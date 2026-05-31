@@ -19,6 +19,8 @@
 Yev Steam Deposit Calculator
 ============================
 
+Version: 1.7
+
 Streamlit-приложение для оценки экономики торговли скинами CS2. Оно сравнивает
 стоимость покупки предмета на стороннем сайте за реальные деньги с операциями
 по тому же предмету на Торговой площадке Steam.
@@ -81,8 +83,17 @@ DEFAULT_CURRENCY = "$"
 # умолчанию для поля конвертации фиксы; курсы меняются — это лишь подсказка).
 USD_RATE_DEFAULTS = {"€": 0.92, "₴": 41.0, "₽": 90.0, "£": 0.79}
 
-# --- Валюты без дробной части (целочисленные цены на ТП Steam) ---
-INTEGER_CURRENCY_CODES = {"₴", "uah", "грн", "uah."}
+# Валюты, у которых на Торговой площадке Steam НЕТ дробной части: цены и
+# комиссии выражаются только в целых единицах. Указаны и символы, и буквенные
+# коды (гривна, иена, вона, чилийское песо, индонезийская рупия).
+INTEGER_CURRENCIES = ["₴", "¥", "₩", "CLP", "IDR"]
+
+# Текстовые псевдонимы тех же валют для распознавания по коду в свободном вводе
+# (продвинутый режим). Множество нормализовано к нижнему регистру.
+_INTEGER_CURRENCY_ALIASES = {
+    "₴", "uah", "грн", "uah.", "¥", "jpy", "yen", "иена",
+    "₩", "krw", "won", "вона", "clp", "idr", "rp",
+}
 
 # Коды/символы, означающие доллар США.
 USD_CODES = {"usd", "$", "usd.", "us$"}
@@ -126,8 +137,9 @@ TRANSLATIONS = {
         "MODE1_FORMULAS":
             "- **Real spent** = (site price × qty) × (1 + fee% / 100) + fixed USD fee (converted)\n"
             "- **Steam received** = seller subtotal × qty. The subtotal is derived from the buyer "
-            "price: for currencies with cents subtotal = price / (1 + Steam fee% / 100); for integer "
-            "currencies the 10% + 5% model with round() is used.\n"
+            "price using Steam's exact fee model: each fee is floored (truncated) with a 1-unit "
+            "minimum, computed in the currency's smallest unit — whole units for integer currencies, "
+            "cents otherwise.\n"
             "- **Net profit** = Steam received − Real spent\n"
             "- **Profit %** = Net profit / Real spent × 100\n\n"
             "In advanced mode each side is first computed in its own currency, then converted to the "
@@ -212,6 +224,8 @@ TRANSLATIONS = {
         "Net profit": "Чистый плюс",
         "Buyer pays {buyer} · you receive {seller} (per item)":
             "Покупатель платит {buyer} · вы получаете {seller} (за 1 шт.)",
+        "Steam fees are floored to whole units with a 1-unit minimum, following Steam's exact fee model.":
+            "Комиссии Steam округляются вниз до целых единиц с минимумом в одну единицу — по точной модели Steam.",
         "Price {x} is impossible in Steam for integer currencies. Rounded to the nearest possible: {y}.":
             "Цена {x} невозможна в Steam для целочисленных валют. Округлено до ближайшей возможной: {y}.",
         "Enter a skin price to see the calculation.": "Введите стоимость скина, чтобы увидеть расчёт.",
@@ -222,8 +236,9 @@ TRANSLATIONS = {
         "MODE1_FORMULAS":
             "- **Реальные затраты** = (цена на сайте × кол-во) × (1 + %комиссии / 100) + фикса USD (конвертированная)\n"
             "- **Получено на Steam** = промежуточный итог продавца × кол-во. Итог выводится из цены "
-            "покупателя: для валют с копейками итог = цена / (1 + %комиссии Steam / 100); для целых "
-            "валют используется модель 10% + 5% с round().\n"
+            "покупателя по точной модели Steam: каждая комиссия округляется вниз (отбрасывание дробной "
+            "части) с минимумом в одну единицу и считается в наименьшей единице валюты — целые единицы "
+            "для целочисленных валют, копейки/центы для остальных.\n"
             "- **Чистый плюс** = Получено на Steam − Реальные затраты\n"
             "- **Процент плюса** = Чистый плюс / Реальные затраты × 100\n\n"
             "В продвинутом режиме каждая сторона сначала считается в своей валюте, и только потом "
@@ -351,6 +366,8 @@ TRANSLATIONS = {
         "Net profit": "Чистий плюс",
         "Buyer pays {buyer} · you receive {seller} (per item)":
             "Покупець платить {buyer} · ви отримуєте {seller} (за 1 шт.)",
+        "Steam fees are floored to whole units with a 1-unit minimum, following Steam's exact fee model.":
+            "Комісії Steam округлюються вниз до цілих одиниць з мінімумом в одну одиницю — за точною моделлю Steam.",
         "Price {x} is impossible in Steam for integer currencies. Rounded to the nearest possible: {y}.":
             "Ціна {x} неможлива в Steam для цілочисельних валют. Заокруглено до найближчої можливої: {y}.",
         "Enter a skin price to see the calculation.": "Введіть вартість скіна, щоб побачити розрахунок.",
@@ -361,8 +378,9 @@ TRANSLATIONS = {
         "MODE1_FORMULAS":
             "- **Реальні витрати** = (ціна на сайті × к-сть) × (1 + %комісії / 100) + фікса USD (конвертована)\n"
             "- **Отримано на Steam** = проміжний підсумок продавця × к-сть. Підсумок виводиться з ціни "
-            "покупця: для валют з копійками підсумок = ціна / (1 + %комісії Steam / 100); для цілих "
-            "валют використовується модель 10% + 5% з round().\n"
+            "покупця за точною моделлю Steam: кожна комісія округлюється вниз (відкидання дробової "
+            "частини) з мінімумом в одну одиницю і рахується в найменшій одиниці валюти — цілі одиниці "
+            "для цілочисельних валют, копійки/центи для інших.\n"
             "- **Чистий плюс** = Отримано на Steam − Реальні витрати\n"
             "- **Відсоток плюса** = Чистий плюс / Реальні витрати × 100\n\n"
             "У розширеному режимі кожна сторона спочатку рахується у своїй валюті, і лише потім "
@@ -452,23 +470,97 @@ def calculate_real_spent(site_price, fee_percent=0.0, fixed_fee=0.0, quantity=1)
     return base * (1.0 + fee_percent / 100.0) + fixed_fee
 
 
+def _split_total_fee(total_fee_percent):
+    """Делит общий процент комиссии Steam на издательскую и площадочную части.
+
+    Steam удерживает две отдельные комиссии: издательскую (для CS2 — 10%) и
+    комиссию площадки (5%), в сумме 15%. Поле «комиссия %» в интерфейсе задаёт
+    суммарный процент; здесь он распределяется пропорционально структуре 10:5,
+    поэтому значение по умолчанию 15% даёт ровно (10.0, 5.0).
+
+    Возвращает (cs2_fee_pct, steam_fee_pct).
+    """
+    total = max(0.0, float(total_fee_percent))
+    default_total = STEAM_CS2_FEE_PERCENT + STEAM_STEAM_FEE_PERCENT
+    if default_total <= 0:
+        return 0.0, 0.0
+    cs2 = total * (STEAM_CS2_FEE_PERCENT / default_total)
+    steam = total * (STEAM_STEAM_FEE_PERCENT / default_total)
+    return cs2, steam
+
+
+def calculate_exact_steam_revenue(steam_buyer_price, is_integer_currency,
+                                  cs2_fee_pct=STEAM_CS2_FEE_PERCENT,
+                                  steam_fee_pct=STEAM_STEAM_FEE_PERCENT):
+    """Точная модель комиссий Steam: из цены покупателя — выручка продавца.
+
+    Steam считает обе комиссии в наименьшей единице валюты и ОТБРАСЫВАЕТ дробную
+    часть (floor), а не округляет к ближайшему; у каждой комиссии есть минимум в
+    одну единицу:
+
+        fee_cs    = max(1, floor(seller * cs2_fee_pct   / 100))
+        fee_steam = max(1, floor(seller * steam_fee_pct / 100))
+        buyer     = seller + fee_cs + fee_steam
+
+    Единица расчёта зависит от валюты:
+        * целочисленные валюты (₴, ¥, ₩, CLP, IDR) — целые единицы;
+        * остальные (USD, EUR, RUB, …) — центы/копейки (цена × 100, затем / 100).
+
+    Из-за floor не каждая цена покупателя достижима, поэтому функция перебирает
+    выручку продавца в небольшом окне вокруг оценки и берёт вариант, чья
+    итоговая цена покупателя ближе всего к запрошенной; при равенстве выбирается
+    меньшая цена покупателя, а затем большая выручка продавца.
+
+    Возвращает кортеж в ИСХОДНОМ масштабе валюты:
+        (seller_revenue, valid_buyer_price, fee_cs, fee_steam).
+    Для цены меньше одной минимальной единицы — нули.
+
+    Деление на ноль исключено: масштаб равен 1 или 100, а делитель оценки
+    защищён проверкой суммарного процента.
+    """
+    price = max(0.0, float(steam_buyer_price))
+    scale = 1 if is_integer_currency else 100
+    # Перевод цены покупателя в целые единицы/центы (округление ввода к ближайшему).
+    desired = int(price * scale + 0.5)
+    if desired < 1:
+        return 0.0, 0.0, 0.0, 0.0
+
+    cs2_fee_pct = max(0.0, float(cs2_fee_pct))
+    steam_fee_pct = max(0.0, float(steam_fee_pct))
+    total_pct = cs2_fee_pct + steam_fee_pct
+    growth = 1.0 + total_pct / 100.0
+    estimate = int(desired / growth + 0.5) if growth > 0 else desired
+
+    best = None  # (отклонение, buyer, -seller); меньший кортеж — лучше
+    for seller in range(max(1, estimate - 6), estimate + 7):
+        # +1e-9 страхует от потери целого из-за погрешности float перед floor.
+        fee_cs = max(1, int(seller * cs2_fee_pct / 100.0 + 1e-9))
+        fee_steam = max(1, int(seller * steam_fee_pct / 100.0 + 1e-9))
+        buyer = seller + fee_cs + fee_steam
+        candidate = (abs(buyer - desired), buyer, -seller)
+        if best is None or candidate < best[0]:
+            best = (candidate, seller, fee_cs, fee_steam, buyer)
+
+    _, seller, fee_cs, fee_steam, buyer = best
+    return seller / scale, buyer / scale, fee_cs / scale, fee_steam / scale
+
+
 def calculate_steam_received(steam_price, steam_fee_percent=DEFAULT_STEAM_FEE_PERCENT):
-    """Выручка продавца на Steam для валют с дробной частью.
+    """Выручка продавца на Steam для валют с дробной частью (в центах/копейках).
 
-    Steam удерживает комиссию из цены, которую платит покупатель, поэтому
-    выручка продавца вычисляется делением, а не вычитанием процента:
-
-        steam_received = steam_price / (1 + steam_fee_percent / 100)
+    Тонкая обёртка над calculate_exact_steam_revenue: суммарный процент делится
+    на издательскую и площадочную части, расчёт ведётся в центах по точной
+    модели Steam (floor с минимумом в одну единицу), что устойчивее простого
+    деления цены на коэффициент.
 
     Пример: при комиссии 15% цена покупателя 3299.00 даёт продавцу 2868.70
     (удержано 286.87 + 143.43).
-
-    При неположительном делителе возвращается исходная цена.
     """
-    steam_price = max(0.0, float(steam_price))
-    steam_fee_percent = max(0.0, float(steam_fee_percent))
-    divisor = 1.0 + steam_fee_percent / 100.0
-    return steam_price / divisor if divisor > 0 else steam_price
+    cs2_fee_pct, steam_fee_pct = _split_total_fee(steam_fee_percent)
+    seller_revenue, _, _, _ = calculate_exact_steam_revenue(
+        steam_price, is_integer_currency=False,
+        cs2_fee_pct=cs2_fee_pct, steam_fee_pct=steam_fee_pct)
+    return seller_revenue
 
 
 def calculate_profit(real_spent, steam_received):
@@ -515,7 +607,10 @@ def calculate_steam_real_cost(steam_price, deposit_profit_percent):
     """
     steam_price = max(0.0, float(steam_price))
     divisor = 1.0 + (float(deposit_profit_percent) / 100.0)
-    return steam_price / divisor if divisor > 0 else steam_price
+    # Защита от деления на ноль: при -100% (и ниже) делитель <= 0 — возвращаем 0.
+    if divisor <= 0:
+        return 0.0
+    return steam_price / divisor
 
 
 def compare_purchase_options(site_real_cost, steam_real_cost):
@@ -598,47 +693,26 @@ def get_valid_steam_price(desired_buyer_price,
                           steam_fee_pct=STEAM_STEAM_FEE_PERCENT):
     """Ближайшая достижимая цена покупателя для целочисленных валют (например, ₴).
 
-    Для валют без дробной части Steam округляет каждую комиссию до целого, а
-    цена покупателя складывается из выручки продавца и обеих комиссий:
-
-        fee_cs    = round(seller_receive * cs2_fee_pct   / 100)   # комиссия CS2
-        fee_steam = round(seller_receive * steam_fee_pct / 100)   # комиссия Steam
-        buyer_pays = seller_receive + fee_cs + fee_steam
-
-    Из-за округления достижимы не все цены покупателя, поэтому функция перебирает
-    значения выручки продавца в небольшом окне вокруг оценки и выбирает вариант
-    с наименьшим отклонением от запрошенной цены; при равном отклонении
-    предпочитается меньшая цена покупателя.
-
-    Возвращает кортеж (buyer_pays, seller_receive); для цены меньше 1 — (0, 0).
-
-    Используется стандартный round() (округление половины к чётному).
+    Тонкая обёртка над calculate_exact_steam_revenue для валют без дробной части.
+    Возвращает кортеж (buyer_pays, seller_receive) целыми числами; для цены
+    меньше одной единицы — (0, 0).
     """
-    desired = int(round(max(0.0, float(desired_buyer_price))))
-    if desired < 1:
-        return 0, 0
-
-    total_pct = max(0.0, float(cs2_fee_pct)) + max(0.0, float(steam_fee_pct))
-    # Оценка выручки продавца; окно перебора покрывает погрешность округления.
-    estimate = int(round(desired / (1.0 + total_pct / 100.0))) if total_pct > -100 else desired
-
-    best = None  # (отклонение, buyer_pays, seller_receive); меньший кортеж лучше
-    for seller in range(max(1, estimate - 6), estimate + 7):
-        fee_cs = round(seller * cs2_fee_pct / 100.0)
-        fee_steam = round(seller * steam_fee_pct / 100.0)
-        buyer = seller + fee_cs + fee_steam
-        diff = abs(buyer - desired)
-        candidate = (diff, buyer, seller)  # при равном отклонении — меньший buyer
-        if best is None or candidate < best:
-            best = candidate
-    return best[1], best[2]
+    _, buyer, _, _ = calculate_exact_steam_revenue(
+        desired_buyer_price, is_integer_currency=True,
+        cs2_fee_pct=cs2_fee_pct, steam_fee_pct=steam_fee_pct)
+    seller, _, _, _ = calculate_exact_steam_revenue(
+        desired_buyer_price, is_integer_currency=True,
+        cs2_fee_pct=cs2_fee_pct, steam_fee_pct=steam_fee_pct)
+    return int(round(buyer)), int(round(seller))
 
 
 def is_integer_currency(code):
-    """True, если валюта считается без дробной части (список INTEGER_CURRENCY_CODES)."""
+    """True, если валюта считается без дробной части (см. INTEGER_CURRENCIES)."""
     if code is None:
         return False
-    return str(code).strip().lower() in INTEGER_CURRENCY_CODES
+    token = str(code).strip().lower()
+    known = {c.lower() for c in INTEGER_CURRENCIES} | _INTEGER_CURRENCY_ALIASES
+    return token in known
 
 
 def is_usd_currency(code):
@@ -885,18 +959,20 @@ def calculate_mode_1(currency, advanced):
     # Целочисленный режим — по валюте стороны Steam или ручной галочке.
     integer_mode = manual_integer or is_integer_currency(steam_side_ccy)
 
-    # «Получено на Steam» за 1 предмет (в валюте стороны Steam).
-    integer_warning = None      # (желаемая, валидная), если потребовалось округление
-    integer_detail = None       # (buyer_pays, seller_receive) для пояснения
-    if integer_mode:
-        # Сначала корректная целочисленная цена для Steam-валюты...
-        valid_buyer, seller_receive = get_valid_steam_price(steam_price)
-        steam_received_unit = float(seller_receive)
-        integer_detail = (valid_buyer, seller_receive)
-        if valid_buyer != int(round(steam_price)):
-            integer_warning = (int(round(steam_price)), valid_buyer)
-    else:
-        steam_received_unit = calculate_steam_received(steam_price, steam_fee)
+    # Выручка продавца за 1 предмет считается по точной модели Steam (floor с
+    # минимумом в одну единицу) в наименьшей единице валюты. Суммарный процент
+    # комиссии распределяется на издательскую и площадочную части (10:5).
+    cs2_fee_pct, steam_fee_pct = _split_total_fee(steam_fee)
+    seller_unit, valid_buyer, fee_cs_unit, fee_steam_unit = calculate_exact_steam_revenue(
+        steam_price, integer_mode, cs2_fee_pct, steam_fee_pct)
+    steam_received_unit = float(seller_unit)
+    integer_detail = (valid_buyer, seller_unit)
+
+    # Предупреждение нужно только для целочисленных валют: там не каждая цена
+    # листинга достижима и могла быть приведена к ближайшей возможной.
+    integer_warning = None
+    if integer_mode and abs(valid_buyer - round(float(steam_price))) >= 1:
+        integer_warning = (int(round(steam_price)), int(round(valid_buyer)))
 
     # Выручка за всё количество (в валюте стороны Steam); конвертация — далее.
     steam_received_total = steam_received_unit * quantity
@@ -942,8 +1018,8 @@ def calculate_mode_1(currency, advanced):
         st.caption(_("Buyer pays {buyer} · you receive {seller} (per item)").format(
             buyer=format_currency(buyer_pays, steam_side_ccy, 0),
             seller=format_currency(seller_receive, steam_side_ccy, 0)))
-        st.caption(_("For integer currencies the 10% + 5% model with nearest rounding is used; "
-                     "the % field above is ignored."))
+        st.caption(_("Steam fees are floored to whole units with a 1-unit minimum, "
+                     "following Steam's exact fee model."))
 
     # В продвинутом режиме — промежуточные суммы в исходных валютах.
     if advanced:
@@ -999,7 +1075,7 @@ def calculate_mode_2(currency, advanced):
             )
             deposit_profit = st.number_input(
                 _("Steam top-up profit (%)"),
-                min_value=0.0, value=50.0, step=1.0, key="m2_deposit_profit",
+                min_value=-99.9, value=50.0, step=1.0, key="m2_deposit_profit",
                 help=_("How profitably you topped up Steam earlier. "
                        "Example: spent 10 real, got 15 on balance → 50% profit."),
             )
