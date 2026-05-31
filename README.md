@@ -1,6 +1,6 @@
 # Yev Steam Deposit Calculator & CS2 Arbitrage Tool
 
-A calculator for CS2 investors and traders, built with Python (Streamlit). It helps accurately calculate the profit of topping up your Steam balance via third-party marketplaces and identifies the most profitable entry points for buying skins.
+This calculator for CS2 investors and traders, built with Python (Streamlit), helps accurately calculate the profit of topping up your Steam balance via third-party marketplaces and identifies the most profitable entry points for buying skins.
 
 ## Key Features
 - **Profit Calculator:** Precise profit calculation accounting for all third-party marketplace fees and Steam Community Market taxes.
