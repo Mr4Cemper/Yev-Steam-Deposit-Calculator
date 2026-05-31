@@ -136,6 +136,15 @@ TRANSLATIONS = {
             "- **Real price (site)** = (site price × qty) × (1 + fee% / 100) + fixed USD fee (converted)\n"
             "- **Real price (Steam)** = (Steam price × qty) / (1 + top-up profit% / 100)\n"
             "- **Savings** = |site real price − Steam real price| (in the base currency when advanced).",
+        "MODE3_FORMULAS":
+            "- **Steam spent** = Steam purchase price × qty\n"
+            "- **Gross site revenue** = site sell price × qty\n"
+            "- **After sales fee** = gross revenue × (1 − sales fee% / 100)\n"
+            "- **Real money received** = after sales fee × (1 − withdrawal fee% / 100) − fixed USD fee (converted)\n"
+            "- **Cashout ratio** = real money received / Steam spent × 100\n"
+            "- **Net profit / loss** = real money received − Steam spent\n\n"
+            "In advanced mode the site side and the Steam side are each computed in their own currency, "
+            "then converted to the base (card) currency via your rates.",
     },
     "ru": {
         # --- сайдбар / общее ---
@@ -143,8 +152,8 @@ TRANSLATIONS = {
         "Language": "Язык",
         "Display currency": "Валюта отображения",
         "Advanced currency mode (cross-rates)": "Продвинутый режим валют (кросс-курсы)",
-        "When enabled, both modes let you set separate currencies for your card, the site, and Steam.":
-            "Если включено, в обоих режимах можно задать отдельные валюты для карты, сайта и Steam.",
+        "When enabled, all modes let you set separate currencies for your card, the site, and Steam.":
+            "Если включено, во всех режимах можно задать отдельные валюты для карты, сайта и Steam.",
         "CS2 Skin Investing Toolkit": "Инструментарий инвестора CS2",
         "© 2026 Yev Capital. Not affiliated with Valve Corp. Steam and CS2 are trademarks of Valve Corporation.":
             "© 2026 Yev Capital. Не связано с Valve Corp. Steam и CS2 являются торговыми марками Valve Corporation.",
@@ -242,6 +251,39 @@ TRANSLATIONS = {
             "- **Реальная цена (сайт)** = (цена на сайте × кол-во) × (1 + %комиссии / 100) + фикса USD (конвертированная)\n"
             "- **Реальная цена (Steam)** = (цена на ТП × кол-во) / (1 + %плюса / 100)\n"
             "- **Экономия** = модуль разницы между двумя реальными ценами (в базовой валюте при кросс-курсах).",
+        # --- Режим 3 ---
+        "Withdrawal (Cashout)": "Вывод средств (Cashout)",
+        "Steam balance cashout calculator": "Калькулятор вывода баланса Steam",
+        "We calculate how much real money you receive by buying a skin on the Steam Market, "
+        "selling it on a third-party site, and withdrawing the proceeds.":
+            "Считаем, сколько реальных денег вы получите, купив скин на Торговой площадке Steam, "
+            "продав его на стороннем сайте и выведя выручку.",
+        "Purchase (Steam Market)": "Покупка (ТП Steam)",
+        "Steam purchase price": "Цена покупки в Steam",
+        "Withdrawal (third-party site)": "Вывод (сторонний сайт)",
+        "Site sell price": "Цена продажи на сайте",
+        "Sales fee (%)": "Комиссия сайта за продажу (%)",
+        "Withdrawal fee (%)": "Комиссия за вывод (%)",
+        "Withdrawal fixed fee (USD)": "Фиксированная комиссия за вывод (USD)",
+        "Total Steam spent": "Потрачено Steam баланса",
+        "Real money received": "Получено реальных денег",
+        "Cashout ratio": "Коэффициент вывода",
+        "Net profit / loss": "Чистая прибыль / убыток",
+        "Gross site revenue": "Грязная выручка на сайте",
+        "After sales fee": "После комиссии за продажу",
+        "Enter prices to see the cashout calculation.":
+            "Введите цены, чтобы увидеть расчёт вывода.",
+        "The higher the cashout ratio, the more of your Steam balance reaches your card.":
+            "Чем выше коэффициент вывода, тем большая часть баланса Steam доходит до карты.",
+        "MODE3_FORMULAS":
+            "- **Потрачено Steam** = цена покупки в Steam × кол-во\n"
+            "- **Грязная выручка на сайте** = цена продажи на сайте × кол-во\n"
+            "- **После комиссии за продажу** = грязная выручка × (1 − %комиссии продажи / 100)\n"
+            "- **Получено реальных денег** = после комиссии за продажу × (1 − %комиссии вывода / 100) − фикса USD (конвертированная)\n"
+            "- **Коэффициент вывода** = получено реальных денег / потрачено Steam × 100\n"
+            "- **Чистая прибыль / убыток** = получено реальных денег − потрачено Steam\n\n"
+            "В продвинутом режиме сторона сайта и сторона Steam считаются каждая в своей валюте, "
+            "а затем приводятся к базовой валюте (карты) по вашим курсам.",
     },
     "uk": {
         # --- сайдбар / загальне ---
@@ -249,8 +291,8 @@ TRANSLATIONS = {
         "Language": "Мова",
         "Display currency": "Валюта відображення",
         "Advanced currency mode (cross-rates)": "Розширений режим валют (крос-курси)",
-        "When enabled, both modes let you set separate currencies for your card, the site, and Steam.":
-            "Якщо увімкнено, в обох режимах можна задати окремі валюти для картки, сайту та Steam.",
+        "When enabled, all modes let you set separate currencies for your card, the site, and Steam.":
+            "Якщо увімкнено, в усіх режимах можна задати окремі валюти для картки, сайту та Steam.",
         "CS2 Skin Investing Toolkit": "Інструментарій інвестора CS2",
         "© 2026 Yev Capital. Not affiliated with Valve Corp. Steam and CS2 are trademarks of Valve Corporation.":
             "© 2026 Yev Capital. Не пов'язано з Valve Corp. Steam та CS2 є торговими марками Valve Corporation.",
@@ -348,6 +390,39 @@ TRANSLATIONS = {
             "- **Реальна ціна (сайт)** = (ціна на сайті × к-сть) × (1 + %комісії / 100) + фікса USD (конвертована)\n"
             "- **Реальна ціна (Steam)** = (ціна на ТМ × к-сть) / (1 + %плюса / 100)\n"
             "- **Економія** = модуль різниці між двома реальними цінами (у базовій валюті за крос-курсів).",
+        # --- Режим 3 ---
+        "Withdrawal (Cashout)": "Виведення коштів (Cashout)",
+        "Steam balance cashout calculator": "Калькулятор виведення балансу Steam",
+        "We calculate how much real money you receive by buying a skin on the Steam Market, "
+        "selling it on a third-party site, and withdrawing the proceeds.":
+            "Рахуємо, скільки реальних грошей ви отримаєте, купивши скін на Торговому майданчику Steam, "
+            "продавши його на сторонньому сайті та вивівши виручку.",
+        "Purchase (Steam Market)": "Купівля (ТМ Steam)",
+        "Steam purchase price": "Ціна купівлі в Steam",
+        "Withdrawal (third-party site)": "Виведення (сторонній сайт)",
+        "Site sell price": "Ціна продажу на сайті",
+        "Sales fee (%)": "Комісія сайту за продаж (%)",
+        "Withdrawal fee (%)": "Комісія за виведення (%)",
+        "Withdrawal fixed fee (USD)": "Фіксована комісія за виведення (USD)",
+        "Total Steam spent": "Витрачено Steam балансу",
+        "Real money received": "Отримано реальних грошей",
+        "Cashout ratio": "Коефіцієнт виведення",
+        "Net profit / loss": "Чистий прибуток / збиток",
+        "Gross site revenue": "Брудна виручка на сайті",
+        "After sales fee": "Після комісії за продаж",
+        "Enter prices to see the cashout calculation.":
+            "Введіть ціни, щоб побачити розрахунок виведення.",
+        "The higher the cashout ratio, the more of your Steam balance reaches your card.":
+            "Що вищий коефіцієнт виведення, то більша частина балансу Steam доходить до картки.",
+        "MODE3_FORMULAS":
+            "- **Витрачено Steam** = ціна купівлі в Steam × к-сть\n"
+            "- **Брудна виручка на сайті** = ціна продажу на сайті × к-сть\n"
+            "- **Після комісії за продаж** = брудна виручка × (1 − %комісії продажу / 100)\n"
+            "- **Отримано реальних грошей** = після комісії за продаж × (1 − %комісії виведення / 100) − фікса USD (конвертована)\n"
+            "- **Коефіцієнт виведення** = отримано реальних грошей / витрачено Steam × 100\n"
+            "- **Чистий прибуток / збиток** = отримано реальних грошей − витрачено Steam\n\n"
+            "У розширеному режимі сторона сайту та сторона Steam рахуються кожна у своїй валюті, "
+            "а потім приводяться до базової валюти (картки) за вашими курсами.",
     },
 }
 
@@ -461,6 +536,60 @@ def compare_purchase_options(site_real_cost, steam_real_cost):
         "savings": difference,
         "site_real_cost": site_real_cost,
         "steam_real_cost": steam_real_cost,
+    }
+
+
+def calculate_cashout(steam_price, site_sell_price, quantity=1,
+                      sales_fee_percent=0.0, withdrawal_fee_percent=0.0,
+                      withdrawal_fixed_fee=0.0):
+    """Вывод баланса Steam в реальные деньги через продажу предмета на сайте.
+
+    Модель денежного потока (все суммы — в одной валюте; конвертация, если
+    нужна, выполняется вызывающим кодом до и после этой функции):
+
+        steam_spent       = steam_price * quantity            # списано с баланса Steam
+        gross_revenue     = site_sell_price * quantity        # цена выставления на сайте
+        after_sales_fee   = gross_revenue * (1 - sales_fee% / 100)
+        real_received     = after_sales_fee * (1 - withdrawal_fee% / 100)
+                            - withdrawal_fixed_fee             # минус фикса за вывод
+
+    Аргумент withdrawal_fixed_fee должен быть уже приведён к валюте сайта.
+    Отрицательная чистая выручка обнуляется (вывести меньше нуля нельзя).
+
+    Возвращает словарь:
+        steam_spent    — затраты баланса Steam;
+        gross_revenue  — выручка до комиссий;
+        after_sales    — выручка после комиссии за продажу;
+        real_received  — сумма к получению на карту/крипту;
+        net_profit     — real_received - steam_spent (обычно отрицательна);
+        ratio_percent  — (real_received / steam_spent) * 100; 0 при нулевых затратах.
+
+    Все числовые аргументы приводятся к неотрицательным значениям; проценты
+    выше 100 дают нулевую (а не отрицательную) выручку на соответствующем шаге.
+    """
+    steam_price = max(0.0, float(steam_price))
+    site_sell_price = max(0.0, float(site_sell_price))
+    quantity = max(1, int(quantity))
+    sales_fee_percent = max(0.0, float(sales_fee_percent))
+    withdrawal_fee_percent = max(0.0, float(withdrawal_fee_percent))
+    withdrawal_fixed_fee = max(0.0, float(withdrawal_fixed_fee))
+
+    steam_spent = steam_price * quantity
+    gross_revenue = site_sell_price * quantity
+    after_sales = gross_revenue * max(0.0, 1.0 - sales_fee_percent / 100.0)
+    real_received = after_sales * max(0.0, 1.0 - withdrawal_fee_percent / 100.0)
+    real_received = max(0.0, real_received - withdrawal_fixed_fee)
+
+    net_profit = real_received - steam_spent
+    ratio_percent = (real_received / steam_spent) * 100.0 if steam_spent > 0 else 0.0
+
+    return {
+        "steam_spent": steam_spent,
+        "gross_revenue": gross_revenue,
+        "after_sales": after_sales,
+        "real_received": real_received,
+        "net_profit": net_profit,
+        "ratio_percent": ratio_percent,
     }
 
 
@@ -961,6 +1090,155 @@ def calculate_mode_2(currency, advanced):
 
 
 # ===========================================================================
+# РЕЖИМ 3: КАЛЬКУЛЯТОР ВЫВОДА СРЕДСТВ ("CASHOUT")
+# ===========================================================================
+
+def calculate_mode_3(currency, advanced):
+    """Интерфейс Режима 3. currency — валюта отображения; advanced — режим кросс-курсов.
+
+    Сценарий: покупка предмета на Торговой площадке Steam за баланс, продажа на
+    стороннем сайте и вывод выручки на карту/крипту. Цель — оценить, какая доля
+    баланса Steam доходит до реальных денег (коэффициент вывода).
+    """
+    st.subheader("💳 " + _("Steam balance cashout calculator"))
+    st.write(_("We calculate how much real money you receive by buying a skin on the Steam Market, "
+               "selling it on a third-party site, and withdrawing the proceeds."))
+
+    # Управляющие элементы вне формы: валюты кросс-курсов (если включён режим).
+    spent_ccy = site_ccy = steam_ccy = None
+    if advanced:
+        spent_ccy, site_ccy, steam_ccy = render_cross_currency_selectors("m3")
+
+    # Значения по умолчанию на случай отключённых блоков.
+    rate_site_to_spent, rate_steam_to_spent = 1.0, 1.0
+
+    # Поля и кнопка внутри st.form: пересчёт выполняется только по нажатию.
+    with st.form("m3_form"):
+        col_buy, col_sell = st.columns(2)
+
+        with col_buy:
+            st.markdown("#### 🏪 " + _("Purchase (Steam Market)"))
+            steam_price = st.number_input(
+                _("Steam purchase price"),
+                min_value=0.0, value=15.0, step=0.5, key="m3_steam_price",
+            )
+            quantity = st.number_input(
+                _("Quantity"), min_value=1, value=1, step=1, key="m3_qty",
+            )
+
+        with col_sell:
+            st.markdown("#### 💳 " + _("Withdrawal (third-party site)"))
+            site_sell_price = st.number_input(
+                _("Site sell price"),
+                min_value=0.0, value=12.0, step=0.5, key="m3_site_sell",
+            )
+            sales_fee = st.number_input(
+                _("Sales fee (%)"),
+                min_value=0.0, max_value=100.0, value=2.0, step=0.5, key="m3_sales_fee",
+            )
+            withdrawal_fee = st.number_input(
+                _("Withdrawal fee (%)"),
+                min_value=0.0, max_value=100.0, value=0.0, step=0.5, key="m3_wd_fee",
+            )
+            withdrawal_fixed_usd = st.number_input(
+                _("Withdrawal fixed fee (USD)"),
+                min_value=0.0, value=0.0, step=0.5, key="m3_wd_fixed",
+            )
+
+        if advanced:
+            st.divider()
+            rate_site_to_spent, rate_steam_to_spent = render_cross_currency_rates(
+                "m3", spent_ccy, site_ccy, steam_ccy)
+
+        # Фиксированная комиссия вывода задаётся в USD и приводится к валюте сайта
+        # (комиссии сайта удерживаются именно в валюте сайта). enable_fees=True,
+        # так как поле фиксы в этом режиме присутствует всегда.
+        fixed_in_site = resolve_fixed_fee_in_target(
+            "m3", withdrawal_fixed_usd, True, advanced,
+            currency, spent_ccy, site_ccy, rate_site_to_spent)
+
+        submitted = st.form_submit_button("🧮 " + _("Calculate"),
+                                          type="primary", use_container_width=True)
+
+    # Результаты выводятся только после нажатия кнопки.
+    if not submitted:
+        st.info(_("Press Calculate to see the results."))
+        return
+
+    # Валютный контекст вывода: база (карта) — итоговая валюта результата.
+    if advanced:
+        output_ccy = spent_ccy or DEFAULT_CURRENCY
+    else:
+        output_ccy = currency
+
+    quantity = max(1, int(quantity))
+
+    # Расчёт в валюте сайта: затраты Steam и стороны сайта изначально в разных
+    # валютах, поэтому Steam-затраты считаем отдельно, а денежный поток сайта —
+    # через чистую функцию, приведя обе стороны к базовой валюте далее.
+    cashout = calculate_cashout(
+        steam_price=steam_price, site_sell_price=site_sell_price, quantity=quantity,
+        sales_fee_percent=sales_fee, withdrawal_fee_percent=withdrawal_fee,
+        withdrawal_fixed_fee=fixed_in_site,
+    )
+
+    # Приведение к базовой валюте (карты).
+    if advanced:
+        steam_spent_base = max(0.0, cashout["steam_spent"]) * max(0.0, rate_steam_to_spent)
+        real_received_base = max(0.0, cashout["real_received"]) * max(0.0, rate_site_to_spent)
+    else:
+        steam_spent_base = cashout["steam_spent"]
+        real_received_base = cashout["real_received"]
+
+    net_profit_base = real_received_base - steam_spent_base
+    ratio_base = (real_received_base / steam_spent_base * 100.0) if steam_spent_base > 0 else 0.0
+
+    # --- Вывод результатов ---
+    st.divider()
+    st.markdown("### 📊 " + _("Results"))
+
+    m_spent, m_received, m_ratio = st.columns(3)
+    m_spent.metric(_("Total Steam spent"), format_currency(steam_spent_base, output_ccy))
+    m_received.metric(_("Real money received"), format_currency(real_received_base, output_ccy))
+    m_ratio.metric(_("Cashout ratio"), f"{ratio_base:.1f}%")
+
+    # Чистый результат: знак процента используется как delta (красный для минуса).
+    base_ratio_delta = ratio_base - 100.0  # >0 — вышли в плюс, <0 — потери
+    st.metric(
+        _("Net profit / loss"),
+        format_currency(net_profit_base, output_ccy),
+        delta=f"{base_ratio_delta:+.1f}%",
+    )
+
+    # В продвинутом режиме — промежуточные суммы в исходных валютах.
+    if advanced:
+        st.caption(
+            f"{_('Gross site revenue')}: "
+            f"{format_currency(cashout['gross_revenue'], site_ccy or '?')} · "
+            f"{_('After sales fee')}: "
+            f"{format_currency(cashout['after_sales'], site_ccy or '?')}")
+
+    # Итоговый вердикт по чистому результату.
+    if steam_spent_base <= 0:
+        st.info(_("Enter prices to see the cashout calculation."))
+    elif net_profit_base > 0:
+        st.success(_("Top-up in profit: +{amount} ({percent}).").format(
+            amount=format_currency(net_profit_base, output_ccy),
+            percent=f"{base_ratio_delta:+.1f}%"))
+    elif net_profit_base < 0:
+        st.error(_("Top-up at a loss: {amount} ({percent}).").format(
+            amount=format_currency(net_profit_base, output_ccy),
+            percent=f"{base_ratio_delta:+.1f}%"))
+    else:
+        st.warning(_("Break-even result."))
+
+    st.caption(_("The higher the cashout ratio, the more of your Steam balance reaches your card."))
+
+    with st.expander("ℹ️ " + _("Calculation formulas")):
+        st.markdown(_("MODE3_FORMULAS"))
+
+
+# ===========================================================================
 # ТОЧКА ВХОДА
 # ===========================================================================
 
@@ -992,7 +1270,7 @@ def main():
         # Переключатель продвинутого валютного режима (по умолчанию выключен).
         advanced = st.checkbox(
             _("Advanced currency mode (cross-rates)"), value=False,
-            help=_("When enabled, both modes let you set separate currencies "
+            help=_("When enabled, all modes let you set separate currencies "
                    "for your card, the site, and Steam."),
         )
 
@@ -1006,14 +1284,17 @@ def main():
     st.caption(_("Steam balance top-up profit calculator and skin purchase analyzer"))
 
     # --- Вкладки режимов ---
-    tab_mode_1, tab_mode_2 = st.tabs([
+    tab_mode_1, tab_mode_2, tab_mode_3 = st.tabs([
         "💰 " + _("Balance top-up (profit)"),
         "🔍 " + _("Where to buy cheaper?"),
+        "💳 " + _("Withdrawal (Cashout)"),
     ])
     with tab_mode_1:
         calculate_mode_1(currency, advanced)
     with tab_mode_2:
         calculate_mode_2(currency, advanced)
+    with tab_mode_3:
+        calculate_mode_3(currency, advanced)
 
     # --- Юридический футер (i18n): копирайт и товарные знаки Valve ---
     st.divider()
