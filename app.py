@@ -494,22 +494,22 @@ def calculate_exact_steam_revenue(steam_buyer_price, is_integer_currency,
                                   steam_fee_pct=STEAM_STEAM_FEE_PERCENT):
     """Точная модель комиссий Steam: из цены покупателя — выручка продавца.
 
-    Steam считает обе комиссии в наименьшей единице валюты и ОТБРАСЫВАЕТ дробную
-    часть (floor), а не округляет к ближайшему; у каждой комиссии есть минимум в
-    одну единицу:
+    Для ЦЕЛОЧИСЛЕННЫХ валют (грн, ¥, ₩, CLP, IDR) модель выверена по реальным
+    данным Торговой площадки Steam. Комиссия считается от суммы продавца, каждая
+    часть округляется к БЛИЖАЙШЕМУ (round half up) с минимумом в одну единицу:
 
-        fee_cs    = max(1, floor(seller * cs2_fee_pct   / 100))
-        fee_steam = max(1, floor(seller * steam_fee_pct / 100))
+        fee_cs    = max(1, round(seller * cs2_fee_pct   / 100))
+        fee_steam = max(1, round(seller * steam_fee_pct / 100))
         buyer     = seller + fee_cs + fee_steam
 
-    Единица расчёта зависит от валюты:
-        * целочисленные валюты (₴, ¥, ₩, CLP, IDR) — целые единицы;
-        * остальные (USD, EUR, RUB, …) — центы/копейки (цена × 100, затем / 100).
+    Сумма продавца для запрошенной цены — это МАКСИМАЛЬНЫЙ seller, при котором
+    итоговая цена покупателя не превышает запрошенную. Если ровно такая цена
+    недостижима (на площадке лот можно выставить только за достижимую цену),
+    берётся ближайшая меньшая достижимая.
 
-    Из-за floor не каждая цена покупателя достижима, поэтому функция перебирает
-    выручку продавца в небольшом окне вокруг оценки и берёт вариант, чья
-    итоговая цена покупателя ближе всего к запрошенной; при равенстве выбирается
-    меньшая цена покупателя, а затем большая выручка продавца.
+    Единица расчёта зависит от валюты:
+        * целочисленные валюты — целые единицы;
+        * остальные (USD, EUR, RUB, …) — центы/копейки (цена × 100, затем / 100).
 
     Возвращает кортеж в ИСХОДНОМ масштабе валюты:
         (seller_revenue, valid_buyer_price, fee_cs, fee_steam).
@@ -527,22 +527,46 @@ def calculate_exact_steam_revenue(steam_buyer_price, is_integer_currency,
 
     cs2_fee_pct = max(0.0, float(cs2_fee_pct))
     steam_fee_pct = max(0.0, float(steam_fee_pct))
+
+    def _fees(seller_units):
+        """Комиссии Steam в наименьшей единице валюты.
+
+        Для ЦЕЛОЧИСЛЕННЫХ валют (грн, ¥, ₩ и т.п.) комиссия считается от суммы
+        продавца с округлением каждой части к БЛИЖАЙШЕМУ (round half up) и
+        минимумом в одну единицу — это поведение Valve, выверенное по реальным
+        данным Торговой площадки. Для дробных валют (центы) сохраняется прежний
+        расчёт через отбрасывание дробной части (floor) в наименьшей единице.
+        """
+        if is_integer_currency:
+            fc = max(1, int(seller_units * cs2_fee_pct / 100.0 + 0.5))
+            fs = max(1, int(seller_units * steam_fee_pct / 100.0 + 0.5))
+        else:
+            fc = max(1, int(seller_units * cs2_fee_pct / 100.0 + 1e-9))
+            fs = max(1, int(seller_units * steam_fee_pct / 100.0 + 1e-9))
+        return fc, fs
+
     total_pct = cs2_fee_pct + steam_fee_pct
     growth = 1.0 + total_pct / 100.0
     estimate = int(desired / growth + 0.5) if growth > 0 else desired
 
-    best = None  # (отклонение, buyer, -seller); меньший кортеж — лучше
-    for seller in range(max(1, estimate - 6), estimate + 7):
-        # +1e-9 страхует от потери целого из-за погрешности float перед floor.
-        fee_cs = max(1, int(seller * cs2_fee_pct / 100.0 + 1e-9))
-        fee_steam = max(1, int(seller * steam_fee_pct / 100.0 + 1e-9))
-        buyer = seller + fee_cs + fee_steam
-        candidate = (abs(buyer - desired), buyer, -seller)
-        if best is None or candidate < best[0]:
-            best = (candidate, seller, fee_cs, fee_steam, buyer)
+    # Сумма продавца = МАКСИМАЛЬНЫЙ seller, при котором цена покупателя
+    # (seller + комиссии) не превышает запрошенную цену. Если ровно эта цена
+    # недостижима, берётся ближайшая меньшая достижимая (как на самой площадке:
+    # выставить лот можно только за достижимую цену).
+    best_seller = 0
+    best_buyer = 0
+    best_fc = 0
+    best_fs = 0
+    for seller in range(max(1, estimate - 8), estimate + 9):
+        fc, fs = _fees(seller)
+        buyer = seller + fc + fs
+        if buyer <= desired and seller > best_seller:
+            best_seller, best_buyer, best_fc, best_fs = seller, buyer, fc, fs
 
-    _, seller, fee_cs, fee_steam, buyer = best
-    return seller / scale, buyer / scale, fee_cs / scale, fee_steam / scale
+    if best_seller == 0:
+        return 0.0, 0.0, 0.0, 0.0
+    return (best_seller / scale, best_buyer / scale,
+            best_fc / scale, best_fs / scale)
 
 
 def calculate_steam_received(steam_price, steam_fee_percent=DEFAULT_STEAM_FEE_PERCENT):
