@@ -149,14 +149,19 @@ TRANSLATIONS = {
             "- **Real price (Steam)** = (Steam price × qty) / (1 + top-up profit% / 100)\n"
             "- **Savings** = |site real price − Steam real price| (in the base currency when advanced).",
         "MODE3_FORMULAS":
-            "- **Steam spent** = Steam purchase price × qty\n"
+            "- **Steam balance spent** = Steam purchase price × qty\n"
+            "- **Real Steam cost** = Steam balance spent / (1 + top-up profit% / 100)  *(only when top-up profit is set)*\n"
             "- **Gross site revenue** = site sell price × qty\n"
             "- **After sales fee** = gross revenue × (1 − sales fee% / 100)\n"
             "- **Real money received** = after sales fee × (1 − withdrawal fee% / 100) − fixed USD fee (converted)\n"
-            "- **Cashout ratio** = real money received / Steam spent × 100\n"
-            "- **Net profit / loss** = real money received − Steam spent\n\n"
+            "- **Cashout ratio** = real money received / Real Steam cost × 100  *(or / Steam balance spent when no top-up profit)*\n"
+            "- **Net profit / loss** = real money received − Real Steam cost\n\n"
             "In advanced mode the site side and the Steam side are each computed in their own currency, "
             "then converted to the base (card) currency via your rates.",
+        "Real Steam cost (with top-up)": "Real Steam cost (with top-up)",
+        "Effective cashout ratio": "Effective cashout ratio",
+        "Top-up profit factored in. Ratio > 100% means you profit even after cashing out.":
+            "Top-up profit factored in. Ratio > 100% means you profit even after cashing out.",
     },
     "ru": {
         # --- сайдбар / общее ---
@@ -291,14 +296,19 @@ TRANSLATIONS = {
         "The higher the cashout ratio, the more of your Steam balance reaches your card.":
             "Чем выше коэффициент вывода, тем большая часть баланса Steam доходит до карты.",
         "MODE3_FORMULAS":
-            "- **Потрачено Steam** = цена покупки в Steam × кол-во\n"
+            "- **Потрачено баланса Steam** = цена покупки в Steam × кол-во\n"
+            "- **Реальные затраты Steam** = потрачено баланса Steam / (1 + % плюса пополнения / 100)  *(только если задан % плюса)*\n"
             "- **Грязная выручка на сайте** = цена продажи на сайте × кол-во\n"
             "- **После комиссии за продажу** = грязная выручка × (1 − %комиссии продажи / 100)\n"
             "- **Получено реальных денег** = после комиссии за продажу × (1 − %комиссии вывода / 100) − фикса USD (конвертированная)\n"
-            "- **Коэффициент вывода** = получено реальных денег / потрачено Steam × 100\n"
-            "- **Чистая прибыль / убыток** = получено реальных денег − потрачено Steam\n\n"
+            "- **Коэффициент вывода** = получено реальных денег / Реальные затраты Steam × 100  *(или / баланс Steam, если плюс не задан)*\n"
+            "- **Чистая прибыль / убыток** = получено реальных денег − Реальные затраты Steam\n\n"
             "В продвинутом режиме сторона сайта и сторона Steam считаются каждая в своей валюте, "
             "а затем приводятся к базовой валюте (карты) по вашим курсам.",
+        "Real Steam cost (with top-up)": "Реальные затраты Steam (с плюсом)",
+        "Effective cashout ratio": "Эффективный коэффициент вывода",
+        "Top-up profit factored in. Ratio > 100% means you profit even after cashing out.":
+            "Учтён плюс пополнения. Коэффициент > 100% означает, что вы в плюсе даже после вывода.",
     },
     "uk": {
         # --- сайдбар / загальне ---
@@ -433,14 +443,19 @@ TRANSLATIONS = {
         "The higher the cashout ratio, the more of your Steam balance reaches your card.":
             "Що вищий коефіцієнт виведення, то більша частина балансу Steam доходить до картки.",
         "MODE3_FORMULAS":
-            "- **Витрачено Steam** = ціна купівлі в Steam × к-сть\n"
+            "- **Витрачено балансу Steam** = ціна купівлі в Steam × к-сть\n"
+            "- **Реальні витрати Steam** = витрачено балансу Steam / (1 + % плюса поповнення / 100)  *(лише якщо задано % плюса)*\n"
             "- **Брудна виручка на сайті** = ціна продажу на сайті × к-сть\n"
             "- **Після комісії за продаж** = брудна виручка × (1 − %комісії продажу / 100)\n"
             "- **Отримано реальних грошей** = після комісії за продаж × (1 − %комісії виведення / 100) − фікса USD (конвертована)\n"
-            "- **Коефіцієнт виведення** = отримано реальних грошей / витрачено Steam × 100\n"
-            "- **Чистий прибуток / збиток** = отримано реальних грошей − витрачено Steam\n\n"
+            "- **Коефіцієнт виведення** = отримано реальних грошей / Реальні витрати Steam × 100  *(або / баланс Steam, якщо плюс не задано)*\n"
+            "- **Чистий прибуток / збиток** = отримано реальних грошей − Реальні витрати Steam\n\n"
             "У розширеному режимі сторона сайту та сторона Steam рахуються кожна у своїй валюті, "
             "а потім приводяться до базової валюти (картки) за вашими курсами.",
+        "Real Steam cost (with top-up)": "Реальні витрати Steam (з плюсом)",
+        "Effective cashout ratio": "Ефективний коефіцієнт виведення",
+        "Top-up profit factored in. Ratio > 100% means you profit even after cashing out.":
+            "Враховано плюс поповнення. Коефіцієнт > 100% означає, що ви в плюсі навіть після виведення.",
     },
 }
 
@@ -1225,6 +1240,14 @@ def calculate_mode_3(currency, advanced):
             quantity = st.number_input(
                 _("Quantity"), min_value=1, value=1, step=1, key="m3_qty",
             )
+            deposit_profit = st.number_input(
+                _("Steam top-up profit (%)"),
+                min_value=-99.9, value=0.0, step=1.0, key="m3_deposit_profit",
+                help=_(
+                    "How profitably you topped up Steam earlier. "
+                    "Example: spent 10 real, got 15 on balance → 50% profit."
+                ),
+            )
 
         with col_sell:
             st.markdown("#### 💳 " + _("Withdrawal (third-party site)"))
@@ -1297,16 +1320,48 @@ def calculate_mode_3(currency, advanced):
     st.divider()
     st.markdown("### 📊 " + _("Results"))
 
+    # Если задан % плюса пополнения — пересчитываем реальные затраты на Steam-баланс.
+    # deposit_profit=0 => real_steam_cost = steam_spent (поведение идентично прежнему).
+    use_deposit = deposit_profit != 0.0
+    if use_deposit:
+        real_steam_cost_base = calculate_steam_real_cost(steam_spent_base, deposit_profit)
+        display_ratio = (real_received_base / real_steam_cost_base * 100.0
+                         ) if real_steam_cost_base > 0 else 0.0
+        net_result_base = real_received_base - real_steam_cost_base
+    else:
+        real_steam_cost_base = steam_spent_base
+        display_ratio = ratio_base
+        net_result_base = net_profit_base
+
+    base_ratio_delta = display_ratio - 100.0
+
     m_spent, m_received, m_ratio = st.columns(3)
-    m_spent.metric(_("Total Steam spent"), format_currency(steam_spent_base, output_ccy))
+
+    if use_deposit:
+        # Колонка «потрачено»: баланс Steam сверху, реальная стоимость — подписью.
+        m_spent.metric(
+            _("Total Steam spent"),
+            format_currency(steam_spent_base, output_ccy),
+        )
+        m_spent.caption(
+            f"↳ {_('Real Steam cost (with top-up)')}: "
+            f"**{format_currency(real_steam_cost_base, output_ccy)}**"
+        )
+        m_ratio.metric(
+            _("Effective cashout ratio"),
+            f"{display_ratio:.1f}%",
+            help=_("Top-up profit factored in. Ratio > 100% means you profit even after cashing out."),
+        )
+    else:
+        m_spent.metric(_("Total Steam spent"), format_currency(steam_spent_base, output_ccy))
+        m_ratio.metric(_("Cashout ratio"), f"{display_ratio:.1f}%")
+
     m_received.metric(_("Real money received"), format_currency(real_received_base, output_ccy))
-    m_ratio.metric(_("Cashout ratio"), f"{ratio_base:.1f}%")
 
     # Чистый результат: знак процента используется как delta (красный для минуса).
-    base_ratio_delta = ratio_base - 100.0  # >0 — вышли в плюс, <0 — потери
     st.metric(
         _("Net profit / loss"),
-        format_currency(net_profit_base, output_ccy),
+        format_currency(net_result_base, output_ccy),
         delta=f"{base_ratio_delta:+.1f}%",
     )
 
@@ -1321,13 +1376,13 @@ def calculate_mode_3(currency, advanced):
     # Итоговый вердикт по чистому результату.
     if steam_spent_base <= 0:
         st.info(_("Enter prices to see the cashout calculation."))
-    elif net_profit_base > 0:
+    elif net_result_base > 0:
         st.success(_("Top-up in profit: +{amount} ({percent}).").format(
-            amount=format_currency(net_profit_base, output_ccy),
+            amount=format_currency(net_result_base, output_ccy),
             percent=f"{base_ratio_delta:+.1f}%"))
-    elif net_profit_base < 0:
+    elif net_result_base < 0:
         st.error(_("Top-up at a loss: {amount} ({percent}).").format(
-            amount=format_currency(net_profit_base, output_ccy),
+            amount=format_currency(net_result_base, output_ccy),
             percent=f"{base_ratio_delta:+.1f}%"))
     else:
         st.warning(_("Break-even result."))
