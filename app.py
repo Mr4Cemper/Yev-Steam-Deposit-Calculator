@@ -162,6 +162,40 @@ TRANSLATIONS = {
         "Effective cashout ratio": "Effective cashout ratio",
         "Top-up profit factored in. Ratio > 100% means you profit even after cashing out.":
             "Top-up profit factored in. Ratio > 100% means you profit even after cashing out.",
+        # --- Режим 4 ---
+        "Where to sell more profitably?": "Where to sell more profitably?",
+        "We compare selling a skin on a third-party site (then topping up Steam at a profit) "
+        "versus selling it directly on the Steam Market.":
+            "We compare selling a skin on a third-party site (then topping up Steam at a profit) "
+            "versus selling it directly on the Steam Market.",
+        "Sell on third-party site → top up Steam": "Sell on third-party site → top up Steam",
+        "Sell on Steam Market directly": "Sell on Steam Market directly",
+        "Steam sell price (buyer pays)": "Steam sell price (buyer pays)",
+        "Steam Market fee (%)": "Steam Market fee (%)",
+        "Steam balance via site (with top-up)": "Steam balance via site (with top-up)",
+        "Steam balance via Steam Market": "Steam balance via Steam Market",
+        "Real money from site: {amount}": "Real money from site: {amount}",
+        "Selling via site and topping up Steam is more profitable. "
+        "Extra Steam balance: {amount}.":
+            "Selling via site and topping up Steam is more profitable. "
+            "Extra Steam balance: {amount}.",
+        "Selling on Steam Market is more profitable. "
+        "Extra Steam balance: {amount}.":
+            "Selling on Steam Market is more profitable. "
+            "Extra Steam balance: {amount}.",
+        "Both options yield the same Steam balance.":
+            "Both options yield the same Steam balance.",
+        "MODE4_FORMULAS":
+            "**Side A — Sell on site, top up Steam:**\n"
+            "- Gross revenue = site sell price × qty\n"
+            "- After sales fee = gross × (1 − sales fee% / 100)\n"
+            "- Real money = after sales fee × (1 − withdrawal fee% / 100) − fixed fee\n"
+            "- **Steam balance (A)** = real money × (1 + top-up profit% / 100)\n\n"
+            "**Side B — Sell on Steam Market directly:**\n"
+            "- **Steam balance (B)** = seller's cut from Steam Market × qty\n"
+            "  *(Steam takes ~15% for CS2: 10% publisher + 5% platform; "
+            "  for integer currencies the exact Valve rounding model is used)*\n\n"
+            "**Comparison:** whichever side gives more Steam balance is recommended.",
     },
     "ru": {
         # --- сайдбар / общее ---
@@ -309,6 +343,40 @@ TRANSLATIONS = {
         "Effective cashout ratio": "Эффективный коэффициент вывода",
         "Top-up profit factored in. Ratio > 100% means you profit even after cashing out.":
             "Учтён плюс пополнения. Коэффициент > 100% означает, что вы в плюсе даже после вывода.",
+        # --- Режим 4 ---
+        "Where to sell more profitably?": "Где продать выгоднее?",
+        "We compare selling a skin on a third-party site (then topping up Steam at a profit) "
+        "versus selling it directly on the Steam Market.":
+            "Сравниваем продажу скина на стороннем сайте (с последующим пополнением Steam в плюс) "
+            "и продажу напрямую через Steam Market.",
+        "Sell on third-party site → top up Steam": "Продать на стороннем сайте → пополнить Steam",
+        "Sell on Steam Market directly": "Продать на Steam Market напрямую",
+        "Steam sell price (buyer pays)": "Цена на Steam Market (платит покупатель)",
+        "Steam Market fee (%)": "Комиссия Steam Market (%)",
+        "Steam balance via site (with top-up)": "Баланс Steam через сайт (с пополнением)",
+        "Steam balance via Steam Market": "Баланс Steam через Steam Market",
+        "Real money from site: {amount}": "Реальных денег с сайта: {amount}",
+        "Selling via site and topping up Steam is more profitable. "
+        "Extra Steam balance: {amount}.":
+            "Выгоднее продать через сайт и пополнить Steam. "
+            "Дополнительный баланс: {amount}.",
+        "Selling on Steam Market is more profitable. "
+        "Extra Steam balance: {amount}.":
+            "Выгоднее продать на Steam Market напрямую. "
+            "Дополнительный баланс: {amount}.",
+        "Both options yield the same Steam balance.":
+            "Оба варианта дают одинаковый Steam-баланс.",
+        "MODE4_FORMULAS":
+            "**Вариант А — Продать на сайте, пополнить Steam:**\n"
+            "- Грязная выручка = цена продажи на сайте × кол-во\n"
+            "- После комиссии продажи = грязная выручка × (1 − %комиссии продажи / 100)\n"
+            "- Реальные деньги = после комиссии × (1 − %комиссии вывода / 100) − фикса\n"
+            "- **Баланс Steam (А)** = реальные деньги × (1 + %плюса пополнения / 100)\n\n"
+            "**Вариант Б — Продать на Steam Market напрямую:**\n"
+            "- **Баланс Steam (Б)** = выручка продавца с учётом комиссии Steam × кол-во\n"
+            "  *(Steam удерживает ~15% для CS2: 10% издательская + 5% площадка; "
+            "  для целочисленных валют применяется точная модель округления Valve)*\n\n"
+            "**Сравнение:** рекомендуется вариант, дающий больший Steam-баланс.",
     },
     "uk": {
         # --- сайдбар / загальне ---
@@ -456,6 +524,40 @@ TRANSLATIONS = {
         "Effective cashout ratio": "Ефективний коефіцієнт виведення",
         "Top-up profit factored in. Ratio > 100% means you profit even after cashing out.":
             "Враховано плюс поповнення. Коефіцієнт > 100% означає, що ви в плюсі навіть після виведення.",
+        # --- Режим 4 ---
+        "Where to sell more profitably?": "Де продати вигідніше?",
+        "We compare selling a skin on a third-party site (then topping up Steam at a profit) "
+        "versus selling it directly on the Steam Market.":
+            "Порівнюємо продаж скіна на сторонньому сайті (з подальшим поповненням Steam у плюс) "
+            "та продаж напряму через Steam Market.",
+        "Sell on third-party site → top up Steam": "Продати на сторонньому сайті → поповнити Steam",
+        "Sell on Steam Market directly": "Продати на Steam Market напряму",
+        "Steam sell price (buyer pays)": "Ціна на Steam Market (платить покупець)",
+        "Steam Market fee (%)": "Комісія Steam Market (%)",
+        "Steam balance via site (with top-up)": "Баланс Steam через сайт (з поповненням)",
+        "Steam balance via Steam Market": "Баланс Steam через Steam Market",
+        "Real money from site: {amount}": "Реальних грошей з сайту: {amount}",
+        "Selling via site and topping up Steam is more profitable. "
+        "Extra Steam balance: {amount}.":
+            "Вигідніше продати через сайт і поповнити Steam. "
+            "Додатковий баланс: {amount}.",
+        "Selling on Steam Market is more profitable. "
+        "Extra Steam balance: {amount}.":
+            "Вигідніше продати на Steam Market напряму. "
+            "Додатковий баланс: {amount}.",
+        "Both options yield the same Steam balance.":
+            "Обидва варіанти дають однаковий Steam-баланс.",
+        "MODE4_FORMULAS":
+            "**Варіант А — Продати на сайті, поповнити Steam:**\n"
+            "- Брудна виручка = ціна продажу на сайті × к-сть\n"
+            "- Після комісії продажу = брудна виручка × (1 − %комісії продажу / 100)\n"
+            "- Реальні гроші = після комісії × (1 − %комісії виведення / 100) − фікса\n"
+            "- **Баланс Steam (А)** = реальні гроші × (1 + %плюса поповнення / 100)\n\n"
+            "**Варіант Б — Продати на Steam Market напряму:**\n"
+            "- **Баланс Steam (Б)** = виручка продавця з урахуванням комісії Steam × к-сть\n"
+            "  *(Steam утримує ~15% для CS2: 10% видавнича + 5% майданчик; "
+            "  для цілочисельних валют застосовується точна модель округлення Valve)*\n\n"
+            "**Порівняння:** рекомендується варіант, що дає більший Steam-баланс.",
     },
 }
 
@@ -1204,9 +1306,248 @@ def calculate_mode_2(currency, advanced):
         st.markdown(_("MODE2_FORMULAS"))
 
 
+def calculate_sell_via_site_topup(site_sell_price, quantity, sales_fee_percent,
+                                   withdrawal_fee_percent, withdrawal_fixed_fee,
+                                   deposit_profit_percent):
+    """Steam-баланс от продажи на сайте с последующим пополнением Steam (Режим 4).
+
+    Шаги:
+        gross_revenue = site_sell_price × quantity
+        after_sales   = gross × (1 − sales_fee_percent / 100)
+        real_money    = after_sales × (1 − withdrawal_fee_percent / 100) − withdrawal_fixed_fee
+        steam_balance = real_money × (1 + deposit_profit_percent / 100)
+
+    При deposit_profit_percent = 0 steam_balance равен real_money (пополнение 1:1).
+
+    Возвращает dict с ключами:
+        «gross»         — выручка до комиссий,
+        «real_money»    — реальные деньги после всех удержаний,
+        «steam_balance» — итоговый Steam-баланс.
+    """
+    site_sell_price = max(0.0, float(site_sell_price))
+    quantity = max(1, int(quantity))
+    sales_fee_percent = min(100.0, max(0.0, float(sales_fee_percent)))
+    withdrawal_fee_percent = min(100.0, max(0.0, float(withdrawal_fee_percent)))
+    withdrawal_fixed_fee = max(0.0, float(withdrawal_fixed_fee))
+
+    gross = site_sell_price * quantity
+    after_sales = gross * (1.0 - sales_fee_percent / 100.0)
+    after_withdrawal = after_sales * (1.0 - withdrawal_fee_percent / 100.0)
+    real_money = max(0.0, after_withdrawal - withdrawal_fixed_fee)
+
+    divisor = 1.0 + float(deposit_profit_percent) / 100.0
+    steam_balance = real_money * max(0.0, divisor)
+    return {"gross": gross, "real_money": real_money, "steam_balance": steam_balance}
+
+
+def calculate_steam_market_sell(steam_sell_price, quantity, total_steam_fee_percent,
+                                 currency_code):
+    """Steam-баланс от продажи на Steam Market напрямую (Режим 4).
+
+    Для целочисленных валют (UAH, JPY, …) применяется точная модель Valve:
+    round(10%)+round(5%) от суммы продавца с минимумом в одну единицу. Цена
+    buyer-side проходит через get_valid_steam_price, чтобы учесть недостижимые
+    цены так же, как реальная торговая площадка.
+
+    Для дробных валют используется расчёт в центах (floor-модель).
+
+    Возвращает dict: «seller_per_unit» — продавцу за единицу, «steam_balance» — итого.
+    """
+    steam_sell_price = max(0.0, float(steam_sell_price))
+    quantity = max(1, int(quantity))
+    total_steam_fee_percent = max(0.0, float(total_steam_fee_percent))
+    cs2_fee_pct, steam_fee_pct = _split_total_fee(total_steam_fee_percent)
+    int_ccy = is_integer_currency(currency_code)
+    if int_ccy:
+        unit_price = float(int(round(steam_sell_price)))
+        seller_per_unit = calculate_exact_steam_revenue(
+            unit_price, is_integer_currency=True,
+            cs2_fee_pct=cs2_fee_pct, steam_fee_pct=steam_fee_pct)[0]
+    else:
+        seller_per_unit = calculate_steam_received(steam_sell_price, total_steam_fee_percent)
+    return {"seller_per_unit": seller_per_unit, "steam_balance": seller_per_unit * quantity}
+
+
 # ===========================================================================
-# РЕЖИМ 3: КАЛЬКУЛЯТОР ВЫВОДА СРЕДСТВ ("CASHOUT")
+# РЕЖИМ 4: АНАЛИЗАТОР ВЫГОДНОЙ ПРОДАЖИ ("ГДЕ ПРОДАТЬ ВЫГОДНЕЕ?")
 # ===========================================================================
+
+def calculate_mode_4(currency, advanced):
+    """Интерфейс Режима 4. currency — валюта отображения; advanced — режим кросс-курсов.
+
+    Сравниваем два пути продажи скина:
+        Вариант А — продать на стороннем сайте, вывести деньги и пополнить Steam в плюс;
+        Вариант Б — продать напрямую на Steam Market (Steam удерживает ~15%).
+
+    Оба варианта дают Steam-баланс как итог, поэтому сравнение прямое.
+    """
+    st.subheader("📊 " + _("Where to sell more profitably?"))
+    st.write(_(
+        "We compare selling a skin on a third-party site (then topping up Steam at a profit) "
+        "versus selling it directly on the Steam Market."
+    ))
+
+    # --- Вне формы: (опц.) валюты кросс-курсов ---
+    spent_ccy = site_ccy = steam_ccy = None
+    if advanced:
+        spent_ccy, site_ccy, steam_ccy = render_cross_currency_selectors("m4")
+
+    rate_site_to_spent, rate_steam_to_spent = 1.0, 1.0
+
+    # --- Форма ---
+    with st.form("m4_form"):
+        col_site, col_steam = st.columns(2)
+
+        with col_site:
+            st.markdown("#### 🛒 " + _("Sell on third-party site → top up Steam"))
+            site_sell_price = st.number_input(
+                _("Site sell price"),
+                min_value=0.0, value=12.0, step=0.5, key="m4_site_sell",
+            )
+            quantity = st.number_input(
+                _("Quantity"), min_value=1, value=1, step=1, key="m4_qty",
+            )
+            sales_fee = st.number_input(
+                _("Sales fee (%)"),
+                min_value=0.0, max_value=100.0, value=2.0, step=0.5, key="m4_sales_fee",
+            )
+            withdrawal_fee = st.number_input(
+                _("Withdrawal fee (%)"),
+                min_value=0.0, max_value=100.0, value=0.0, step=0.5, key="m4_wd_fee",
+            )
+            withdrawal_fixed_usd = st.number_input(
+                _("Withdrawal fixed fee (USD)"),
+                min_value=0.0, value=0.0, step=0.5, key="m4_wd_fixed",
+            )
+            deposit_profit = st.number_input(
+                _("Steam top-up profit (%)"),
+                min_value=-99.9, value=50.0, step=1.0, key="m4_deposit_profit",
+                help=_(
+                    "How profitably you topped up Steam earlier. "
+                    "Example: spent 10 real, got 15 on balance → 50% profit."
+                ),
+            )
+
+        with col_steam:
+            st.markdown("#### 🏪 " + _("Sell on Steam Market directly"))
+            steam_sell_price = st.number_input(
+                _("Steam sell price (buyer pays)"),
+                min_value=0.0, value=15.0, step=0.5, key="m4_steam_sell",
+                help=_("The price shown to buyers on the Steam Market."),
+            )
+            steam_fee_total = st.number_input(
+                _("Steam Market fee (%)"),
+                min_value=0.0, max_value=100.0, value=15.0, step=0.5, key="m4_steam_fee",
+                help="Steam CS2: 10% (publisher) + 5% (platform) = 15%.",
+            )
+
+        if advanced:
+            st.divider()
+            rate_site_to_spent, rate_steam_to_spent = render_cross_currency_rates(
+                "m4", spent_ccy, site_ccy, steam_ccy)
+
+        # Фиксированная комиссия вывода задаётся в USD → приводится к валюте сайта.
+        fixed_in_site = resolve_fixed_fee_in_target(
+            "m4", withdrawal_fixed_usd, True, advanced,
+            currency, spent_ccy, site_ccy, rate_site_to_spent)
+
+        submitted = st.form_submit_button("🧮 " + _("Calculate"),
+                                          type="primary", use_container_width=True)
+
+    if not submitted:
+        st.info(_("Press Calculate to see the results."))
+        return
+
+    # --- Контекст валют ---
+    if advanced:
+        output_ccy = spent_ccy or DEFAULT_CURRENCY
+        steam_side_ccy = steam_ccy or DEFAULT_CURRENCY
+    else:
+        output_ccy = currency
+        steam_side_ccy = currency
+
+    quantity = max(1, int(quantity))
+
+    # --- Вариант А: продать на сайте → реальные деньги → пополнить Steam ---
+    result_site = calculate_sell_via_site_topup(
+        site_sell_price=site_sell_price,
+        quantity=quantity,
+        sales_fee_percent=sales_fee,
+        withdrawal_fee_percent=withdrawal_fee,
+        withdrawal_fixed_fee=fixed_in_site,
+        deposit_profit_percent=deposit_profit,
+    )
+
+    # --- Вариант Б: продать напрямую на Steam Market ---
+    result_steam = calculate_steam_market_sell(
+        steam_sell_price=steam_sell_price,
+        quantity=quantity,
+        total_steam_fee_percent=steam_fee_total,
+        currency_code=steam_side_ccy,
+    )
+
+    # --- Приведение к базовой валюте для сравнения ---
+    if advanced:
+        # Вариант А: реальные деньги (сайт) → базовая валюта → мысленное пополнение Steam
+        # Вариант Б: Steam-баланс → базовая валюта (по курсу Steam→base)
+        real_money_base_a = result_site["real_money"] * max(0.0, rate_site_to_spent)
+        divisor_a = max(0.0, 1.0 + deposit_profit / 100.0)
+        steam_balance_a = real_money_base_a * divisor_a
+        steam_balance_b = result_steam["steam_balance"] * max(0.0, rate_steam_to_spent)
+    else:
+        steam_balance_a = result_site["steam_balance"]
+        steam_balance_b = result_steam["steam_balance"]
+
+    # --- Вывод результатов ---
+    st.divider()
+    st.markdown("### 📊 " + _("Results comparison"))
+
+    m_site, m_steam = st.columns(2)
+    m_site.metric(
+        _("Steam balance via site (with top-up)"),
+        format_currency(steam_balance_a, output_ccy),
+    )
+    # Подсказка: сколько реальных денег пришло с сайта (до пополнения)
+    real_money_display = (result_site["real_money"] * max(0.0, rate_site_to_spent)
+                          if advanced else result_site["real_money"])
+    m_site.caption(
+        _("Real money from site: {amount}").format(
+            amount=format_currency(real_money_display, output_ccy))
+    )
+
+    m_steam.metric(
+        _("Steam balance via Steam Market"),
+        format_currency(steam_balance_b, output_ccy),
+    )
+    # В продвинутом режиме — показываем исходные значения до конвертации.
+    if advanced:
+        st.caption(
+            f"{_('Site')} → real: {format_currency(result_site['real_money'], site_ccy or '?')} · "
+            f"{_('Steam Market')} → balance: "
+            f"{format_currency(result_steam['steam_balance'], steam_side_ccy or '?')}"
+        )
+
+    # --- Вердикт ---
+    diff = steam_balance_a - steam_balance_b
+    both_zero = steam_balance_a <= 0 and steam_balance_b <= 0
+
+    if both_zero:
+        st.info(_("Enter data to see the comparison."))
+    elif diff > 1e-4:
+        st.success(_(
+            "Selling via site and topping up Steam is more profitable. "
+            "Extra Steam balance: {amount}."
+        ).format(amount=format_currency(diff, output_ccy)))
+    elif diff < -1e-4:
+        st.success(_(
+            "Selling on Steam Market is more profitable. "
+            "Extra Steam balance: {amount}."
+        ).format(amount=format_currency(-diff, output_ccy)))
+    else:
+        st.warning(_("Both options yield the same Steam balance."))
+
+    with st.expander("ℹ️ " + _("Calculation formulas")):
+        st.markdown(_("MODE4_FORMULAS"))
 
 def calculate_mode_3(currency, advanced):
     """Интерфейс Режима 3. currency — валюта отображения; advanced — режим кросс-курсов.
@@ -1439,10 +1780,11 @@ def main():
     st.caption(_("Steam balance top-up profit calculator and skin purchase analyzer"))
 
     # --- Вкладки режимов ---
-    tab_mode_1, tab_mode_2, tab_mode_3 = st.tabs([
+    tab_mode_1, tab_mode_2, tab_mode_3, tab_mode_4 = st.tabs([
         "💰 " + _("Balance top-up (profit)"),
         "🔍 " + _("Where to buy cheaper?"),
         "💳 " + _("Withdrawal (Cashout)"),
+        "📈 " + _("Where to sell more profitably?"),
     ])
     with tab_mode_1:
         calculate_mode_1(currency, advanced)
@@ -1450,6 +1792,8 @@ def main():
         calculate_mode_2(currency, advanced)
     with tab_mode_3:
         calculate_mode_3(currency, advanced)
+    with tab_mode_4:
+        calculate_mode_4(currency, advanced)
 
     # --- Юридический футер (i18n): копирайт и товарные знаки Valve ---
     st.divider()
