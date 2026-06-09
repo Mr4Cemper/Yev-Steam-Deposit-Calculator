@@ -196,6 +196,73 @@ TRANSLATIONS = {
             "  *(Steam takes ~15% for CS2: 10% publisher + 5% platform; "
             "  for integer currencies the exact Valve rounding model is used)*\n\n"
             "**Comparison:** whichever side gives more Steam balance is recommended.",
+        # --- Режим 5 ---
+        "Best rarity to buy (collection)": "Best rarity to buy (collection)",
+        "We rank which rarity in a collection is the best buy, based on the price ratio "
+        "between adjacent rarities (10 lower-rarity items trade up into 1 higher-rarity item).":
+            "We rank which rarity in a collection is the best buy, based on the price ratio "
+            "between adjacent rarities (10 lower-rarity items trade up into 1 higher-rarity item).",
+        "Enter prices in ONE currency. Use one float tier (or the tier that best fits your goal): "
+        "for most filler the result is nearly the same regardless of quality; it only matters for "
+        "low-float crafts (0.01+). Leave a rarity at 0 to exclude it from the collection.":
+            "Enter prices in ONE currency. Use one float tier (or the tier that best fits your goal): "
+            "for most filler the result is nearly the same regardless of quality; it only matters for "
+            "low-float crafts (0.01+). Leave a rarity at 0 to exclude it from the collection.",
+        "Rarity prices": "Rarity prices",
+        "Price (0 = not in collection)": "Price (0 = not in collection)",
+        "Rarity": "Rarity",
+        "Price": "Price",
+        "Ratio": "Ratio",
+        "Rank": "Rank",
+        "Comment": "Comment",
+        "Enter at least two rarity prices to compare.": "Enter at least two rarity prices to compare.",
+        "Best buy: {rarity} (rank {rank})": "Best buy: {rarity} (rank {rank})",
+        "Ranking (higher = better buy)": "Ranking (higher = better buy)",
+        "{n}× this rarity = one rarity above": "{n}× this rarity = one rarity above",
+        "this rarity = {n}× the rarity below": "this rarity = {n}× the rarity below",
+        "rarity_consumer": "Consumer Grade (grey)",
+        "rarity_industrial": "Industrial Grade (light blue)",
+        "rarity_milspec": "Mil-Spec (blue)",
+        "rarity_restricted": "Restricted (purple)",
+        "rarity_classified": "Classified (pink)",
+        "rarity_covert": "Covert (red)",
+        "rk_over": "overpriced — bad buy",
+        "rk_over_slight": "slightly overpriced",
+        "rk_normal": "normal average ratio",
+        "rk_good": "a bit better than average",
+        "rk_under": "underpriced — good buy",
+        "rk_under_susp": "underpriced, suspicious — check liquidity",
+        "rk_exp": "expensive vs lower tier",
+        "rk_exp_slight": "a bit expensive",
+        "rk_cheap": "cheap vs lower tier — good buy",
+        "rk_cheap_susp": "very cheap, suspicious — check liquidity",
+        "Enter the price you consider fair for each rarity. Tick the box if you "
+        "find that rarity's skins beautiful or especially liquid.":
+            "Enter the price you consider fair for each rarity. Tick the box if you "
+            "find that rarity's skins beautiful or especially liquid.",
+        "Beautiful / liquid?": "Beautiful / liquid?",
+        "rk_top_note": "(Top rarity: it can't be crafted up and its supply only grows, "
+                       "so its rank carries a penalty.)",
+        "MODE5_FORMULAS":
+            "For each rarity except the highest, ratio = **price(rarity above) / price(this rarity)** "
+            "— how many of this rarity, by price, equal one item of the rarity above. A trade-up turns "
+            "10 of one rarity into 1 of the next, so a **bigger ratio** means this rarity is cheap "
+            "relative to what it becomes → a better buy:\n\n"
+            "- ≤ 2 → **E** (this tier overpriced)\n"
+            "- 2–4 → **D**\n"
+            "- 4–5.5 → **C** (normal)\n"
+            "- 5.5–6.5 → **B**\n"
+            "- 6.5–8 → **A** (this tier underpriced)\n"
+            "- 8–10 → **A+**\n"
+            "- > 10 → **A++** (unusual — 10 of these craft 1 above; check the higher tier's liquidity)\n\n"
+            "The **highest** rarity is scored in reverse (nothing is above it): its ratio vs the tier "
+            "below is flipped, then a penalty is applied (−2 if it lands on A or above, −1 for B/C/D/E) "
+            "because the top rarity can't be crafted upward and its supply only grows.\n\n"
+            "**Beauty / liquidity:** ticking a rarity adds +0.5 to its ratio and to the tier one below, "
+            "+0.25 to the tier two below (nothing three below); it never affects a rarity above the "
+            "ticked one. For the top rarity the bonus instead improves its reversed score.\n\n"
+            "Empty/0 prices are skipped, so collections missing some rarities are handled. "
+            "This is a heuristic on the prices you enter, not financial advice.",
     },
     "ru": {
         # --- сайдбар / общее ---
@@ -377,6 +444,76 @@ TRANSLATIONS = {
             "  *(Steam удерживает ~15% для CS2: 10% издательская + 5% площадка; "
             "  для целочисленных валют применяется точная модель округления Valve)*\n\n"
             "**Сравнение:** рекомендуется вариант, дающий больший Steam-баланс.",
+        # --- Режим 5 ---
+        "Best rarity to buy (collection)": "Лучшее качество для покупки (коллекция)",
+        "We rank which rarity in a collection is the best buy, based on the price ratio "
+        "between adjacent rarities (10 lower-rarity items trade up into 1 higher-rarity item).":
+            "Оцениваем, какое качество в коллекции выгоднее покупать, по соотношению цен соседних "
+            "качеств (10 предметов нижнего качества через контракт обмена дают 1 предмет выше).",
+        "Enter prices in ONE currency. Use one float tier (or the tier that best fits your goal): "
+        "for most filler the result is nearly the same regardless of quality; it only matters for "
+        "low-float crafts (0.01+). Leave a rarity at 0 to exclude it from the collection.":
+            "Вводи цены в ОДНОЙ валюте. Используй одно качество флоата (или наиболее подходящее под "
+            "твою цель): для большинства филлеров результат почти одинаков вне зависимости от качества; "
+            "это важно только для крафтов низких флотов (0,01 и выше). Оставь 0, чтобы исключить "
+            "качество из коллекции.",
+        "Rarity prices": "Цены по качествам",
+        "Price (0 = not in collection)": "Цена (0 = нет в коллекции)",
+        "Rarity": "Качество",
+        "Price": "Цена",
+        "Ratio": "Соотношение",
+        "Rank": "Ранг",
+        "Comment": "Комментарий",
+        "Enter at least two rarity prices to compare.":
+            "Введи цены минимум для двух качеств для сравнения.",
+        "Best buy: {rarity} (rank {rank})": "Выгоднее всего покупать: {rarity} (ранг {rank})",
+        "Ranking (higher = better buy)": "Рейтинг (выше — выгоднее покупать)",
+        "{n}× this rarity = one rarity above": "{n}× этого качества = одно качество выше",
+        "this rarity = {n}× the rarity below": "это качество = {n}× качества ниже",
+        "rarity_consumer": "Ширпотреб (серое)",
+        "rarity_industrial": "Промышленное (голубое)",
+        "rarity_milspec": "Армейское (синее)",
+        "rarity_restricted": "Запрещённое (фиолетовое)",
+        "rarity_classified": "Засекреченное (розовое)",
+        "rarity_covert": "Тайное (красное)",
+        "rk_over": "переоценено — невыгодно покупать",
+        "rk_over_slight": "слегка переоценено",
+        "rk_normal": "нормальное среднее соотношение",
+        "rk_good": "чуть лучше среднего",
+        "rk_under": "недооценено — выгодно покупать",
+        "rk_under_susp": "недооценено, подозрительно — проверь ликвидность",
+        "rk_exp": "дорогое относительно качества ниже",
+        "rk_exp_slight": "дороговато",
+        "rk_cheap": "дёшево относительно качества ниже — выгодно",
+        "rk_cheap_susp": "очень дёшево, подозрительно — проверь ликвидность",
+        "Enter the price you consider fair for each rarity. Tick the box if you "
+        "find that rarity's skins beautiful or especially liquid.":
+            "Укажи цену, которую считаешь справедливой для каждого качества. Отметь галочку, "
+            "если скины этого качества красивые или особенно ликвидные.",
+        "Beautiful / liquid?": "Красивое / ликвидное?",
+        "rk_top_note": "(Высшее качество: его нельзя скрафтить выше, а предложение только "
+                       "растёт, поэтому к рангу применён штраф.)",
+        "MODE5_FORMULAS":
+            "Для каждого качества, кроме высшего, соотношение = **цена качества выше / цена этого "
+            "качества** — сколько штук этого качества по цене равны одному предмету качества выше. "
+            "Контракт превращает 10 предметов одного качества в 1 предмет следующего, поэтому "
+            "**большее соотношение** означает, что качество дёшево относительно того, чем становится "
+            "→ выгоднее покупать:\n\n"
+            "- ≤ 2 → **E** (это качество переоценено)\n"
+            "- 2–4 → **D**\n"
+            "- 4–5.5 → **C** (норма)\n"
+            "- 5.5–6.5 → **B**\n"
+            "- 6.5–8 → **A** (это качество недооценено)\n"
+            "- 8–10 → **A+**\n"
+            "- > 10 → **A++** (необычно — 10 этих крафтят 1 выше; проверь ликвидность верхнего)\n\n"
+            "**Высшее** качество считается наоборот (выше него ничего нет): его соотношение к качеству "
+            "ниже реверсируется, затем применяется штраф (−2, если попадает на A и выше, −1 для B/C/D/E), "
+            "потому что высшее качество нельзя скрафтить дальше, а его предложение только растёт.\n\n"
+            "**Красота / ликвидность:** галочка добавляет +0.5 к соотношению этого качества и качества "
+            "на 1 ниже, +0.25 к качеству на 2 ниже (на 3 ниже — ничего); на качество выше отмеченного "
+            "бонус не влияет. Для высшего качества бонус, наоборот, улучшает его реверс-оценку.\n\n"
+            "Пустые цены/0 пропускаются, поэтому коллекции без некоторых качеств учитываются. "
+            "Это эвристика по введённым ценам, а не финансовая рекомендация.",
     },
     "uk": {
         # --- сайдбар / загальне ---
@@ -558,6 +695,76 @@ TRANSLATIONS = {
             "  *(Steam утримує ~15% для CS2: 10% видавнича + 5% майданчик; "
             "  для цілочисельних валют застосовується точна модель округлення Valve)*\n\n"
             "**Порівняння:** рекомендується варіант, що дає більший Steam-баланс.",
+        # --- Режим 5 ---
+        "Best rarity to buy (collection)": "Найкраща якість для купівлі (колекція)",
+        "We rank which rarity in a collection is the best buy, based on the price ratio "
+        "between adjacent rarities (10 lower-rarity items trade up into 1 higher-rarity item).":
+            "Оцінюємо, яку якість у колекції вигідніше купувати, за співвідношенням цін сусідніх "
+            "якостей (10 предметів нижчої якості через контракт обміну дають 1 предмет вище).",
+        "Enter prices in ONE currency. Use one float tier (or the tier that best fits your goal): "
+        "for most filler the result is nearly the same regardless of quality; it only matters for "
+        "low-float crafts (0.01+). Leave a rarity at 0 to exclude it from the collection.":
+            "Вводь ціни в ОДНІЙ валюті. Використовуй одну якість флоату (або найбільш відповідну до "
+            "твоєї мети): для більшості філерів результат майже однаковий незалежно від якості; "
+            "це важливо лише для крафтів низьких флоатів (0,01 і вище). Залиш 0, щоб виключити "
+            "якість із колекції.",
+        "Rarity prices": "Ціни за якостями",
+        "Price (0 = not in collection)": "Ціна (0 = немає в колекції)",
+        "Rarity": "Якість",
+        "Price": "Ціна",
+        "Ratio": "Співвідношення",
+        "Rank": "Ранг",
+        "Comment": "Коментар",
+        "Enter at least two rarity prices to compare.":
+            "Введи ціни мінімум для двох якостей для порівняння.",
+        "Best buy: {rarity} (rank {rank})": "Найвигідніше купувати: {rarity} (ранг {rank})",
+        "Ranking (higher = better buy)": "Рейтинг (вище — вигідніше купувати)",
+        "{n}× this rarity = one rarity above": "{n}× цієї якості = одна якість вище",
+        "this rarity = {n}× the rarity below": "ця якість = {n}× якості нижче",
+        "rarity_consumer": "Ширвжиток (сіре)",
+        "rarity_industrial": "Промислове (блакитне)",
+        "rarity_milspec": "Армійське (синє)",
+        "rarity_restricted": "Заборонене (фіолетове)",
+        "rarity_classified": "Засекречене (рожеве)",
+        "rarity_covert": "Таємне (червоне)",
+        "rk_over": "переоцінено — невигідно купувати",
+        "rk_over_slight": "трохи переоцінено",
+        "rk_normal": "нормальне середнє співвідношення",
+        "rk_good": "трохи краще за середнє",
+        "rk_under": "недооцінено — вигідно купувати",
+        "rk_under_susp": "недооцінено, підозріло — перевір ліквідність",
+        "rk_exp": "дороге відносно якості нижче",
+        "rk_exp_slight": "дорогувато",
+        "rk_cheap": "дешево відносно якості нижче — вигідно",
+        "rk_cheap_susp": "дуже дешево, підозріло — перевір ліквідність",
+        "Enter the price you consider fair for each rarity. Tick the box if you "
+        "find that rarity's skins beautiful or especially liquid.":
+            "Вкажи ціну, яку вважаєш справедливою для кожної якості. Постав галочку, "
+            "якщо скіни цієї якості гарні або особливо ліквідні.",
+        "Beautiful / liquid?": "Гарне / ліквідне?",
+        "rk_top_note": "(Найвища якість: її не можна скрафтити вище, а пропозиція лише "
+                       "зростає, тому до рангу застосовано штраф.)",
+        "MODE5_FORMULAS":
+            "Для кожної якості, крім найвищої, співвідношення = **ціна якості вище / ціна цієї "
+            "якості** — скільки штук цієї якості за ціною дорівнюють одному предмету якості вище. "
+            "Контракт перетворює 10 предметів однієї якості на 1 предмет наступної, тому "
+            "**більше співвідношення** означає, що якість дешева відносно того, чим стає "
+            "→ вигідніше купувати:\n\n"
+            "- ≤ 2 → **E** (ця якість переоцінена)\n"
+            "- 2–4 → **D**\n"
+            "- 4–5.5 → **C** (норма)\n"
+            "- 5.5–6.5 → **B**\n"
+            "- 6.5–8 → **A** (ця якість недооцінена)\n"
+            "- 8–10 → **A+**\n"
+            "- > 10 → **A++** (незвично — 10 цих крафтять 1 вище; перевір ліквідність верхньої)\n\n"
+            "**Найвища** якість рахується навпаки (вище неї нічого немає): її співвідношення до якості "
+            "нижче реверсується, потім застосовується штраф (−2, якщо потрапляє на A і вище, −1 для "
+            "B/C/D/E), бо найвищу якість не можна скрафтити далі, а її пропозиція лише зростає.\n\n"
+            "**Краса / ліквідність:** галочка додає +0.5 до співвідношення цієї якості та якості на 1 "
+            "нижче, +0.25 до якості на 2 нижче (на 3 нижче — нічого); на якість вище позначеної бонус "
+            "не впливає. Для найвищої якості бонус навпаки покращує її реверс-оцінку.\n\n"
+            "Порожні ціни/0 пропускаються, тож колекції без деяких якостей враховуються. "
+            "Це евристика за введеними цінами, а не фінансова порада.",
     },
 }
 
@@ -1369,6 +1576,260 @@ def calculate_steam_market_sell(steam_sell_price, quantity, total_steam_fee_perc
 
 
 # ===========================================================================
+# РЕЖИМ 5: ЛУЧШЕЕ КАЧЕСТВО ДЛЯ ПОКУПКИ В КОЛЛЕКЦИИ
+# ===========================================================================
+
+# Качества CS2 по возрастанию редкости: (ключ перевода, цвет редкости).
+RARITY_DEFS = [
+    ("rarity_consumer",   "#b0c3d9"),
+    ("rarity_industrial", "#5e98d9"),
+    ("rarity_milspec",    "#4b69ff"),
+    ("rarity_restricted", "#8847ff"),
+    ("rarity_classified", "#d32ce6"),
+    ("rarity_covert",     "#eb4b4b"),
+]
+
+# Цвета рангов для подсветки (выше ранг — выгоднее покупка).
+RANK_COLORS = {
+    "A++": "#1a9850", "A+": "#52b04f", "A": "#86cb66",
+    "B": "#b8b8b8", "C": "#9e9e9e",
+    "D": "#f08a4b", "E": "#e2563b",
+}
+
+
+_RARITY_RANKS = ["E", "D", "C", "B", "A", "A+", "A++"]  # индекс 0..6
+
+
+def _ratio_rank_index(ratio):
+    """Индекс ранга 0..6 (E..A++) по соотношению цен соседних качеств.
+
+    ratio — «во сколько раз дороже». Чем больше предметов нижнего качества по цене
+    эквивалентны одному верхнему, тем дешевле нижнее относительно того, во что оно
+    превращается контрактом 10->1, тем выгоднее покупка. Пороги заданы пользователем:
+        ≤2 → E, 2–4 → D, 4–5.5 → C, 5.5–6.5 → B, 6.5–8 → A, 8–10 → A+, >10 → A++.
+    Возвращает None при отсутствующем соотношении.
+    """
+    if ratio is None:
+        return None
+    if ratio <= 2.0:
+        return 0
+    if ratio <= 4.0:
+        return 1
+    if ratio <= 5.5:
+        return 2
+    if ratio <= 6.5:
+        return 3
+    if ratio <= 8.0:
+        return 4
+    if ratio <= 10.0:
+        return 5
+    return 6
+
+
+# Категория комментария по (ранг, роль). role: "lower" — обычное качество,
+# сравниваемое с тем, что выше; "highest" — высшее качество (наоборот).
+_RANK_COMMENT_KEYS = {
+    "lower":   {"E": "rk_over", "D": "rk_over_slight", "C": "rk_normal",
+                "B": "rk_good", "A": "rk_under", "A+": "rk_under", "A++": "rk_under_susp"},
+    "highest": {"E": "rk_exp", "D": "rk_exp_slight", "C": "rk_normal",
+                "B": "rk_good", "A": "rk_cheap", "A+": "rk_cheap", "A++": "rk_cheap_susp"},
+}
+
+# Порядок рангов для выбора лучшего (по убыванию привлекательности покупки).
+_RANK_ORDER = {"A++": 6, "A+": 5, "A": 4, "B": 3, "C": 2, "D": 1, "E": 0}
+
+
+def analyze_collection_rarities(tiers):
+    """Считает соотношения и инвестиционные ранги для заполненных качеств коллекции.
+
+    tiers — список словарей {«key», «name», «color», «price», «beautiful»} ТОЛЬКО
+    для качеств с ценой > 0, по возрастанию редкости (нижнее первым). Возвращает
+    тот же список, обогащённый ключами «ratio» (базовое соотношение), «rank»,
+    «rank_index», «role» («lower»/«highest»).
+
+    Логика рангов:
+        * НЕ высшее качество: ratio = цена_выше / цена_этого (сколько штук этого по
+          цене = одно качество выше). Ранг — по _ratio_rank_index. Чем больше ratio,
+          тем выгоднее покупка нижнего качества.
+        * ВЫСШЕЕ качество (выше ничего нет): ранг считается «наоборот». ratio =
+          цена_высшего / цена_ниже; индекс реверсируется (6 - idx, т.е. E<->A++).
+          Затем штраф за инфляцию саплая (высшее нельзя скрафтить дальше, его
+          предложение только растёт): для итогового A и выше −2, для B/C/D/E −1.
+          Штраф берётся от БАЗОВОГО ratio (структурно), чтобы бонус красоты его
+          не гасил.
+        * Бонус «красоты/ликвидности»: если у качества включён флаг, к его ratio и к
+          ratio качества на 1 ниже прибавляется +0.5, на 2 ниже +0.25 (на 3 ниже —
+          ничего). На качество ВЫШЕ отмеченного бонус не влияет. Для высшего
+          качества бонус, наоборот, СНИЖАЕТ его ratio (улучшает реверс-ранг).
+    """
+    n = len(tiers)
+
+    # Накопление бонуса красоты по списку активных качеств (снизу вверх).
+    bonus = [0.0] * n
+    for i, t in enumerate(tiers):
+        if t.get("beautiful"):
+            bonus[i] += 0.5
+            if i - 1 >= 0:
+                bonus[i - 1] += 0.5
+            if i - 2 >= 0:
+                bonus[i - 2] += 0.25
+
+    results = []
+    for i, t in enumerate(tiers):
+        price = t["price"]
+        if i < n - 1:  # не высшее: сравниваем с тем, что выше
+            higher = tiers[i + 1]["price"]
+            base_ratio = (higher / price) if price > 0 else None
+            role = "lower"
+            idx = _ratio_rank_index(base_ratio + bonus[i]) if base_ratio is not None else None
+        else:  # высшее: наоборот + штраф за инфляцию саплая
+            role = "highest"
+            lower = tiers[i - 1]["price"] if n >= 2 else 0.0
+            if n >= 2 and lower > 0:
+                base_ratio = price / lower
+                reversed_base = 6 - _ratio_rank_index(base_ratio)
+                penalty = 2 if reversed_base >= 4 else 1
+                eff = max(0.0, base_ratio - bonus[i])      # красота снижает M -> лучше
+                reversed_eff = 6 - _ratio_rank_index(eff)
+                idx = max(0, min(6, reversed_eff - penalty))
+            else:
+                base_ratio = None
+                idx = None
+        rank = _RARITY_RANKS[idx] if idx is not None else None
+        results.append({**t, "ratio": base_ratio, "rank": rank, "rank_index": idx, "role": role})
+    return results
+
+
+def calculate_mode_5(currency):
+    """Интерфейс Режима 5. Только одна валюта (кросс-курсы не применяются).
+
+    Пользователь вводит цены качеств коллекции; приложение ранжирует, какое
+    качество выгоднее покупать, по соотношению цен соседних качеств.
+    """
+    st.subheader("🎚️ " + _("Best rarity to buy (collection)"))
+    st.write(_(
+        "We rank which rarity in a collection is the best buy, based on the price ratio "
+        "between adjacent rarities (10 lower-rarity items trade up into 1 higher-rarity item)."
+    ))
+    st.info(_(
+        "Enter prices in ONE currency. Use one float tier (or the tier that best fits your goal): "
+        "for most filler the result is nearly the same regardless of quality; it only matters for "
+        "low-float crafts (0.01+). Leave a rarity at 0 to exclude it from the collection."
+    ))
+
+    with st.form("m5_form"):
+        st.markdown("#### 🎨 " + _("Rarity prices"))
+        st.caption(_(
+            "Enter the price you consider fair for each rarity. Tick the box if you "
+            "find that rarity's skins beautiful or especially liquid."
+        ))
+        h_name, h_price, h_beauty = st.columns([2, 1, 1])
+        h_name.markdown("**" + _("Rarity") + "**")
+        h_price.markdown("**" + _("Price") + "**")
+        h_beauty.markdown("**" + _("Beautiful / liquid?") + "**")
+        prices = {}
+        beauty = {}
+        for key, color in RARITY_DEFS:
+            label = (f"<span style='color:{color};font-weight:600;'>● </span>" + _(key))
+            c_name, c_price, c_beauty = st.columns([2, 1, 1])
+            with c_name:
+                st.markdown("<div style='padding-top:0.5rem;'>" + label + "</div>",
+                            unsafe_allow_html=True)
+            with c_price:
+                prices[key] = st.number_input(
+                    _(key), min_value=0.0, value=0.0, step=0.1,
+                    key=f"m5_price_{key}", label_visibility="collapsed",
+                )
+            with c_beauty:
+                beauty[key] = st.checkbox(
+                    _("Beautiful / liquid?"), value=False,
+                    key=f"m5_beauty_{key}", label_visibility="collapsed",
+                )
+        submitted = st.form_submit_button("🧮 " + _("Calculate"),
+                                          type="primary", use_container_width=True)
+
+    if not submitted:
+        st.info(_("Press Calculate to see the results."))
+        return
+
+    # Берём только заполненные качества (цена > 0), сохраняя порядок редкости.
+    tiers = []
+    for key, color in RARITY_DEFS:
+        price = prices.get(key, 0.0)
+        if price and price > 0:
+            tiers.append({"key": key, "name": _(key), "color": color,
+                          "price": float(price), "beautiful": bool(beauty.get(key))})
+
+    if len(tiers) < 2:
+        st.warning(_("Enter at least two rarity prices to compare."))
+        return
+
+    results = analyze_collection_rarities(tiers)
+
+    # --- Таблица результатов ---
+    st.divider()
+    st.markdown("### 📊 " + _("Ranking (higher = better buy)"))
+
+    header = (
+        "<tr>"
+        f"<th style='text-align:left;padding:6px 10px;'>{_('Rarity')}</th>"
+        f"<th style='text-align:right;padding:6px 10px;'>{_('Price')}</th>"
+        f"<th style='text-align:center;padding:6px 10px;'>{_('Ratio')}</th>"
+        f"<th style='text-align:center;padding:6px 10px;'>{_('Rank')}</th>"
+        f"<th style='text-align:left;padding:6px 10px;'>{_('Comment')}</th>"
+        "</tr>"
+    )
+    rows = []
+    for r in results:
+        rank = r["rank"]
+        rank_color = RANK_COLORS.get(rank, "#9e9e9e")
+        # После реверса ранг высшего качества означает то же, что у нижних: высокий
+        # ранг — выгодная покупка. Поэтому комментарий берём из единой шкалы, а для
+        # высшего качества добавляем пометку про штраф за инфляцию саплая.
+        comment_key = _RANK_COMMENT_KEYS["lower"].get(rank, "rk_normal") if rank else "rk_normal"
+        comment = _(comment_key) if rank else "—"
+        if rank and r["role"] == "highest":
+            comment += " " + _("rk_top_note")
+        if r["beautiful"]:
+            comment += " ✨"
+        if r["ratio"] is None:
+            ratio_str = "—"
+        elif r["role"] == "highest":
+            ratio_str = _("this rarity = {n}× the rarity below").format(n=f"{r['ratio']:.2f}")
+        else:
+            ratio_str = _("{n}× this rarity = one rarity above").format(n=f"{r['ratio']:.2f}")
+        rank_badge = (
+            f"<span style='background:{rank_color};color:white;padding:2px 8px;"
+            f"border-radius:6px;font-weight:700;'>{rank or '—'}</span>"
+        )
+        name_cell = f"<span style='color:{r['color']};font-weight:600;'>● </span>{r['name']}"
+        rows.append(
+            "<tr style='border-top:1px solid #3a3a3a;'>"
+            f"<td style='text-align:left;padding:6px 10px;'>{name_cell}</td>"
+            f"<td style='text-align:right;padding:6px 10px;'>{format_currency(r['price'], currency)}</td>"
+            f"<td style='text-align:center;padding:6px 10px;font-size:0.85em;'>{ratio_str}</td>"
+            f"<td style='text-align:center;padding:6px 10px;'>{rank_badge}</td>"
+            f"<td style='text-align:left;padding:6px 10px;font-size:0.9em;'>{comment}</td>"
+            "</tr>"
+        )
+    table_html = (
+        "<table style='width:100%;border-collapse:collapse;'>"
+        + "<thead>" + header + "</thead><tbody>" + "".join(rows) + "</tbody></table>"
+    )
+    st.markdown(table_html, unsafe_allow_html=True)
+
+    # --- Лучшая покупка: наивысший ранг среди качеств с оценкой ---
+    ranked = [r for r in results if r["rank"] is not None]
+    if ranked:
+        best = max(ranked, key=lambda r: _RANK_ORDER.get(r["rank"], -1))
+        st.success(_("Best buy: {rarity} (rank {rank})").format(
+            rarity=best["name"], rank=best["rank"]))
+
+    with st.expander("ℹ️ " + _("Calculation formulas")):
+        st.markdown(_("MODE5_FORMULAS"))
+
+
+# ===========================================================================
 # РЕЖИМ 4: АНАЛИЗАТОР ВЫГОДНОЙ ПРОДАЖИ ("ГДЕ ПРОДАТЬ ВЫГОДНЕЕ?")
 # ===========================================================================
 
@@ -1548,6 +2009,7 @@ def calculate_mode_4(currency, advanced):
 
     with st.expander("ℹ️ " + _("Calculation formulas")):
         st.markdown(_("MODE4_FORMULAS"))
+
 
 def calculate_mode_3(currency, advanced):
     """Интерфейс Режима 3. currency — валюта отображения; advanced — режим кросс-курсов.
@@ -1780,11 +2242,12 @@ def main():
     st.caption(_("Steam balance top-up profit calculator and skin purchase analyzer"))
 
     # --- Вкладки режимов ---
-    tab_mode_1, tab_mode_2, tab_mode_3, tab_mode_4 = st.tabs([
+    tab_mode_1, tab_mode_2, tab_mode_3, tab_mode_4, tab_mode_5 = st.tabs([
         "💰 " + _("Balance top-up (profit)"),
         "🔍 " + _("Where to buy cheaper?"),
         "💳 " + _("Withdrawal (Cashout)"),
         "📈 " + _("Where to sell more profitably?"),
+        "🎚️ " + _("Best rarity to buy (collection)"),
     ])
     with tab_mode_1:
         calculate_mode_1(currency, advanced)
@@ -1794,6 +2257,8 @@ def main():
         calculate_mode_3(currency, advanced)
     with tab_mode_4:
         calculate_mode_4(currency, advanced)
+    with tab_mode_5:
+        calculate_mode_5(currency)
 
     # --- Юридический футер (i18n): копирайт и товарные знаки Valve ---
     st.divider()
