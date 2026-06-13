@@ -105,7 +105,7 @@ _INTEGER_CURRENCY_ALIASES = {
 USD_CODES = {"usd", "$", "usd.", "us$"}
 
 # Языки: отображаемое имя -> код.
-LANG_OPTIONS = {"English": "en", "Русский": "ru", "Українська": "uk"}
+LANG_OPTIONS = {"English": "en", "Русский": "ru", "Українська": "ua"}
 DEFAULT_LANG_NAME = "English"   # язык интерфейса по умолчанию
 
 
@@ -120,9 +120,9 @@ _CURRENT_LANG = "en"
 
 
 def set_language(code):
-    """Задаёт активный язык интерфейса ('en' | 'ru' | 'uk')."""
+    """Задаёт активный язык интерфейса ('en' | 'ru' | 'ua')."""
     global _CURRENT_LANG
-    _CURRENT_LANG = code if code in ("en", "ru", "uk") else "en"
+    _CURRENT_LANG = code if code in ("en", "ru", "ua") else "en"
 
 
 def _(key):
@@ -208,12 +208,8 @@ TRANSLATIONS = {
         "between adjacent rarities (10 lower-rarity items trade up into 1 higher-rarity item).":
             "We rank which rarity in a collection is the best buy, based on the price ratio "
             "between adjacent rarities (10 lower-rarity items trade up into 1 higher-rarity item).",
-        "Enter prices in ONE currency. Use one float tier (or the tier that best fits your goal): "
-        "for most filler the result is nearly the same regardless of quality; it only matters for "
-        "low-float crafts (0.01+). Leave a rarity at 0 to exclude it from the collection.":
-            "Enter prices in ONE currency. Use one float tier (or the tier that best fits your goal): "
-            "for most filler the result is nearly the same regardless of quality; it only matters for "
-            "low-float crafts (0.01+). Leave a rarity at 0 to exclude it from the collection.",
+        "Prices in one currency; use a single float tier (preferably the lowest). Leave a rarity at 0 to exclude it from the collection.":
+            "Prices in one currency; use a single float tier (preferably the lowest). Leave a rarity at 0 to exclude it from the collection.",
         "Rarity prices": "Rarity prices",
         "Price (0 = not in collection)": "Price (0 = not in collection)",
         "Rarity": "Rarity",
@@ -242,6 +238,9 @@ TRANSLATIONS = {
         "rk_exp_slight": "a bit expensive",
         "rk_cheap": "cheap vs lower tier — good buy",
         "rk_cheap_susp": "very cheap, suspicious — check liquidity",
+        "rk_over_strong": "strongly overpriced — bad buy",
+        "rk_below": "below average",
+        "rk_exp_strong": "very expensive vs the lower tier",
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Enter the price you consider fair for each rarity. Tick the box if you "
@@ -254,9 +253,10 @@ TRANSLATIONS = {
             "— how many of this rarity, by price, equal one item of the rarity above. A trade-up turns "
             "10 of one rarity into 1 of the next, so a **bigger ratio** means this rarity is cheap "
             "relative to what it becomes → a better buy:\n\n"
-            "- ≤ 2 → **E** (this tier overpriced)\n"
-            "- 2–4 → **D**\n"
-            "- 4–5.5 → **C** (normal)\n"
+            "- ≤ 2 → **F** (strongly overpriced)\n"
+            "- 2–3.5 → **E** (overpriced)\n"
+            "- 3.5–4.5 → **D** (below average)\n"
+            "- 4.5–5.5 → **C** (average)\n"
             "- 5.5–6.5 → **B**\n"
             "- 6.5–8 → **A** (this tier underpriced)\n"
             "- 8–10 → **A+**\n"
@@ -458,13 +458,8 @@ TRANSLATIONS = {
         "between adjacent rarities (10 lower-rarity items trade up into 1 higher-rarity item).":
             "Оцениваем, какое качество в коллекции выгоднее покупать, по соотношению цен соседних "
             "качеств (10 предметов нижнего качества через контракт обмена дают 1 предмет выше).",
-        "Enter prices in ONE currency. Use one float tier (or the tier that best fits your goal): "
-        "for most filler the result is nearly the same regardless of quality; it only matters for "
-        "low-float crafts (0.01+). Leave a rarity at 0 to exclude it from the collection.":
-            "Вводи цены в ОДНОЙ валюте. Используй одно качество флоата (или наиболее подходящее под "
-            "твою цель): для большинства филлеров результат почти одинаков вне зависимости от качества; "
-            "это важно только для крафтов низких флотов (0,01 и выше). Оставь 0, чтобы исключить "
-            "качество из коллекции.",
+        "Prices in one currency; use a single float tier (preferably the lowest). Leave a rarity at 0 to exclude it from the collection.":
+            "Цены в одной валюте; используй одно качество флоата (желательно самое низкое). Оставь 0, чтобы исключить редкость из коллекции.",
         "Rarity prices": "Цены по качествам",
         "Price (0 = not in collection)": "Цена (0 = нет в коллекции)",
         "Rarity": "Качество",
@@ -494,6 +489,9 @@ TRANSLATIONS = {
         "rk_exp_slight": "дороговато",
         "rk_cheap": "дёшево относительно качества ниже — выгодно",
         "rk_cheap_susp": "очень дёшево, подозрительно — проверь ликвидность",
+        "rk_over_strong": "сильно переоценено — невыгодно покупать",
+        "rk_below": "ниже среднего",
+        "rk_exp_strong": "очень дорогое относительно качества ниже",
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Укажи цену, которую считаешь справедливой для каждого качества. Отметь галочку, "
@@ -507,9 +505,10 @@ TRANSLATIONS = {
             "Контракт превращает 10 предметов одного качества в 1 предмет следующего, поэтому "
             "**большее соотношение** означает, что качество дёшево относительно того, чем становится "
             "→ выгоднее покупать:\n\n"
-            "- ≤ 2 → **E** (это качество переоценено)\n"
-            "- 2–4 → **D**\n"
-            "- 4–5.5 → **C** (норма)\n"
+            "- ≤ 2 → **F** (сильно переоценено)\n"
+            "- 2–3.5 → **E** (переоценено)\n"
+            "- 3.5–4.5 → **D** (ниже среднего)\n"
+            "- 4.5–5.5 → **C** (среднее)\n"
             "- 5.5–6.5 → **B**\n"
             "- 6.5–8 → **A** (это качество недооценено)\n"
             "- 8–10 → **A+**\n"
@@ -523,7 +522,7 @@ TRANSLATIONS = {
             "Пустые цены/0 пропускаются, поэтому коллекции без некоторых качеств учитываются. "
             "Это эвристика по введённым ценам, а не финансовая рекомендация.",
     },
-    "uk": {
+    "ua": {
         # --- сайдбар / загальне ---
         "Settings": "Налаштування",
         "Language": "Мова",
@@ -711,13 +710,8 @@ TRANSLATIONS = {
         "between adjacent rarities (10 lower-rarity items trade up into 1 higher-rarity item).":
             "Оцінюємо, яку якість у колекції вигідніше купувати, за співвідношенням цін сусідніх "
             "якостей (10 предметів нижчої якості через контракт обміну дають 1 предмет вище).",
-        "Enter prices in ONE currency. Use one float tier (or the tier that best fits your goal): "
-        "for most filler the result is nearly the same regardless of quality; it only matters for "
-        "low-float crafts (0.01+). Leave a rarity at 0 to exclude it from the collection.":
-            "Вводь ціни в ОДНІЙ валюті. Використовуй одну якість флоату (або найбільш відповідну до "
-            "твоєї мети): для більшості філерів результат майже однаковий незалежно від якості; "
-            "це важливо лише для крафтів низьких флоатів (0,01 і вище). Залиш 0, щоб виключити "
-            "якість із колекції.",
+        "Prices in one currency; use a single float tier (preferably the lowest). Leave a rarity at 0 to exclude it from the collection.":
+            "Ціни в одній валюті; використовуй одну якість флоата (бажано найнижчу). Залиш 0, щоб виключити рідкість з колекції.",
         "Rarity prices": "Ціни за якостями",
         "Price (0 = not in collection)": "Ціна (0 = немає в колекції)",
         "Rarity": "Якість",
@@ -747,6 +741,9 @@ TRANSLATIONS = {
         "rk_exp_slight": "дорогувато",
         "rk_cheap": "дешево відносно якості нижче — вигідно",
         "rk_cheap_susp": "дуже дешево, підозріло — перевір ліквідність",
+        "rk_over_strong": "сильно переоцінено — невигідно купувати",
+        "rk_below": "нижче середнього",
+        "rk_exp_strong": "дуже дороге відносно якості нижче",
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Вкажи ціну, яку вважаєш справедливою для кожної якості. Постав галочку, "
@@ -760,9 +757,10 @@ TRANSLATIONS = {
             "Контракт перетворює 10 предметів однієї якості на 1 предмет наступної, тому "
             "**більше співвідношення** означає, що якість дешева відносно того, чим стає "
             "→ вигідніше купувати:\n\n"
-            "- ≤ 2 → **E** (ця якість переоцінена)\n"
-            "- 2–4 → **D**\n"
-            "- 4–5.5 → **C** (норма)\n"
+            "- ≤ 2 → **F** (сильно переоцінено)\n"
+            "- 2–3.5 → **E** (переоцінено)\n"
+            "- 3.5–4.5 → **D** (нижче середнього)\n"
+            "- 4.5–5.5 → **C** (середнє)\n"
             "- 5.5–6.5 → **B**\n"
             "- 6.5–8 → **A** (ця якість недооцінена)\n"
             "- 8–10 → **A+**\n"
@@ -1649,11 +1647,11 @@ RARITY_DEFS = [
 RANK_COLORS = {
     "A++": "#1a9850", "A+": "#52b04f", "A": "#86cb66",
     "B": "#b8b8b8", "C": "#9e9e9e",
-    "D": "#f08a4b", "E": "#e2563b",
+    "D": "#f08a4b", "E": "#e2563b", "F": "#c0392b",
 }
 
 
-_RARITY_RANKS = ["E", "D", "C", "B", "A", "A+", "A++"]  # индекс 0..6
+_RARITY_RANKS = ["F", "E", "D", "C", "B", "A", "A+", "A++"]  # индекс 0..7
 
 
 def _ratio_rank_index(ratio):
@@ -1662,37 +1660,40 @@ def _ratio_rank_index(ratio):
     ratio — «во сколько раз дороже». Чем больше предметов нижнего качества по цене
     эквивалентны одному верхнему, тем дешевле нижнее относительно того, во что оно
     превращается контрактом 10->1, тем выгоднее покупка. Пороги заданы пользователем:
-        ≤2 → E, 2–4 → D, 4–5.5 → C, 5.5–6.5 → B, 6.5–8 → A, 8–10 → A+, >10 → A++.
+        ≤2 → F, 2–3.5 → E, 3.5–4.5 → D, 4.5–5.5 → C (среднее), 5.5–6.5 → B,
+        6.5–8 → A, 8–10 → A+, >10 → A++.
     Возвращает None при отсутствующем соотношении.
     """
     if ratio is None:
         return None
     if ratio <= 2.0:
-        return 0
-    if ratio <= 4.0:
-        return 1
+        return 0   # F  — сильно переоценено
+    if ratio <= 3.5:
+        return 1   # E  — переоценено
+    if ratio <= 4.5:
+        return 2   # D  — ниже среднего
     if ratio <= 5.5:
-        return 2
+        return 3   # C  — среднее
     if ratio <= 6.5:
-        return 3
+        return 4   # B
     if ratio <= 8.0:
-        return 4
+        return 5   # A
     if ratio <= 10.0:
-        return 5
-    return 6
+        return 6   # A+
+    return 7       # A++
 
 
 # Категория комментария по (ранг, роль). role: "lower" — обычное качество,
 # сравниваемое с тем, что выше; "highest" — высшее качество (наоборот).
 _RANK_COMMENT_KEYS = {
-    "lower":   {"E": "rk_over", "D": "rk_over_slight", "C": "rk_normal",
+    "lower":   {"F": "rk_over_strong", "E": "rk_over", "D": "rk_below", "C": "rk_normal",
                 "B": "rk_good", "A": "rk_under", "A+": "rk_under", "A++": "rk_under_susp"},
-    "highest": {"E": "rk_exp", "D": "rk_exp_slight", "C": "rk_normal",
+    "highest": {"F": "rk_exp_strong", "E": "rk_exp", "D": "rk_exp_slight", "C": "rk_normal",
                 "B": "rk_good", "A": "rk_cheap", "A+": "rk_cheap", "A++": "rk_cheap_susp"},
 }
 
 # Порядок рангов для выбора лучшего (по убыванию привлекательности покупки).
-_RANK_ORDER = {"A++": 6, "A+": 5, "A": 4, "B": 3, "C": 2, "D": 1, "E": 0}
+_RANK_ORDER = {"A++": 7, "A+": 6, "A": 5, "B": 4, "C": 3, "D": 2, "E": 1, "F": 0}
 
 
 def analyze_collection_rarities(tiers):
@@ -1708,7 +1709,7 @@ def analyze_collection_rarities(tiers):
           цене = одно качество выше). Ранг — по _ratio_rank_index. Чем больше ratio,
           тем выгоднее покупка нижнего качества.
         * ВЫСШЕЕ качество (выше ничего нет): ранг считается «наоборот». ratio =
-          цена_высшего / цена_ниже; индекс реверсируется (6 - idx, т.е. E<->A++).
+          цена_высшего / цена_ниже; индекс реверсируется (7 - idx, т.е. F<->A++).
           Затем штраф за инфляцию саплая (высшее нельзя скрафтить дальше, его
           предложение только растёт): для итогового A и выше −2, для B/C/D/E −1.
           Штраф берётся от БАЗОВОГО ratio (структурно), чтобы бонус красоты его
@@ -1743,17 +1744,368 @@ def analyze_collection_rarities(tiers):
             lower = tiers[i - 1]["price"] if n >= 2 else 0.0
             if n >= 2 and lower > 0:
                 base_ratio = price / lower
-                reversed_base = 6 - _ratio_rank_index(base_ratio)
-                penalty = 2 if reversed_base >= 4 else 1
+                reversed_base = 7 - _ratio_rank_index(base_ratio)
+                penalty = 2 if reversed_base >= 5 else 1   # A и выше -> -2, иначе -1
                 eff = max(0.0, base_ratio - bonus[i])      # красота снижает M -> лучше
-                reversed_eff = 6 - _ratio_rank_index(eff)
-                idx = max(0, min(6, reversed_eff - penalty))
+                reversed_eff = 7 - _ratio_rank_index(eff)
+                idx = max(0, min(7, reversed_eff - penalty))
             else:
                 base_ratio = None
                 idx = None
         rank = _RARITY_RANKS[idx] if idx is not None else None
         results.append({**t, "ratio": base_ratio, "rank": rank, "rank_index": idx, "role": role})
     return results
+
+
+# ===========================================================================
+# РЕЖИМ 5 — ПРОДВИНУТЫЙ АНАЛИЗ ФЛОАТА (чистые функции, основа для продв. режима)
+# ===========================================================================
+# Структура данных (готова к расширению, см. план):
+#   record = {"wear": str|None, "exact_float": float|None, "price": float}
+#   skin   = {"name": str, "cap_lo": float, "cap_hi": float,
+#             "records": [record, ...], "agg_choice": int|None}
+#   rarity = {"key": ..., "skins": [skin, ...]}   # до 10 скинов на редкость
+# Резка скина [cap_lo, cap_hi] может быть нестандартной (например, перчатки 0.06–0.80).
+# Все расчёты ведутся в полном float64 (12+ значащих цифр сохраняются).
+
+# Степени износа CS2 и их границы по флоату. Сами флоаты 0.0 и 1.0 не существуют,
+# но как ГРАНИЦЫ полос и резки 0.0/1.0 допустимы (стандартный скин 0.00–1.00).
+WEAR_ORDER = ["FN", "MW", "FT", "WW", "BS"]
+WEAR_BANDS = {
+    "FN": (0.00, 0.07), "MW": (0.07, 0.15), "FT": (0.15, 0.38),
+    "WW": (0.38, 0.45), "BS": (0.45, 1.00),
+}
+FLOAT_EPS = 0.001  # отступ от верхней границы для дефолтного «худшего в качестве» флоата
+
+
+def wear_of_float(f):
+    """Степень износа (FN/MW/FT/WW/BS) по значению флоата."""
+    for name in WEAR_ORDER:
+        lo, hi = WEAR_BANDS[name]
+        if lo <= f < hi:
+            return name
+    return "BS" if f >= 0.45 else None
+
+
+def wears_intersecting_cap(cap_lo, cap_hi):
+    """Список степеней износа, чьи диапазоны пересекаются с резкой скина."""
+    out = []
+    for name in WEAR_ORDER:
+        wl, wh = WEAR_BANDS[name]
+        if max(wl, cap_lo) < min(wh, cap_hi):
+            out.append(name)
+    return out
+
+
+def default_float_for_wear(wear, cap_lo, cap_hi, midpoint=False, eps=FLOAT_EPS):
+    """Дефолтный флоат записи, у которой указано только качество (без точного флоата).
+
+    По умолчанию — ВЕРХ пересечения (качество ∩ резка) − ε («худший в качестве»):
+    для стандартной резки 0–1 это FN 0.069, MW 0.149, FT 0.379, WW 0.449, BS 0.999.
+    midpoint=True — СЕРЕДИНА пересечения (например, для FT с резкой 0.25–0.75 это
+    середина [0.25; 0.38)). Возвращает None, если качество не пересекает резку.
+    """
+    wl, wh = WEAR_BANDS[wear]
+    lo, hi = max(wl, cap_lo), min(wh, cap_hi)
+    if lo >= hi:
+        return None
+    if midpoint:
+        return (lo + hi) / 2.0
+    cand = hi - eps
+    return cand if cand > lo else (lo + hi) / 2.0
+
+
+def contract_weight(f, cap_lo, cap_hi):
+    """Вес флоата в контракте: w = (f − cap_lo) / (cap_hi − cap_lo), зажат в [0, 1].
+
+    Скин с нестандартной резкой «растягивается» к стандартному 0–1: например,
+    Savannah Halftone FT 0.265 (резка 0.25–0.75) даёт w = 0.03 (в контракте — почти FN).
+    Возвращает None при некорректной резке (span ≤ 0).
+    """
+    span = cap_hi - cap_lo
+    if span <= 0:
+        return None
+    return min(1.0, max(0.0, (f - cap_lo) / span))
+
+
+def float_value_metric(w, price):
+    """G = 100·(1 − w) / цена — «флоат-ценность на единицу денег».
+
+    Чем выше G, тем меньше переплата за чистоту: чистый дешёвый предмет даёт высокий
+    G, дорогой грязный — низкий. Деление только на цену (она валидируется > 0), на
+    грязных флоатах метрика честно стремится к 0, а не взрывается (в отличие от
+    черновой идеи цена/флоат). Возвращает None при некорректных входах.
+    """
+    if price is None or price <= 0 or w is None:
+        return None
+    return 100.0 * (1.0 - w) / price
+
+
+def price_per_clean_unit(w, price):
+    """цена / (1 − w) — цена полной единицы чистоты (для средней стоимости флоата).
+
+    Возвращает None при w ≈ 1 (платить за нулевую чистоту — бесконечно дорого).
+    """
+    if price is None or price <= 0 or w is None:
+        return None
+    q = 1.0 - w
+    if q <= 1e-9:
+        return None
+    return price / q
+
+
+def validate_cap(cap_lo, cap_hi):
+    """Проверка резки. Границы 0.0 и 1.0 допустимы (стандартный скин 0.00–1.00);
+    несуществование флоатов 0.0/1.0 — ограничение на ФЛОАТ, а не на резку."""
+    if cap_lo is None or cap_hi is None or not (0.0 <= cap_lo < cap_hi <= 1.0):
+        return ["cap: требуется 0 <= min < max <= 1"]
+    return []
+
+
+def record_effective_float(rec, cap_lo, cap_hi, midpoint=False):
+    """Эффективный флоат записи: точный, если указан; иначе дефолт по качеству."""
+    if rec.get("exact_float") is not None:
+        return rec["exact_float"]
+    if rec.get("wear"):
+        return default_float_for_wear(rec["wear"], cap_lo, cap_hi, midpoint)
+    return None
+
+
+def validate_record(rec, cap_lo, cap_hi):
+    """Валидация записи в контексте резки скина. Возвращает список ошибок (пуст — ок).
+
+    Правила: цена > 0; указано качество ИЛИ точный флоат; если резка валидна —
+    точный флоат внутри резки И внутри указанного качества; выбранное качество
+    пересекается с резкой (FN невозможен при резке от 0.25).
+    """
+    errs = []
+    cap_errs = validate_cap(cap_lo, cap_hi)
+    errs += cap_errs
+    price = rec.get("price")
+    if price is None or price <= 0:
+        errs.append("цена должна быть > 0")
+    wear = rec.get("wear")
+    ef = rec.get("exact_float")
+    if wear is None and ef is None:
+        errs.append("укажите качество или точный флоат")
+    if not cap_errs:
+        if wear is not None and wear not in wears_intersecting_cap(cap_lo, cap_hi):
+            errs.append(f"качество {wear} не пересекается с резкой [{cap_lo}; {cap_hi})")
+        if ef is not None:
+            if not (cap_lo <= ef < cap_hi):
+                errs.append(f"точный флоат {ef:.12f} вне резки [{cap_lo}; {cap_hi})")
+            elif wear is not None:
+                wl, wh = WEAR_BANDS[wear]
+                if not (wl <= ef < wh):
+                    errs.append(f"точный флоат {ef:.12f} вне качества {wear}")
+    return errs
+
+
+def record_metrics(rec, cap_lo, cap_hi, midpoint=False):
+    """Показатели валидной записи: eff_float, w, G, price_per_clean. None — если запись невалидна."""
+    if validate_record(rec, cap_lo, cap_hi):
+        return None
+    f = record_effective_float(rec, cap_lo, cap_hi, midpoint)
+    if f is None:
+        return None
+    w = contract_weight(f, cap_lo, cap_hi)
+    return {"eff_float": f, "w": w,
+            "G": float_value_metric(w, rec["price"]),
+            "price_per_clean": price_per_clean_unit(w, rec["price"])}
+
+
+def skin_records_metrics(skin, midpoint=False):
+    """Метрики по каждой валидной записи скина (основа для сравнения качеств внутри скина)."""
+    cap_lo, cap_hi = skin["cap_lo"], skin["cap_hi"]
+    out = []
+    for i, rec in enumerate(skin.get("records", [])):
+        m = record_metrics(rec, cap_lo, cap_hi, midpoint)
+        if m is not None:
+            out.append({"index": i, **m})
+    return out
+
+
+def aggregate_record_index(skin, midpoint=False):
+    """Индекс записи скина, идущей в агрегат редкости (от скина — ровно одна запись).
+
+    Если ручной выбор agg_choice указывает на ВАЛИДНУЮ запись — берётся он; иначе
+    авто: запись с максимальным G. Откат на авто при удалении/невалидности выбранной.
+    """
+    metrics = skin_records_metrics(skin, midpoint)
+    if not metrics:
+        return None
+    valid_indices = {m["index"] for m in metrics}
+    choice = skin.get("agg_choice")
+    if choice is not None and choice in valid_indices:
+        return choice
+    best = max(metrics, key=lambda m: (m["G"] if m["G"] is not None else float("-inf")))
+    return best["index"]
+
+
+def rarity_float_aggregates(skins, midpoint=False):
+    """Агрегаты редкости по флоату: средняя цена/(1−w) и лучший показатель G.
+
+    От каждого скина в агрегат идёт ровно ОДНА запись (авто-лучшая по G или ручной
+    выбор), чтобы скин с несколькими качествами не весил как несколько скинов.
+    Возвращает dict {avg_float_cost, best_G, best_skin, n_skins} или None.
+    """
+    per_skin = []
+    for skin in skins:
+        idx = aggregate_record_index(skin, midpoint)
+        if idx is None:
+            continue
+        m = record_metrics(skin["records"][idx], skin["cap_lo"], skin["cap_hi"], midpoint)
+        if m is not None:
+            per_skin.append({"skin": skin.get("name", "?"), **m})
+    if not per_skin:
+        return None
+    costs = [p["price_per_clean"] for p in per_skin if p["price_per_clean"] is not None]
+    avg_cost = (sum(costs) / len(costs)) if costs else None
+    best = max(per_skin, key=lambda p: (p["G"] if p["G"] is not None else float("-inf")))
+    return {"avg_float_cost": avg_cost, "best_G": best["G"],
+            "best_skin": best["skin"], "n_skins": len(per_skin)}
+
+
+# ===========================================================================
+# РЕЖИМ 5 — ДВИЖОК КОНТРАКТОВ И ДВУНАПРАВЛЕННЫЙ ROI (чистые функции)
+# ===========================================================================
+# Модель контракта обмена: 10 входов редкости R -> 1 выход редкости R+1.
+# Выходной флоат: f_out = a_out + W̄·(b_out − a_out), где W̄ — средняя нормализованная
+# чистота входов (w_i). База — равновероятный исход по всем выходным скинам коллекции;
+# точечный подбор под конкретный выходной скин — будущий режим (есть заготовка ниже).
+
+def contract_output_float(W_bar, out_cap_lo, out_cap_hi):
+    """Выходной флоат контракта: f_out = a + W̄·(b − a). W̄ — средняя чистота входов."""
+    return out_cap_lo + W_bar * (out_cap_hi - out_cap_lo)
+
+
+def _price_by_wear_map(skin, midpoint=False):
+    """{качество: минимальная цена среди валидных записей скина в этом качестве}."""
+    m = {}
+    for rec in skin.get("records", []):
+        rm = record_metrics(rec, skin["cap_lo"], skin["cap_hi"], midpoint)
+        if rm is None:
+            continue
+        wear = wear_of_float(rm["eff_float"])
+        if wear is None:
+            continue
+        if wear not in m or rec["price"] < m[wear]:
+            m[wear] = rec["price"]
+    return m
+
+
+def skin_price_at_wear(skin, target_wear, midpoint=False):
+    """Цена скина в заданном качестве; если записи нет — ближайшее качество по индексу
+    (оценка). None, если у скина нет валидных записей."""
+    m = _price_by_wear_map(skin, midpoint)
+    if not m:
+        return None
+    if target_wear in m:
+        return m[target_wear]
+    ti = WEAR_ORDER.index(target_wear)
+    nearest = min(m.keys(), key=lambda w: abs(WEAR_ORDER.index(w) - ti))
+    return m[nearest]
+
+
+def expected_output_value(W_bar, output_skins, midpoint=False):
+    """E(выход, W̄) — средняя цена по выходным скинам на полученном флоате
+    (равновероятный исход контракта одной коллекции). None, если данных нет."""
+    vals = []
+    for s in output_skins:
+        f = contract_output_float(W_bar, s["cap_lo"], s["cap_hi"])
+        wear = wear_of_float(f)
+        if wear is None:
+            continue
+        p = skin_price_at_wear(s, wear, midpoint)
+        if p is not None:
+            vals.append(p)
+    if not vals:
+        return None
+    return sum(vals) / len(vals)
+
+
+def _cleanliness_price_curve(filler_skins, midpoint=False):
+    """Отсортированные (w, минимальная цена) по записям филлеров — во сколько обходится
+    чистота w (для интерполяции стоимости входа)."""
+    pts = []
+    for s in filler_skins:
+        for rec in s.get("records", []):
+            rm = record_metrics(rec, s["cap_lo"], s["cap_hi"], midpoint)
+            if rm is None or rm["w"] is None:
+                continue
+            pts.append((rm["w"], rec["price"]))
+    pts.sort()
+    return pts
+
+
+def input_cost(W_bar, filler_skins, midpoint=False, n=10):
+    """Стоимость n входов средней чистоты W̄ (упрощение: n одинаковых филлеров чистоты
+    W̄, цена интерполируется по кривой чистоты). Оптимизация смеси — будущий режим."""
+    pts = _cleanliness_price_curve(filler_skins, midpoint)
+    if not pts:
+        return None
+    ws = [w for w, _ in pts]
+    ps = [p for _, p in pts]
+    if W_bar <= ws[0]:
+        price = ps[0]
+    elif W_bar >= ws[-1]:
+        price = ps[-1]
+    else:
+        price = ps[-1]
+        for i in range(1, len(ws)):
+            if W_bar <= ws[i]:
+                if ws[i] == ws[i - 1]:
+                    price = min(ps[i - 1], ps[i])
+                else:
+                    t = (W_bar - ws[i - 1]) / (ws[i] - ws[i - 1])
+                    price = ps[i - 1] + t * (ps[i] - ps[i - 1])
+                break
+    return n * price
+
+
+def best_tradeup_roi(filler_skins, output_skins, midpoint=False, n=10, steps=100):
+    """Перебор средней чистоты входов W̄ ∈ [0,1]; максимизирует ROI=(E_выход−затраты)/затраты.
+
+    Возвращает {roi, W_star, E_out, cost, overpay_clean} или None. overpay_clean:
+        'worth'    — оптимум в чистой зоне (доплата за чистоту оправдана),
+        'avoid'    — оптимум в грязной зоне (за чистоту не переплачивать, бери BS),
+        'moderate' — между.
+    """
+    if not filler_skins or not output_skins:
+        return None
+    best = None
+    for k in range(steps + 1):
+        W = k / steps
+        e = expected_output_value(W, output_skins, midpoint)
+        c = input_cost(W, filler_skins, midpoint, n)
+        if e is None or c is None or c <= 0:
+            continue
+        roi = (e - c) / c
+        if best is None or roi > best["roi"]:
+            best = {"roi": roi, "W_star": W, "E_out": e, "cost": c}
+    if best is None:
+        return None
+    W = best["W_star"]
+    best["overpay_clean"] = "worth" if W <= 0.15 else ("avoid" if W >= 0.45 else "moderate")
+    return best
+
+
+def tradeup_float_bonus(roi, cap=2.0, max_bonus=1.0):
+    """Флоат-бонус к ratio из ROI лучшего контракта (ограниченный, как бонус красоты).
+    ROI ≤ 0 → 0; ROI ≥ cap → max_bonus; линейно между (cap=2.0 ⇒ ROI 200% даёт полный бонус)."""
+    if roi is None or roi <= 0:
+        return 0.0
+    return min(max_bonus, (roi / cap) * max_bonus)
+
+
+def best_tradeup_for_target(filler_skins, target_skin, target_wear=None, midpoint=False, n=10):
+    """ЗАГОТОВКА под будущий режим «целимся в конкретный выходной скин».
+
+    Здесь будет точечный подбор входных скинов и оптимизация смеси флоатов под
+    заданный выход (target_skin / target_wear). Пока возвращает None — структура
+    данных это уже поддерживает, режим подключится позже без переделки.
+    """
+    return None  # TODO (будущий режим): целевой подбор + оптимизация смеси входов
 
 
 def calculate_mode_5(currency):
@@ -1768,9 +2120,7 @@ def calculate_mode_5(currency):
         "between adjacent rarities (10 lower-rarity items trade up into 1 higher-rarity item)."
     ))
     st.info(_(
-        "Enter prices in ONE currency. Use one float tier (or the tier that best fits your goal): "
-        "for most filler the result is nearly the same regardless of quality; it only matters for "
-        "low-float crafts (0.01+). Leave a rarity at 0 to exclude it from the collection."
+        "Prices in one currency; use a single float tier (preferably the lowest). Leave a rarity at 0 to exclude it from the collection."
     ))
 
     with st.form("m5_form"):
