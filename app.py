@@ -19,7 +19,7 @@
 Yev Steam Deposit Calculator
 ============================
 
-Version: 1.12
+Version: 2.2
 
 Streamlit-приложение для оценки экономики торговли скинами CS2. Оно сравнивает
 стоимость покупки/продажи предмета на стороннем сайте за реальные деньги с
@@ -240,7 +240,71 @@ TRANSLATIONS = {
         "rk_cheap_susp": "very cheap, suspicious — check liquidity",
         "rk_over_strong": "strongly overpriced — bad buy",
         "rk_below": "below average",
+        "Site": "Site",
+        "Steam Market": "Steam Market",
+        "The price shown to buyers on the Steam Market.": "The price shown to buyers on the Steam Market.",
+        "How the ranking works": "How the ranking works",
         "rk_exp_strong": "very expensive vs the lower tier",
+        'Advanced float analysis (float & cut)':
+            'Advanced float analysis (float & cut)',
+        'Advanced mode: for each rarity add skins with their float cap and one or more quality records. The ranking then also accounts for float economics — the contract value of cleanliness. (The single-currency note still applies.)':
+            'Advanced mode: for each rarity add skins with their float cap and one or more quality records. The ranking then also accounts for float economics — the contract value of cleanliness. (The single-currency note still applies.)',
+        'Default float = midpoint of (wear ∩ cap), instead of worst-in-wear':
+            'Default float = midpoint of (wear ∩ cap), instead of worst-in-wear',
+        'Skins in this rarity':
+            'Skins in this rarity',
+        'Skin':
+            'Skin',
+        'Skin name (optional)':
+            'Skin name (optional)',
+        'Float cap min':
+            'Float cap min',
+        'Float cap max':
+            'Float cap max',
+        'Invalid cap: need 0 ≤ min < max ≤ 1.':
+            'Invalid cap: need 0 ≤ min < max ≤ 1.',
+        'Quality records':
+            'Quality records',
+        'Quality (wear)':
+            'Quality (wear)',
+        'Exact float':
+            'Exact float',
+        'Float value':
+            'Float value',
+        'contract float':
+            'contract float',
+        'float-value':
+            'float-value',
+        'Auto (best value)':
+            'Auto (best value)',
+        'Record':
+            'Record',
+        'Record used in the rarity aggregate':
+            'Record used in the rarity aggregate',
+        'Add at least two rarities, each with a valid priced skin, to compare.':
+            'Add at least two rarities, each with a valid priced skin, to compare.',
+        'Ranking with float economics (higher = better buy)':
+            'Ranking with float economics (higher = better buy)',
+        'Float bonus':
+            'Float bonus',
+        'Trade-up & float details':
+            'Trade-up & float details',
+        'craft up':
+            'craft up',
+        '(best ROI {roi}% at input cleanliness W̄={w})':
+            '(best ROI {roi}% at input cleanliness W̄={w})',
+        'avg float cost {c} · best float-value (G) {g} ({skin})':
+            'avg float cost {c} · best float-value (G) {g} ({skin})',
+        'clean pays off — worth buying low-float fillers':
+            'clean pays off — worth buying low-float fillers',
+        "don't overpay for clean — a dirty filler gives the same output":
+            "don't overpay for clean — a dirty filler gives the same output",
+        'moderate — some cleanliness helps':
+            'moderate — some cleanliness helps',
+        'trade-up into the next rarity is unprofitable':
+            'trade-up into the next rarity is unprofitable',
+        'MODE5_ADV_NOTE':
+            'MODE5_ADV_NOTE',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Enter the price you consider fair for each rarity. Tick the box if you "
@@ -491,7 +555,71 @@ TRANSLATIONS = {
         "rk_cheap_susp": "очень дёшево, подозрительно — проверь ликвидность",
         "rk_over_strong": "сильно переоценено — невыгодно покупать",
         "rk_below": "ниже среднего",
+        "Site": "Сайт",
+        "Steam Market": "Steam Market",
+        "The price shown to buyers on the Steam Market.": "Цена, которую видят покупатели на Торговой площадке Steam.",
+        "How the ranking works": "Как считается ранг",
         "rk_exp_strong": "очень дорогое относительно качества ниже",
+        'Advanced float analysis (float & cut)':
+            'Продвинутый анализ флоата (флоат и резка)',
+        'Advanced mode: for each rarity add skins with their float cap and one or more quality records. The ranking then also accounts for float economics — the contract value of cleanliness. (The single-currency note still applies.)':
+            'Продвинутый режим: для каждой редкости добавь скины с их резкой флоата и одной или несколькими записями качеств. Тогда ранжирование учитывает и экономику флоата — контрактную ценность чистоты. (Условие одной валюты по-прежнему действует.)',
+        'Default float = midpoint of (wear ∩ cap), instead of worst-in-wear':
+            'Дефолтный флоат = середина (качество ∩ резка), вместо «худшего в качестве»',
+        'Skins in this rarity':
+            'Скинов в этой редкости',
+        'Skin':
+            'Скин',
+        'Skin name (optional)':
+            'Название скина (необязательно)',
+        'Float cap min':
+            'Резка флоата, min',
+        'Float cap max':
+            'Резка флоата, max',
+        'Invalid cap: need 0 ≤ min < max ≤ 1.':
+            'Некорректная резка: нужно 0 ≤ min < max ≤ 1.',
+        'Quality records':
+            'Записей качества',
+        'Quality (wear)':
+            'Качество (износ)',
+        'Exact float':
+            'Точный флоат',
+        'Float value':
+            'Значение флоата',
+        'contract float':
+            'контрактный флоат',
+        'float-value':
+            'стоимость за флоат',
+        'Auto (best value)':
+            'Авто (лучшая по стоимости)',
+        'Record':
+            'Запись',
+        'Record used in the rarity aggregate':
+            'Запись для агрегата редкости',
+        'Add at least two rarities, each with a valid priced skin, to compare.':
+            'Добавь минимум две редкости с валидным скином с ценой для сравнения.',
+        'Ranking with float economics (higher = better buy)':
+            'Ранжирование с учётом экономики флоата (выше = выгоднее)',
+        'Float bonus':
+            'Флоат-бонус',
+        'Trade-up & float details':
+            'Контракты и детали флоата',
+        'craft up':
+            'крафт вверх',
+        '(best ROI {roi}% at input cleanliness W̄={w})':
+            '(лучший ROI {roi}% при чистоте входов W̄={w})',
+        'avg float cost {c} · best float-value (G) {g} ({skin})':
+            'средняя стоимость флоата {c} · лучшая стоимость за флоат (G) {g} ({skin})',
+        'clean pays off — worth buying low-float fillers':
+            'чистота окупается — есть смысл брать низкофлоатные филлеры',
+        "don't overpay for clean — a dirty filler gives the same output":
+            'не переплачивай за чистоту — грязный филлер даёт тот же выход',
+        'moderate — some cleanliness helps':
+            'умеренно — небольшая чистота помогает',
+        'trade-up into the next rarity is unprofitable':
+            'контракт в следующую редкость невыгоден',
+        'MODE5_ADV_NOTE':
+            'Продвинутый режим: представительная цена редкости — среднее введённых цен скинов. Флоат-бонус берётся из лучшего ROI контракта в следующую редкость (10→1): чистые филлеры поднимают ранг редкости только когда более чистые входы реально дают более ценный выход. Контрактный вес флоата w = (флоат − cap_min)/(cap_max − cap_min); стоимость за флоат G = 100·(1−w)/цена.',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Укажи цену, которую считаешь справедливой для каждого качества. Отметь галочку, "
@@ -743,7 +871,71 @@ TRANSLATIONS = {
         "rk_cheap_susp": "дуже дешево, підозріло — перевір ліквідність",
         "rk_over_strong": "сильно переоцінено — невигідно купувати",
         "rk_below": "нижче середнього",
+        "Site": "Сайт",
+        "Steam Market": "Steam Market",
+        "The price shown to buyers on the Steam Market.": "Ціна, яку бачать покупці на Торговій площадці Steam.",
+        "How the ranking works": "Як рахується ранг",
         "rk_exp_strong": "дуже дороге відносно якості нижче",
+        'Advanced float analysis (float & cut)':
+            'Просунутий аналіз флоата (флоат і різання)',
+        'Advanced mode: for each rarity add skins with their float cap and one or more quality records. The ranking then also accounts for float economics — the contract value of cleanliness. (The single-currency note still applies.)':
+            'Просунутий режим: для кожної рідкості додай скіни з їх різанням флоата та одним чи кількома записами якостей. Тоді ранжування враховує й економіку флоата — контрактну цінність чистоти. (Умова однієї валюти досі діє.)',
+        'Default float = midpoint of (wear ∩ cap), instead of worst-in-wear':
+            'Дефолтний флоат = середина (якість ∩ різання), замість «найгіршого в якості»',
+        'Skins in this rarity':
+            'Скінів у цій рідкості',
+        'Skin':
+            'Скін',
+        'Skin name (optional)':
+            "Назва скіна (необов'язково)",
+        'Float cap min':
+            'Різання флоата, min',
+        'Float cap max':
+            'Різання флоата, max',
+        'Invalid cap: need 0 ≤ min < max ≤ 1.':
+            'Некоректне різання: потрібно 0 ≤ min < max ≤ 1.',
+        'Quality records':
+            'Записів якості',
+        'Quality (wear)':
+            'Якість (знос)',
+        'Exact float':
+            'Точний флоат',
+        'Float value':
+            'Значення флоата',
+        'contract float':
+            'контрактний флоат',
+        'float-value':
+            'вартість за флоат',
+        'Auto (best value)':
+            'Авто (найкраща за вартістю)',
+        'Record':
+            'Запис',
+        'Record used in the rarity aggregate':
+            'Запис для агрегату рідкості',
+        'Add at least two rarities, each with a valid priced skin, to compare.':
+            'Додай щонайменше дві рідкості з валідним скіном із ціною для порівняння.',
+        'Ranking with float economics (higher = better buy)':
+            'Ранжування з урахуванням економіки флоата (вище = вигідніше)',
+        'Float bonus':
+            'Флоат-бонус',
+        'Trade-up & float details':
+            'Контракти та деталі флоата',
+        'craft up':
+            'крафт вгору',
+        '(best ROI {roi}% at input cleanliness W̄={w})':
+            '(найкращий ROI {roi}% за чистоти входів W̄={w})',
+        'avg float cost {c} · best float-value (G) {g} ({skin})':
+            'середня вартість флоата {c} · найкраща вартість за флоат (G) {g} ({skin})',
+        'clean pays off — worth buying low-float fillers':
+            'чистота окупається — є сенс брати низькофлоатні філери',
+        "don't overpay for clean — a dirty filler gives the same output":
+            'не переплачуй за чистоту — брудний філер дає той самий вихід',
+        'moderate — some cleanliness helps':
+            'помірно — невелика чистота допомагає',
+        'trade-up into the next rarity is unprofitable':
+            'контракт у наступну рідкість невигідний',
+        'MODE5_ADV_NOTE':
+            'Просунутий режим: представницька ціна рідкості — середнє введених цін скінів. Флоат-бонус береться з найкращого ROI контракту в наступну рідкість (10→1): чисті філери піднімають ранг рідкості лише коли чистіші входи справді дають цінніший вихід. Контрактна вага флоата w = (флоат − cap_min)/(cap_max − cap_min); вартість за флоат G = 100·(1−w)/ціна.',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Вкажи ціну, яку вважаєш справедливою для кожної якості. Постав галочку, "
@@ -2086,7 +2278,10 @@ def best_tradeup_roi(filler_skins, output_skins, midpoint=False, n=10, steps=100
     if best is None:
         return None
     W = best["W_star"]
-    best["overpay_clean"] = "worth" if W <= 0.15 else ("avoid" if W >= 0.45 else "moderate")
+    if best["roi"] <= 0:
+        best["overpay_clean"] = "unprofitable"   # даже оптимум убыточен — крафт не имеет смысла
+    else:
+        best["overpay_clean"] = "worth" if W <= 0.15 else ("avoid" if W >= 0.45 else "moderate")
     return best
 
 
@@ -2108,6 +2303,243 @@ def best_tradeup_for_target(filler_skins, target_skin, target_wear=None, midpoin
     return None  # TODO (будущий режим): целевой подбор + оптимизация смеси входов
 
 
+def rarity_representative_price(skins, midpoint=False):
+    """Представительная цена редкости для ценового ранга в продвинутом режиме.
+
+    Среднее по скинам средней цены ВАЛИДНЫХ записей каждого скина (каждый скин —
+    равный вес; внутри скина усредняются введённые качества). Это устойчивый
+    «типичный» уровень цены редкости, в отличие от цены лучшей-по-G записи (она
+    смещена к самому дешёвому-за-чистоту варианту). None, если валидных нет."""
+    skin_prices = []
+    for skin in skins:
+        recs = [rec["price"] for rec in skin.get("records", [])
+                if record_metrics(rec, skin["cap_lo"], skin["cap_hi"], midpoint) is not None]
+        if recs:
+            skin_prices.append(sum(recs) / len(recs))
+    if not skin_prices:
+        return None
+    return sum(skin_prices) / len(skin_prices)
+
+
+def analyze_collection_advanced(rarity_data, midpoint=False):
+    """Ранжирование редкостей в продвинутом режиме (с учётом резки и флоат-экономики).
+
+    rarity_data — список (key, skins) ПО ВОЗРАСТАНИЮ редкости. Учитываются редкости,
+    у которых есть хотя бы один валидный скин с ценой. Логика ценового ранга та же,
+    что в простом режиме (ratio соседних цен, реверс+штраф для высшего), НО к ratio
+    нижних редкостей добавляется флоат-бонус из ROI лучшего контракта R→R+1
+    (tradeup_float_bonus). Высшее качество флоат-бонус не получает (из него не крафтят).
+
+    Возвращает список dict: key, price, ratio, rank, rank_index, role, float_bonus,
+    roi, W_star, verdict (overpay_clean), aggregates (агрегаты редкости по флоату).
+    """
+    active = []
+    for key, skins in rarity_data:
+        price = rarity_representative_price(skins, midpoint)
+        if price is not None and price > 0:
+            active.append({"key": key, "skins": skins, "price": price})
+    if len(active) < 2:
+        return []
+    n = len(active)
+    results = []
+    for i, rar in enumerate(active):
+        price = rar["price"]
+        float_bonus, verdict, roi_info = 0.0, None, None
+        if i < n - 1:  # не высшее: возможен контракт R -> R+1
+            roi_info = best_tradeup_roi(rar["skins"], active[i + 1]["skins"], midpoint)
+            if roi_info:
+                float_bonus = tradeup_float_bonus(roi_info["roi"])
+                verdict = roi_info["overpay_clean"]
+            base_ratio = active[i + 1]["price"] / price
+            idx = _ratio_rank_index(base_ratio + float_bonus)
+            role = "lower"
+        else:  # высшее: реверс + штраф, без флоат-бонуса
+            base_ratio = price / active[i - 1]["price"]
+            reversed_base = 7 - _ratio_rank_index(base_ratio)
+            penalty = 2 if reversed_base >= 5 else 1
+            idx = max(0, min(7, reversed_base - penalty))
+            role = "highest"
+        results.append({
+            "key": rar["key"], "price": price, "ratio": base_ratio,
+            "rank": _RARITY_RANKS[idx], "rank_index": idx, "role": role,
+            "float_bonus": float_bonus,
+            "roi": (roi_info["roi"] if roi_info else None),
+            "W_star": (roi_info["W_star"] if roi_info else None),
+            "verdict": verdict,
+            "aggregates": rarity_float_aggregates(rar["skins"], midpoint),
+        })
+    return results
+
+
+def _mode_5_advanced(currency):
+    """Продвинутый режим: ввод скинов с резкой и записями качеств, метрики флоата,
+    агрегаты редкости, контрактный ROI и ранги с флоат-бонусом. Защита от поломок:
+    вся валидация на месте, пустые/невалидные записи не ломают расчёт."""
+    st.caption(_(
+        "Advanced mode: for each rarity add skins with their float cap and one or more "
+        "quality records. The ranking then also accounts for float economics — the "
+        "contract value of cleanliness. (The single-currency note still applies.)"
+    ))
+    midpoint = st.checkbox(
+        _("Default float = midpoint of (wear ∩ cap), instead of worst-in-wear"),
+        value=False, key="m5a_midpoint")
+
+    rarity_data = []
+    for key, color in RARITY_DEFS:
+        with st.expander("● " + _(key), expanded=False):
+            nskins = int(st.number_input(
+                _("Skins in this rarity"), min_value=0, max_value=10, value=0, step=1,
+                key=f"m5a_n_{key}"))
+            skins = []
+            for si in range(nskins):
+                st.markdown(f"**{_('Skin')} {si + 1}**")
+                name = st.text_input(_("Skin name (optional)"), value="",
+                                     key=f"m5a_name_{key}_{si}")
+                cc1, cc2 = st.columns(2)
+                cap_lo = cc1.number_input(
+                    _("Float cap min"), min_value=0.0, max_value=1.0, value=0.0,
+                    step=0.01, format="%.12f", key=f"m5a_caplo_{key}_{si}")
+                cap_hi = cc2.number_input(
+                    _("Float cap max"), min_value=0.0, max_value=1.0, value=1.0,
+                    step=0.01, format="%.12f", key=f"m5a_caphi_{key}_{si}")
+                cap_errs = validate_cap(cap_lo, cap_hi)
+                if cap_errs:
+                    st.warning("⚠️ " + _("Invalid cap: need 0 ≤ min < max ≤ 1."))
+                inter = wears_intersecting_cap(cap_lo, cap_hi) if not cap_errs else list(WEAR_ORDER)
+                if not inter:
+                    inter = list(WEAR_ORDER)
+                nrec = int(st.number_input(
+                    _("Quality records"), min_value=1, max_value=5, value=1, step=1,
+                    key=f"m5a_nrec_{key}_{si}"))
+                records = []
+                for ri in range(nrec):
+                    rc1, rc2, rc3 = st.columns([2, 2, 2])
+                    wear = rc1.selectbox(_("Quality (wear)"), options=inter,
+                                         key=f"m5a_wear_{key}_{si}_{ri}")
+                    use_exact = rc2.checkbox(_("Exact float"), value=False,
+                                             key=f"m5a_exon_{key}_{si}_{ri}")
+                    exact = None
+                    if use_exact:
+                        mid = min(0.999999, max(0.000001, (cap_lo + cap_hi) / 2.0))
+                        exact = rc2.number_input(
+                            _("Float value"), min_value=0.0, max_value=1.0, value=float(mid),
+                            step=0.000001, format="%.12f", key=f"m5a_exact_{key}_{si}_{ri}")
+                    price = rc3.number_input(_("Price"), min_value=0.0, value=0.0, step=0.1,
+                                             key=f"m5a_price_{key}_{si}_{ri}")
+                    rec = {"wear": wear, "exact_float": exact, "price": float(price)}
+                    records.append(rec)
+                    if price > 0:
+                        errs = validate_record(rec, cap_lo, cap_hi)
+                        if errs:
+                            st.caption("⚠️ " + "; ".join(errs))
+                        else:
+                            m = record_metrics(rec, cap_lo, cap_hi, midpoint)
+                            if m:
+                                st.caption(
+                                    f"{_('contract float')} w = {m['w']:.12f} · "
+                                    f"{_('float-value')} G = {m['G']:.2f}")
+                if nrec > 1:
+                    agg_opts = [_("Auto (best value)")] + \
+                               [f"{_('Record')} {i + 1}" for i in range(nrec)]
+                    agg_sel = st.selectbox(
+                        _("Record used in the rarity aggregate"),
+                        options=list(range(len(agg_opts))),
+                        format_func=lambda x, _o=agg_opts: _o[x],
+                        key=f"m5a_agg_{key}_{si}")
+                    agg_choice = None if agg_sel == 0 else (agg_sel - 1)
+                else:
+                    agg_choice = None
+                skins.append({"name": name or f"{_(key)} #{si + 1}",
+                              "cap_lo": cap_lo, "cap_hi": cap_hi,
+                              "records": records, "agg_choice": agg_choice})
+            if skins:
+                rarity_data.append((key, skins))
+
+    results = analyze_collection_advanced(rarity_data, midpoint)
+    st.divider()
+    if not results:
+        st.info(_("Add at least two rarities, each with a valid priced skin, to compare."))
+        return
+
+    price_decimals = 0 if is_integer_currency(currency) else 2
+    name_by_key = {k: _(k) for k, _c in RARITY_DEFS}
+    color_by_key = {k: c for k, c in RARITY_DEFS}
+
+    st.markdown("### 📊 " + _("Ranking with float economics (higher = better buy)"))
+    verdict_label = {
+        "worth": _("clean pays off — worth buying low-float fillers"),
+        "avoid": _("don't overpay for clean — a dirty filler gives the same output"),
+        "moderate": _("moderate — some cleanliness helps"),
+        "unprofitable": _("trade-up into the next rarity is unprofitable"),
+        None: "—",
+    }
+    header = (
+        "<tr>"
+        f"<th style='text-align:left;padding:6px 10px;'>{_('Rarity')}</th>"
+        f"<th style='text-align:right;padding:6px 10px;'>{_('Price')}</th>"
+        f"<th style='text-align:center;padding:6px 10px;'>{_('Ratio')}</th>"
+        f"<th style='text-align:center;padding:6px 10px;'>{_('Float bonus')}</th>"
+        f"<th style='text-align:center;padding:6px 10px;'>{_('Rank')}</th>"
+        "</tr>"
+    )
+    rows = []
+    for r in results:
+        rank = r["rank"]
+        rcolor = RANK_COLORS.get(rank, "#9e9e9e")
+        ratio_str = "—" if r["ratio"] is None else (
+            _("this rarity = {n}× the rarity below").format(n=f"{r['ratio']:.2f}")
+            if r["role"] == "highest" else
+            _("{n}× this rarity = one rarity above").format(n=f"{r['ratio']:.2f}"))
+        bonus_str = f"+{r['float_bonus']:.2f}" if r["float_bonus"] else "—"
+        badge = (f"<span style='background:{rcolor};color:white;padding:2px 8px;"
+                 f"border-radius:6px;font-weight:700;'>{rank or '—'}</span>")
+        name_cell = (f"<span style='color:{color_by_key.get(r['key'], '#888')};"
+                     f"font-weight:600;'>● </span>{name_by_key.get(r['key'], r['key'])}")
+        rows.append(
+            "<tr style='border-top:1px solid #3a3a3a;'>"
+            f"<td style='text-align:left;padding:6px 10px;'>{name_cell}</td>"
+            f"<td style='text-align:right;padding:6px 10px;'>{format_currency(r['price'], currency, price_decimals)}</td>"
+            f"<td style='text-align:center;padding:6px 10px;font-size:0.85em;'>{ratio_str}</td>"
+            f"<td style='text-align:center;padding:6px 10px;'>{bonus_str}</td>"
+            f"<td style='text-align:center;padding:6px 10px;'>{badge}</td>"
+            "</tr>")
+    st.markdown("<table style='width:100%;border-collapse:collapse;'><thead>" + header +
+                "</thead><tbody>" + "".join(rows) + "</tbody></table>", unsafe_allow_html=True)
+
+    ranked = [r for r in results if r["rank"] is not None]
+    if ranked:
+        best = max(ranked, key=lambda r: _RANK_ORDER.get(r["rank"], -1))
+        st.success(_("Best buy: {rarity} (rank {rank})").format(
+            rarity=name_by_key.get(best["key"], best["key"]), rank=best["rank"]))
+
+    # Контрактные вердикты и агрегаты редкости по флоату
+    st.markdown("#### 🔧 " + _("Trade-up & float details"))
+    for r in results:
+        nm = name_by_key.get(r["key"], r["key"])
+        agg = r["aggregates"]
+        parts = []
+        if r["verdict"] is not None:
+            verdict_txt = verdict_label.get(r["verdict"], "—")
+            extra = ""
+            if r["roi"] is not None and r["W_star"] is not None and r["verdict"] != "unprofitable":
+                extra = " " + _("(best ROI {roi}% at input cleanliness W̄={w})").format(
+                    roi=f"{r['roi']*100:.0f}", w=f"{r['W_star']:.2f}")
+            parts.append(f"**{_('craft up')}:** {verdict_txt}{extra}")
+        if agg:
+            cost = agg["avg_float_cost"]
+            cost_str = "—" if cost is None else format_currency(cost, currency, price_decimals)
+            parts.append(_("avg float cost {c} · best float-value (G) {g} ({skin})").format(
+                c=cost_str, g=f"{agg['best_G']:.2f}" if agg["best_G"] is not None else "—",
+                skin=agg["best_skin"]))
+        if parts:
+            st.markdown(f"<span style='color:{color_by_key.get(r['key'],'#888')};'>● </span>"
+                        f"**{nm}** — " + " · ".join(parts), unsafe_allow_html=True)
+
+    with st.expander("ℹ️ " + _("How the ranking works")):
+        st.markdown(_("MODE5_FORMULAS"))
+        st.markdown(_("MODE5_ADV_NOTE"))
+
+
 def calculate_mode_5(currency):
     """Интерфейс Режима 5. Только одна валюта (кросс-курсы не применяются).
 
@@ -2115,6 +2547,12 @@ def calculate_mode_5(currency):
     качество выгоднее покупать, по соотношению цен соседних качеств.
     """
     st.subheader("🎚️ " + _("Best rarity to buy (collection)"))
+    advanced = st.checkbox(_("Advanced float analysis (float & cut)"),
+                           value=False, key="m5_advanced")
+    if advanced:
+        _mode_5_advanced(currency)
+        return
+
     st.write(_(
         "We rank which rarity in a collection is the best buy, based on the price ratio "
         "between adjacent rarities (10 lower-rarity items trade up into 1 higher-rarity item)."
