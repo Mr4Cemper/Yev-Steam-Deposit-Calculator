@@ -19,7 +19,7 @@
 Yev Steam Deposit Calculator
 ============================
 
-Version: 2.2
+Version: 2.3
 
 Streamlit-приложение для оценки экономики торговли скинами CS2. Оно сравнивает
 стоимость покупки/продажи предмета на стороннем сайте за реальные деньги с
@@ -275,8 +275,8 @@ TRANSLATIONS = {
             'contract float',
         'float-value':
             'float-value',
-        'Auto (best value)':
-            'Auto (best value)',
+        'Auto (cheapest by price)':
+            'Auto (cheapest by price)',
         'Record':
             'Record',
         'Record used in the rarity aggregate':
@@ -590,8 +590,8 @@ TRANSLATIONS = {
             'контрактный флоат',
         'float-value':
             'стоимость за флоат',
-        'Auto (best value)':
-            'Авто (лучшая по стоимости)',
+        'Auto (cheapest by price)':
+            'Авто (самая дешёвая по цене)',
         'Record':
             'Запись',
         'Record used in the rarity aggregate':
@@ -619,7 +619,7 @@ TRANSLATIONS = {
         'trade-up into the next rarity is unprofitable':
             'контракт в следующую редкость невыгоден',
         'MODE5_ADV_NOTE':
-            'Продвинутый режим: представительная цена редкости — среднее введённых цен скинов. Флоат-бонус берётся из лучшего ROI контракта в следующую редкость (10→1): чистые филлеры поднимают ранг редкости только когда более чистые входы реально дают более ценный выход. Контрактный вес флоата w = (флоат − cap_min)/(cap_max − cap_min); стоимость за флоат G = 100·(1−w)/цена.',
+            'Продвинутый режим: представительная цена редкости — среднее по скинам цены самой дешёвой (или выбранной вручную) записи скина — цена, по которой её реально набираешь. Флоат-бонус берётся из лучшего ROI контракта в следующую редкость (10→1): чистые филлеры поднимают ранг редкости только когда более чистые входы реально дают более ценный выход. Контрактный вес флоата w = (флоат − cap_min)/(cap_max − cap_min); стоимость за флоат G = 100·(1−w)/цена.',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Укажи цену, которую считаешь справедливой для каждого качества. Отметь галочку, "
@@ -906,8 +906,8 @@ TRANSLATIONS = {
             'контрактний флоат',
         'float-value':
             'вартість за флоат',
-        'Auto (best value)':
-            'Авто (найкраща за вартістю)',
+        'Auto (cheapest by price)':
+            'Авто (найдешевша за ціною)',
         'Record':
             'Запис',
         'Record used in the rarity aggregate':
@@ -935,7 +935,7 @@ TRANSLATIONS = {
         'trade-up into the next rarity is unprofitable':
             'контракт у наступну рідкість невигідний',
         'MODE5_ADV_NOTE':
-            'Просунутий режим: представницька ціна рідкості — середнє введених цін скінів. Флоат-бонус береться з найкращого ROI контракту в наступну рідкість (10→1): чисті філери піднімають ранг рідкості лише коли чистіші входи справді дають цінніший вихід. Контрактна вага флоата w = (флоат − cap_min)/(cap_max − cap_min); вартість за флоат G = 100·(1−w)/ціна.',
+            'Просунутий режим: представницька ціна рідкості — середнє по скінах ціни найдешевшого (або обраного вручну) запису скіна — ціна, за якою її реально набираєш. Флоат-бонус береться з найкращого ROI контракту в наступну рідкість (10→1): чисті філери піднімають ранг рідкості лише коли чистіші входи справді дають цінніший вихід. Контрактна вага флоата w = (флоат − cap_min)/(cap_max − cap_min); вартість за флоат G = 100·(1−w)/ціна.',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Вкажи ціну, яку вважаєш справедливою для кожної якості. Постав галочку, "
@@ -2121,7 +2121,9 @@ def aggregate_record_index(skin, midpoint=False):
     """Индекс записи скина, идущей в агрегат редкости (от скина — ровно одна запись).
 
     Если ручной выбор agg_choice указывает на ВАЛИДНУЮ запись — берётся он; иначе
-    авто: запись с максимальным G. Откат на авто при удалении/невалидности выбранной.
+    авто: САМАЯ ДЕШЁВАЯ по цене запись (та, что реально покупаешь как филлер — «худшее»
+    качество по цене, не по шкале G и не по флоату). Откат на авто при удалении/
+    невалидности выбранной.
     """
     metrics = skin_records_metrics(skin, midpoint)
     if not metrics:
@@ -2130,32 +2132,42 @@ def aggregate_record_index(skin, midpoint=False):
     choice = skin.get("agg_choice")
     if choice is not None and choice in valid_indices:
         return choice
-    best = max(metrics, key=lambda m: (m["G"] if m["G"] is not None else float("-inf")))
-    return best["index"]
+    cheapest = min(metrics, key=lambda m: skin["records"][m["index"]]["price"])
+    return cheapest["index"]
 
 
 def rarity_float_aggregates(skins, midpoint=False):
-    """Агрегаты редкости по флоату: средняя цена/(1−w) и лучший показатель G.
+    """Агрегаты редкости по флоату.
 
-    От каждого скина в агрегат идёт ровно ОДНА запись (авто-лучшая по G или ручной
-    выбор), чтобы скин с несколькими качествами не весил как несколько скинов.
-    Возвращает dict {avg_float_cost, best_G, best_skin, n_skins} или None.
+    * Средняя стоимость флоата — среднее цена/(1−w) по ПРЕДСТАВИТЕЛЬНЫМ записям
+      скинов (по одной на скин: самой дешёвой по цене или выбранной вручную), чтобы
+      скин с несколькими качествами не весил как несколько скинов.
+    * Лучший показатель G — максимум по ВСЕМ валидным записям редкости (лучшая
+      сделка по флоат-ценности, независимо от того, какая запись представляет скин
+      в средней).
+    Возвращает {avg_float_cost, best_G, best_skin, n_skins} или None.
     """
-    per_skin = []
+    per_skin = []     # представительные записи (для средней стоимости)
+    all_metrics = []  # все валидные записи (для лучшего G)
     for skin in skins:
+        sm = skin_records_metrics(skin, midpoint)
+        for m in sm:
+            all_metrics.append({"skin": skin.get("name", "?"), **m})
         idx = aggregate_record_index(skin, midpoint)
-        if idx is None:
-            continue
-        m = record_metrics(skin["records"][idx], skin["cap_lo"], skin["cap_hi"], midpoint)
-        if m is not None:
-            per_skin.append({"skin": skin.get("name", "?"), **m})
+        if idx is not None:
+            rm = record_metrics(skin["records"][idx], skin["cap_lo"], skin["cap_hi"], midpoint)
+            if rm is not None:
+                per_skin.append({"skin": skin.get("name", "?"), **rm})
     if not per_skin:
         return None
     costs = [p["price_per_clean"] for p in per_skin if p["price_per_clean"] is not None]
     avg_cost = (sum(costs) / len(costs)) if costs else None
-    best = max(per_skin, key=lambda p: (p["G"] if p["G"] is not None else float("-inf")))
-    return {"avg_float_cost": avg_cost, "best_G": best["G"],
-            "best_skin": best["skin"], "n_skins": len(per_skin)}
+    best = max(all_metrics, key=lambda p: (p["G"] if p["G"] is not None else float("-inf"))) \
+        if all_metrics else None
+    return {"avg_float_cost": avg_cost,
+            "best_G": (best["G"] if best else None),
+            "best_skin": (best["skin"] if best else None),
+            "n_skins": len(per_skin)}
 
 
 # ===========================================================================
@@ -2306,19 +2318,19 @@ def best_tradeup_for_target(filler_skins, target_skin, target_wear=None, midpoin
 def rarity_representative_price(skins, midpoint=False):
     """Представительная цена редкости для ценового ранга в продвинутом режиме.
 
-    Среднее по скинам средней цены ВАЛИДНЫХ записей каждого скина (каждый скин —
-    равный вес; внутри скина усредняются введённые качества). Это устойчивый
-    «типичный» уровень цены редкости, в отличие от цены лучшей-по-G записи (она
-    смещена к самому дешёвому-за-чистоту варианту). None, если валидных нет."""
-    skin_prices = []
+    Среднее по скинам цены ПРЕДСТАВИТЕЛЬНОЙ записи скина (самой дешёвой по цене или
+    выбранной вручную через agg_choice). То есть редкость представляет «худшее»
+    (самое дешёвое) качество — цена, по которой её реально набираешь как филлер;
+    и выбор записи для агрегата напрямую влияет на ранг. None, если валидных нет."""
+    prices = []
     for skin in skins:
-        recs = [rec["price"] for rec in skin.get("records", [])
-                if record_metrics(rec, skin["cap_lo"], skin["cap_hi"], midpoint) is not None]
-        if recs:
-            skin_prices.append(sum(recs) / len(recs))
-    if not skin_prices:
+        idx = aggregate_record_index(skin, midpoint)
+        if idx is None:
+            continue
+        prices.append(skin["records"][idx]["price"])
+    if not prices:
         return None
-    return sum(skin_prices) / len(skin_prices)
+    return sum(prices) / len(prices)
 
 
 def analyze_collection_advanced(rarity_data, midpoint=False):
@@ -2439,7 +2451,7 @@ def _mode_5_advanced(currency):
                                     f"{_('contract float')} w = {m['w']:.12f} · "
                                     f"{_('float-value')} G = {m['G']:.2f}")
                 if nrec > 1:
-                    agg_opts = [_("Auto (best value)")] + \
+                    agg_opts = [_("Auto (cheapest by price)")] + \
                                [f"{_('Record')} {i + 1}" for i in range(nrec)]
                     agg_sel = st.selectbox(
                         _("Record used in the rarity aggregate"),
