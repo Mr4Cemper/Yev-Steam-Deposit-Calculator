@@ -19,7 +19,7 @@
 Yev Steam Deposit Calculator
 ============================
 
-Version: 2.5
+Version: 2.4
 
 Streamlit-приложение для оценки экономики торговли скинами CS2. Оно сравнивает
 стоимость покупки/продажи предмета на стороннем сайте за реальные деньги с
@@ -245,17 +245,6 @@ TRANSLATIONS = {
         "The price shown to buyers on the Steam Market.": "The price shown to buyers on the Steam Market.",
         "How the ranking works": "How the ranking works",
         "rk_exp_strong": "very expensive vs the lower tier",
-        "cleanliness": "cleanliness",
-        "floor (cheapest)": "floor (cheapest)",
-        "cleanliness premium": "cleanliness premium",
-        "unit": "unit",
-        "pricier and not cleaner — not worth it": "pricier and not cleaner — not worth it",
-        "score": "score",
-        "cleanliness premium: n/a (add a 2nd float to compare)": "cleanliness premium: n/a (add a 2nd float to compare)",
-        "cleanliness premium: n/a (the cheapest is already the cleanest)": "cleanliness premium: n/a (the cheapest is already the cleanest)",
-        "cheapest cleanliness {b}/{u} ({skin}) · avg {a}/{u}": "cheapest cleanliness {b}/{u} ({skin}) · avg {a}/{u}",
-        "cleanliness premium: n/a (skins need ≥2 floats)": "cleanliness premium: n/a (skins need ≥2 floats)",
-        "Score 0–100 is experimental (relative within a skin, 50/50 clean/cheap).": "Score 0–100 is experimental (relative within a skin, 50/50 clean/cheap).",
         'Advanced float analysis (float & cut)':
             'Advanced float analysis (float & cut)',
         'Advanced mode: for each rarity add skins with their float cap and one or more quality records. The ranking then also accounts for float economics — the contract value of cleanliness. (The single-currency note still applies.)':
@@ -571,17 +560,6 @@ TRANSLATIONS = {
         "The price shown to buyers on the Steam Market.": "Цена, которую видят покупатели на Торговой площадке Steam.",
         "How the ranking works": "Как считается ранг",
         "rk_exp_strong": "очень дорогое относительно качества ниже",
-        "cleanliness": "чистота",
-        "floor (cheapest)": "пол (самый дешёвый)",
-        "cleanliness premium": "наценка за чистоту",
-        "unit": "ед.",
-        "pricier and not cleaner — not worth it": "дороже и не чище — невыгодно",
-        "score": "балл",
-        "cleanliness premium: n/a (add a 2nd float to compare)": "наценка за чистоту: н/д (добавьте 2-й флоат для сравнения)",
-        "cleanliness premium: n/a (the cheapest is already the cleanest)": "наценка за чистоту: н/д (самый дешёвый уже самый чистый)",
-        "cheapest cleanliness {b}/{u} ({skin}) · avg {a}/{u}": "дешевле всего чистота {b}/{u} ({skin}) · в среднем {a}/{u}",
-        "cleanliness premium: n/a (skins need ≥2 floats)": "наценка за чистоту: н/д (нужно ≥2 флоата у скинов)",
-        "Score 0–100 is experimental (relative within a skin, 50/50 clean/cheap).": "Балл 0–100 — экспериментальный (относительный внутри скина, 50/50 чистота/цена).",
         'Advanced float analysis (float & cut)':
             'Продвинутый анализ флоата (флоат и резка)',
         'Advanced mode: for each rarity add skins with their float cap and one or more quality records. The ranking then also accounts for float economics — the contract value of cleanliness. (The single-currency note still applies.)':
@@ -641,7 +619,7 @@ TRANSLATIONS = {
         'trade-up into the next rarity is unprofitable':
             'контракт в следующую редкость невыгоден',
         'MODE5_ADV_NOTE':
-            'Продвинутый режим: цена редкости для ранга — её САМАЯ ДЕШЁВАЯ запись (цена филлеров). Флоат-ценность — это наценка за чистоту ВНУТРИ скина: пол = самая дешёвая запись скина, и для записи чище пола наценка = (цена − цена пола)/(чистота − чистота пола) = $ за доп. единицу чистоты (нужно ≥2 флоата; ниже = дешевле чистота = меньше переплата). Одна запись → н/д. Флоат-бонус берётся из лучшего ROI контракта в следующую редкость (10→1): чистые филлеры поднимают ранг редкости только когда более чистые входы реально дают более ценный выход. Контрактный вес флоата w = (флоат − cap_min)/(cap_max − cap_min); стоимость за флоат G = 100·(1−w)/цена.',
+            'Продвинутый режим: цена редкости для ранга — её САМАЯ ДЕШЁВАЯ запись (цена филлеров). Средняя стоимость флоата = среднее цена/(1−w) по самой выгодной-по-G записи каждого скина (иначе грязные BS раздували бы её; цена/(1−w) по природе велика для грязных/дорогих предметов). Лучший G — лучшая сделка цена/флоат в редкости. Флоат-бонус берётся из лучшего ROI контракта в следующую редкость (10→1): чистые филлеры поднимают ранг редкости только когда более чистые входы реально дают более ценный выход. Контрактный вес флоата w = (флоат − cap_min)/(cap_max − cap_min); стоимость за флоат G = 100·(1−w)/цена.',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Укажи цену, которую считаешь справедливой для каждого качества. Отметь галочку, "
@@ -898,17 +876,6 @@ TRANSLATIONS = {
         "The price shown to buyers on the Steam Market.": "Ціна, яку бачать покупці на Торговій площадці Steam.",
         "How the ranking works": "Як рахується ранг",
         "rk_exp_strong": "дуже дороге відносно якості нижче",
-        "cleanliness": "чистота",
-        "floor (cheapest)": "підлога (найдешевший)",
-        "cleanliness premium": "націнка за чистоту",
-        "unit": "од.",
-        "pricier and not cleaner — not worth it": "дорожче і не чистіше — невигідно",
-        "score": "бал",
-        "cleanliness premium: n/a (add a 2nd float to compare)": "націнка за чистоту: н/д (додайте 2-й флоат для порівняння)",
-        "cleanliness premium: n/a (the cheapest is already the cleanest)": "націнка за чистоту: н/д (найдешевший уже найчистіший)",
-        "cheapest cleanliness {b}/{u} ({skin}) · avg {a}/{u}": "найдешевше чистота {b}/{u} ({skin}) · у середньому {a}/{u}",
-        "cleanliness premium: n/a (skins need ≥2 floats)": "націнка за чистоту: н/д (потрібно ≥2 флоата у скінів)",
-        "Score 0–100 is experimental (relative within a skin, 50/50 clean/cheap).": "Бал 0–100 — експериментальний (відносний усередині скіна, 50/50 чистота/ціна).",
         'Advanced float analysis (float & cut)':
             'Просунутий аналіз флоата (флоат і різання)',
         'Advanced mode: for each rarity add skins with their float cap and one or more quality records. The ranking then also accounts for float economics — the contract value of cleanliness. (The single-currency note still applies.)':
@@ -968,7 +935,7 @@ TRANSLATIONS = {
         'trade-up into the next rarity is unprofitable':
             'контракт у наступну рідкість невигідний',
         'MODE5_ADV_NOTE':
-            'Просунутий режим: ціна рідкості для рангу — її НАЙДЕШЕВШИЙ запис (ціна філерів). Флоат-цінність — це націнка за чистоту ВСЕРЕДИНІ скіна: підлога = найдешевший запис скіна, і для запису чистішого підлоги націнка = (ціна − ціна підлоги)/(чистота − чистота підлоги) = $ за дод. одиницю чистоти (потрібно ≥2 флоата; нижче = дешевша чистота = менша переплата). Один запис → н/д. Флоат-бонус береться з найкращого ROI контракту в наступну рідкість (10→1): чисті філери піднімають ранг рідкості лише коли чистіші входи справді дають цінніший вихід. Контрактна вага флоата w = (флоат − cap_min)/(cap_max − cap_min); вартість за флоат G = 100·(1−w)/ціна.',
+            'Просунутий режим: ціна рідкості для рангу — її НАЙДЕШЕВШИЙ запис (ціна філерів). Середня вартість флоата = середнє ціна/(1−w) по найвигіднішому-за-G запису кожного скіна (інакше брудні BS роздували б її; ціна/(1−w) за природою велика для брудних/дорогих предметів). Найкращий G — найкраща угода ціна/флоат у рідкості. Флоат-бонус береться з найкращого ROI контракту в наступну рідкість (10→1): чисті філери піднімають ранг рідкості лише коли чистіші входи справді дають цінніший вихід. Контрактна вага флоата w = (флоат − cap_min)/(cap_max − cap_min); вартість за флоат G = 100·(1−w)/ціна.',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Вкажи ціну, яку вважаєш справедливою для кожної якості. Постав галочку, "
@@ -2053,6 +2020,32 @@ def contract_weight(f, cap_lo, cap_hi):
     return min(1.0, max(0.0, (f - cap_lo) / span))
 
 
+def float_value_metric(w, price):
+    """G = 100·(1 − w) / цена — «флоат-ценность на единицу денег».
+
+    Чем выше G, тем меньше переплата за чистоту: чистый дешёвый предмет даёт высокий
+    G, дорогой грязный — низкий. Деление только на цену (она валидируется > 0), на
+    грязных флоатах метрика честно стремится к 0, а не взрывается (в отличие от
+    черновой идеи цена/флоат). Возвращает None при некорректных входах.
+    """
+    if price is None or price <= 0 or w is None:
+        return None
+    return 100.0 * (1.0 - w) / price
+
+
+def price_per_clean_unit(w, price):
+    """цена / (1 − w) — цена полной единицы чистоты (для средней стоимости флоата).
+
+    Возвращает None при w ≈ 1 (платить за нулевую чистоту — бесконечно дорого).
+    """
+    if price is None or price <= 0 or w is None:
+        return None
+    q = 1.0 - w
+    if q <= 1e-9:
+        return None
+    return price / q
+
+
 def validate_cap(cap_lo, cap_hi):
     """Проверка резки. Границы 0.0 и 1.0 допустимы (стандартный скин 0.00–1.00);
     несуществование флоатов 0.0/1.0 — ограничение на ФЛОАТ, а не на резку."""
@@ -2101,9 +2094,7 @@ def validate_record(rec, cap_lo, cap_hi):
 
 
 def record_metrics(rec, cap_lo, cap_hi, midpoint=False):
-    """Показатели валидной записи: eff_float, w (вес в контракте), q (чистота = 1−w),
-    price. None — если запись невалидна. Метрики «ценности» (наценка за чистоту, балл)
-    считаются на уровне скина/редкости, где есть с чем сравнивать."""
+    """Показатели валидной записи: eff_float, w, G, price_per_clean. None — если запись невалидна."""
     if validate_record(rec, cap_lo, cap_hi):
         return None
     f = record_effective_float(rec, cap_lo, cap_hi, midpoint)
@@ -2111,8 +2102,8 @@ def record_metrics(rec, cap_lo, cap_hi, midpoint=False):
         return None
     w = contract_weight(f, cap_lo, cap_hi)
     return {"eff_float": f, "w": w,
-            "q": (1.0 - w) if w is not None else None,
-            "price": float(rec["price"])}
+            "G": float_value_metric(w, rec["price"]),
+            "price_per_clean": price_per_clean_unit(w, rec["price"])}
 
 
 def skin_records_metrics(skin, midpoint=False):
@@ -2126,85 +2117,56 @@ def skin_records_metrics(skin, midpoint=False):
     return out
 
 
-def skin_premium_table(skin, midpoint=False):
-    """Наценка за чистоту ВНУТРИ скина — основная метрика флоат-ценности.
+def aggregate_record_index(skin, midpoint=False):
+    """Индекс записи скина, идущей в агрегат редкости (от скина — ровно одна запись).
 
-    Пол — самая дешёвая валидная запись скина (при равной цене — самая чистая); это
-    цена без наценки за флоат. Для каждой записи ЧИЩЕ пола:
-        наценка = (Цена − Цена_пола) / (Чистота − Чистота_пола)   [$ за ед. чистоты]
-    Здесь нет деления на (1−w), поэтому метрика не взрывается ни при грязи (w→1), ни
-    при любой цене. Ниже наценка — дешевле чистота — меньше переплата за флоат.
-
-    Статусы записей: 'floor' (пол), 'premium' (чище пола, есть наценка),
-    'dominated' (дороже пола и не чище — невыгодно). best_premium — минимальная наценка
-    среди 'premium'-записей (лучшая сделка по чистоте у этого скина); None, если записей
-    меньше двух ИЛИ ни одна не чище пола (например, самый дешёвый уже самый чистый).
-    Возвращает dict или None (нет валидных записей).
+    Если ручной выбор agg_choice указывает на ВАЛИДНУЮ запись — берётся он; иначе
+    авто: САМАЯ ДЕШЁВАЯ по цене запись (та, что реально покупаешь как филлер — «худшее»
+    качество по цене, не по шкале G и не по флоату). Откат на авто при удалении/
+    невалидности выбранной.
     """
-    ms = skin_records_metrics(skin, midpoint)
-    if not ms:
+    metrics = skin_records_metrics(skin, midpoint)
+    if not metrics:
         return None
-    floor = min(ms, key=lambda m: (m["price"], m["w"]))  # дешевле, при равенстве — чище
-    p0, q0 = floor["price"], floor["q"]
-    recs, best, best_i, cleaner_exists = [], None, None, False
-    for m in ms:
-        if m["index"] == floor["index"]:
-            recs.append({**m, "premium": None, "status": "floor"})
-            continue
-        dq = m["q"] - q0
-        if dq > 1e-9:  # чище пола
-            cleaner_exists = True
-            prem = (m["price"] - p0) / dq
-            recs.append({**m, "premium": prem, "status": "premium"})
-            if best is None or prem < best:
-                best, best_i = prem, m["index"]
-        else:  # не чище, но не дешевле пола — доминируется
-            recs.append({**m, "premium": None, "status": "dominated"})
-    return {"floor_index": floor["index"], "records": recs, "best_premium": best,
-            "best_index": best_i, "n_records": len(ms), "cleaner_exists": cleaner_exists}
+    valid_indices = {m["index"] for m in metrics}
+    choice = skin.get("agg_choice")
+    if choice is not None and choice in valid_indices:
+        return choice
+    cheapest = min(metrics, key=lambda m: skin["records"][m["index"]]["price"])
+    return cheapest["index"]
 
 
-def rarity_float_summary(skins, midpoint=False):
-    """Сводка наценки за чистоту по редкости (на основе наценок внутри скинов).
+def rarity_float_aggregates(skins, midpoint=False):
+    """Агрегаты редкости по флоату.
 
-    best_premium — минимальная наценка за чистоту среди всех скинов (самая дешёвая
-    чистота в редкости); avg_premium — среднее лучших наценок по скинам, у которых
-    наценку вообще можно посчитать (≥2 флоата и есть запись чище пола). n_with_premium —
-    сколько скинов попало в расчёт. Скины с одной записью в наценку не входят.
+    * Средняя стоимость флоата — среднее цена/(1−w) по САМОЙ ВЫГОДНОЙ-по-G записи
+      КАЖДОГО скина (одна на скин). Берётся именно лучшая-по-G (а не самая дешёвая):
+      у дешёвых грязных BS-скинов w≈0.999, и цена/(1−w) уходит в тысячи; лучшая-по-G
+      запись — самый чистый-выгодный вариант, поэтому метрика не взрывается.
+    * Лучший показатель G — максимум по ВСЕМ валидным записям редкости (лучшая
+      сделка по флоат-ценности).
+    Возвращает {avg_float_cost, best_G, best_skin, n_skins} или None.
+
+    Примечание: цена/(1−w) по своей природе велика для грязных/дорогих предметов —
+    это «цена за единицу чистоты», и у грязного предмета чистоты почти нет.
     """
-    per_skin_best, overall_best, overall_best_skin = [], None, None
+    all_metrics = []      # все валидные записи (для лучшего G)
+    per_skin_best = []    # лучшая-по-G запись каждого скина (для средней стоимости)
     for skin in skins:
-        t = skin_premium_table(skin, midpoint)
-        if t and t["best_premium"] is not None:
-            per_skin_best.append(t["best_premium"])
-            if overall_best is None or t["best_premium"] < overall_best:
-                overall_best, overall_best_skin = t["best_premium"], skin.get("name", "?")
-    if not per_skin_best:
-        return {"best_premium": None, "avg_premium": None,
-                "best_skin": None, "n_with_premium": 0}
-    return {"best_premium": overall_best,
-            "avg_premium": sum(per_skin_best) / len(per_skin_best),
-            "best_skin": overall_best_skin, "n_with_premium": len(per_skin_best)}
-
-
-def float_value_scores(records_metrics, alpha=0.5):
-    """ЭКСПЕРИМЕНТАЛЬНЫЙ балл флоат-ценности 0–100 внутри набора записей.
-
-    Сводит чистоту q (уже [0,1]) и дешевизну (нормированную min-max цену в наборе) в
-    один балл: score = 100·(α·q + (1−α)·дешевизна). Выше = чище и дешевле. Балл
-    ОТНОСИТЕЛЕН набору (меняется при добавлении записей) и зависит от веса α (по
-    умолчанию 0.5/0.5) — поэтому он вспомогательный, а основная метрика — наценка за
-    чистоту. Возвращает тот же список со старыми полями плюс 'score'.
-    """
-    if not records_metrics:
-        return []
-    prices = [m["price"] for m in records_metrics]
-    p_min, p_max = min(prices), max(prices)
-    out = []
-    for m in records_metrics:
-        cheap = 1.0 - ((m["price"] - p_min) / (p_max - p_min)) if p_max > p_min else 1.0
-        out.append({**m, "score": 100.0 * (alpha * m["q"] + (1.0 - alpha) * cheap)})
-    return out
+        sm = skin_records_metrics(skin, midpoint)
+        if not sm:
+            continue
+        for m in sm:
+            all_metrics.append({"skin": skin.get("name", "?"), **m})
+        best_rec = max(sm, key=lambda m: (m["G"] if m["G"] is not None else float("-inf")))
+        per_skin_best.append(best_rec)
+    if not all_metrics:
+        return None
+    costs = [m["price_per_clean"] for m in per_skin_best if m["price_per_clean"] is not None]
+    avg_cost = (sum(costs) / len(costs)) if costs else None
+    best = max(all_metrics, key=lambda m: (m["G"] if m["G"] is not None else float("-inf")))
+    return {"avg_float_cost": avg_cost, "best_G": best["G"],
+            "best_skin": best["skin"], "n_skins": len(per_skin_best)}
 
 
 # ===========================================================================
@@ -2378,7 +2340,7 @@ def analyze_collection_advanced(rarity_data, midpoint=False):
     (tradeup_float_bonus). Высшее качество флоат-бонус не получает (из него не крафтят).
 
     Возвращает список dict: key, price, ratio, rank, rank_index, role, float_bonus,
-    roi, W_star, verdict (overpay_clean), float_summary (наценка за чистоту по редкости).
+    roi, W_star, verdict (overpay_clean), aggregates (агрегаты редкости по флоату).
     """
     active = []
     for key, skins in rarity_data:
@@ -2413,7 +2375,7 @@ def analyze_collection_advanced(rarity_data, midpoint=False):
             "roi": (roi_info["roi"] if roi_info else None),
             "W_star": (roi_info["W_star"] if roi_info else None),
             "verdict": verdict,
-            "float_summary": rarity_float_summary(rar["skins"], midpoint),
+            "aggregates": rarity_float_aggregates(rar["skins"], midpoint),
         })
     return results
 
@@ -2483,38 +2445,11 @@ def _mode_5_advanced(currency):
                             m = record_metrics(rec, cap_lo, cap_hi, midpoint)
                             if m:
                                 st.caption(
-                                    f"{_('cleanliness')} = {m['q'] * 100:.1f}% · w = {m['w']:.12f}")
-                skin_obj = {"name": name or f"{_(key)} #{si + 1}",
-                            "cap_lo": cap_lo, "cap_hi": cap_hi,
-                            "records": records, "agg_choice": None}
-                pt = skin_premium_table(skin_obj, midpoint)
-                if pt:
-                    scored = {r["index"]: r["score"]
-                              for r in float_value_scores(pt["records"], alpha=0.5)}
-                    lines = []
-                    for r in pt["records"]:
-                        wn = wear_of_float(r["eff_float"]) or "?"
-                        qp = f"{r['q'] * 100:.1f}%"
-                        sc = scored.get(r["index"])
-                        sct = f" · {_('score')} {sc:.0f}" if sc is not None else ""
-                        money = format_currency(r["price"], currency, price_decimals)
-                        if r["status"] == "floor":
-                            lines.append(f"{wn} ({r['eff_float']:.3f}): {_('cleanliness')} {qp} · "
-                                         f"{money} — {_('floor (cheapest)')}{sct}")
-                        elif r["status"] == "premium":
-                            prem = format_currency(r["premium"], currency, price_decimals)
-                            lines.append(f"{wn} ({r['eff_float']:.3f}): {_('cleanliness')} {qp} · "
-                                         f"{_('cleanliness premium')} {prem}/{_('unit')}{sct}")
-                        else:
-                            lines.append(f"{wn} ({r['eff_float']:.3f}): {_('cleanliness')} {qp} — "
-                                         f"{_('pricier and not cleaner — not worth it')}{sct}")
-                    st.markdown("<div style='font-size:0.85em;opacity:0.85;'>" +
-                                "<br>".join(lines) + "</div>", unsafe_allow_html=True)
-                    if pt["n_records"] < 2:
-                        st.caption("ℹ️ " + _("cleanliness premium: n/a (add a 2nd float to compare)"))
-                    elif not pt["cleaner_exists"]:
-                        st.caption("ℹ️ " + _("cleanliness premium: n/a (the cheapest is already the cleanest)"))
-                skins.append(skin_obj)
+                                    f"{_('contract float')} w = {m['w']:.12f} · "
+                                    f"{_('float-value')} G = {m['G']:.2f}")
+                skins.append({"name": name or f"{_(key)} #{si + 1}",
+                              "cap_lo": cap_lo, "cap_hi": cap_hi,
+                              "records": records, "agg_choice": None})
             if skins:
                 rarity_data.append((key, skins))
 
@@ -2575,11 +2510,11 @@ def _mode_5_advanced(currency):
         st.success(_("Best buy: {rarity} (rank {rank})").format(
             rarity=name_by_key.get(best["key"], best["key"]), rank=best["rank"]))
 
-    # Контрактные вердикты и наценка за чистоту по редкости
+    # Контрактные вердикты и агрегаты редкости по флоату
     st.markdown("#### 🔧 " + _("Trade-up & float details"))
     for r in results:
         nm = name_by_key.get(r["key"], r["key"])
-        fs = r["float_summary"]
+        agg = r["aggregates"]
         parts = []
         if r["verdict"] is not None:
             verdict_txt = verdict_label.get(r["verdict"], "—")
@@ -2588,16 +2523,15 @@ def _mode_5_advanced(currency):
                 extra = " " + _("(best ROI {roi}% at input cleanliness W̄={w})").format(
                     roi=f"{r['roi']*100:.0f}", w=f"{r['W_star']:.2f}")
             parts.append(f"**{_('craft up')}:** {verdict_txt}{extra}")
-        if fs and fs["best_premium"] is not None:
-            best_p = format_currency(fs["best_premium"], currency, price_decimals)
-            avg_p = format_currency(fs["avg_premium"], currency, price_decimals)
-            parts.append(_("cheapest cleanliness {b}/{u} ({skin}) · avg {a}/{u}").format(
-                b=best_p, a=avg_p, u=_("unit"), skin=fs["best_skin"]))
-        else:
-            parts.append(_("cleanliness premium: n/a (skins need ≥2 floats)"))
-        st.markdown(f"<span style='color:{color_by_key.get(r['key'],'#888')};'>● </span>"
-                    f"**{nm}** — " + " · ".join(parts), unsafe_allow_html=True)
-    st.caption("ℹ️ " + _("Score 0–100 is experimental (relative within a skin, 50/50 clean/cheap)."))
+        if agg:
+            cost = agg["avg_float_cost"]
+            cost_str = "—" if cost is None else format_currency(cost, currency, price_decimals)
+            parts.append(_("avg float cost {c} · best float-value (G) {g} ({skin})").format(
+                c=cost_str, g=f"{agg['best_G']:.2f}" if agg["best_G"] is not None else "—",
+                skin=agg["best_skin"]))
+        if parts:
+            st.markdown(f"<span style='color:{color_by_key.get(r['key'],'#888')};'>● </span>"
+                        f"**{nm}** — " + " · ".join(parts), unsafe_allow_html=True)
 
     with st.expander("ℹ️ " + _("How the ranking works")):
         st.markdown(_("MODE5_FORMULAS"))
