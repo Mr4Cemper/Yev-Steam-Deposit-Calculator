@@ -313,10 +313,8 @@ TRANSLATIONS = {
             'Trade-up & float details',
         'craft up':
             'craft up',
-        '(best ROI {roi}% at input cleanliness W̄={w})':
-            '(best ROI {roi}% at input cleanliness W̄={w})',
-        'avg float cost {c} · best float-value (G) {g} ({skin})':
-            'avg float cost {c} · best float-value (G) {g} ({skin})',
+        "m5a_roi_at_wear":
+            "(best ROI {roi}% at avg input wear W̄={w}; 0=clean … 1=worn)",
         'clean pays off — worth buying low-float fillers':
             'clean pays off — worth buying low-float fillers',
         "don't overpay for clean — a dirty filler gives the same output":
@@ -326,7 +324,17 @@ TRANSLATIONS = {
         'trade-up into the next rarity is unprofitable':
             'trade-up into the next rarity is unprofitable',
         'MODE5_ADV_NOTE':
-            'MODE5_ADV_NOTE',
+            "Advanced mode: a rarity's price for ranking is its CHEAPEST record (the filler "
+            "price). Float value is the cleanliness premium WITHIN a skin: the floor is the "
+            "skin's cheapest record, and for a record cleaner than the floor the premium = "
+            "(price − floor price)/(cleanliness − floor cleanliness) = $ per extra unit of "
+            "cleanliness (needs ≥2 floats; lower = cheaper cleanliness = less overpay). One "
+            "record → n/a. The float bonus comes from the best contract ROI into the next "
+            "rarity (10→1): clean fillers raise a rarity's rank only when cleaner inputs "
+            "actually yield a more valuable output. Contract float weight w = (float − "
+            "cap_min)/(cap_max − cap_min). In advanced mode there is no 'beautiful/liquid' "
+            "checkbox — its role is played by the float bonus from contract ROI (the checkbox "
+            "described above applies to the simple mode).",
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Enter the price you consider fair for each rarity. Tick the box if you "
@@ -409,8 +417,6 @@ TRANSLATIONS = {
         "Currency without cents (integers only)": "Валюта без копеек (целые числа)",
         "Forces integer Steam pricing. Auto-enabled for ₴ / UAH.":
             "Включает целочисленные цены Steam. Для ₴ / UAH включается автоматически.",
-        "For integer currencies the 10% + 5% model with nearest rounding is used; the % field above is ignored.":
-            "Для целочисленных валют используется модель 10% + 5% с округлением до ближайшего; поле % выше не учитывается.",
         "Cross-currency settings": "Настройки кросс-курсов",
         "Spent currency (e.g. UAH)": "Валюта затрат (например, UAH)",
         "Site currency (e.g. USD)": "Валюта сайта (например, USD)",
@@ -675,10 +681,8 @@ TRANSLATIONS = {
             'Контракты и детали флоата',
         'craft up':
             'крафт вверх',
-        '(best ROI {roi}% at input cleanliness W̄={w})':
-            '(лучший ROI {roi}% при чистоте входов W̄={w})',
-        'avg float cost {c} · best float-value (G) {g} ({skin})':
-            'средняя стоимость флоата {c} · лучшая стоимость за флоат (G) {g} ({skin})',
+        "m5a_roi_at_wear":
+            "(лучший ROI {roi}% при средней изношенности входов W̄={w}; 0=чистый … 1=грязный)",
         'clean pays off — worth buying low-float fillers':
             'чистота окупается — есть смысл брать низкофлоатные филлеры',
         "don't overpay for clean — a dirty filler gives the same output":
@@ -688,7 +692,7 @@ TRANSLATIONS = {
         'trade-up into the next rarity is unprofitable':
             'контракт в следующую редкость невыгоден',
         'MODE5_ADV_NOTE':
-            'Продвинутый режим: цена редкости для ранга — её САМАЯ ДЕШЁВАЯ запись (цена филлеров). Флоат-ценность — это наценка за чистоту ВНУТРИ скина: пол = самая дешёвая запись скина, и для записи чище пола наценка = (цена − цена пола)/(чистота − чистота пола) = $ за доп. единицу чистоты (нужно ≥2 флоата; ниже = дешевле чистота = меньше переплата). Одна запись → н/д. Флоат-бонус берётся из лучшего ROI контракта в следующую редкость (10→1): чистые филлеры поднимают ранг редкости только когда более чистые входы реально дают более ценный выход. Контрактный вес флоата w = (флоат − cap_min)/(cap_max − cap_min); стоимость за флоат G = 100·(1−w)/цена.',
+            'Продвинутый режим: цена редкости для ранга — её САМАЯ ДЕШЁВАЯ запись (цена филлеров). Флоат-ценность — это наценка за чистоту ВНУТРИ скина: пол = самая дешёвая запись скина, и для записи чище пола наценка = (цена − цена пола)/(чистота − чистота пола) = $ за доп. единицу чистоты (нужно ≥2 флоата; ниже = дешевле чистота = меньше переплата). Одна запись → н/д. Флоат-бонус берётся из лучшего ROI контракта в следующую редкость (10→1): чистые филлеры поднимают ранг редкости только когда более чистые входы реально дают более ценный выход. Контрактный вес флоата w = (флоат − cap_min)/(cap_max − cap_min). В продвинутом режиме галочки «красивое/ликвидное» нет — её роль играет флоат-бонус из контрактного ROI (описание галочки выше относится к простому режиму).',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Укажи цену, которую считаешь справедливой для каждого качества. Отметь галочку, "
@@ -773,8 +777,6 @@ TRANSLATIONS = {
         "Currency without cents (integers only)": "Валюта без копійок (цілі числа)",
         "Forces integer Steam pricing. Auto-enabled for ₴ / UAH.":
             "Вмикає цілочисельні ціни Steam. Для ₴ / UAH вмикається автоматично.",
-        "For integer currencies the 10% + 5% model with nearest rounding is used; the % field above is ignored.":
-            "Для цілочисельних валют використовується модель 10% + 5% із заокругленням до найближчого; поле % вище не враховується.",
         "Cross-currency settings": "Налаштування крос-курсів",
         "Spent currency (e.g. UAH)": "Валюта витрат (наприклад, UAH)",
         "Site currency (e.g. USD)": "Валюта сайту (наприклад, USD)",
@@ -1039,10 +1041,8 @@ TRANSLATIONS = {
             'Контракти та деталі флоата',
         'craft up':
             'крафт вгору',
-        '(best ROI {roi}% at input cleanliness W̄={w})':
-            '(найкращий ROI {roi}% за чистоти входів W̄={w})',
-        'avg float cost {c} · best float-value (G) {g} ({skin})':
-            'середня вартість флоата {c} · найкраща вартість за флоат (G) {g} ({skin})',
+        "m5a_roi_at_wear":
+            "(найкращий ROI {roi}% за середньою зношеністю входів W̄={w}; 0=чистий … 1=зношений)",
         'clean pays off — worth buying low-float fillers':
             'чистота окупається — є сенс брати низькофлоатні філери',
         "don't overpay for clean — a dirty filler gives the same output":
@@ -1052,7 +1052,7 @@ TRANSLATIONS = {
         'trade-up into the next rarity is unprofitable':
             'контракт у наступну рідкість невигідний',
         'MODE5_ADV_NOTE':
-            'Просунутий режим: ціна рідкості для рангу — її НАЙДЕШЕВШИЙ запис (ціна філерів). Флоат-цінність — це націнка за чистоту ВСЕРЕДИНІ скіна: підлога = найдешевший запис скіна, і для запису чистішого підлоги націнка = (ціна − ціна підлоги)/(чистота − чистота підлоги) = $ за дод. одиницю чистоти (потрібно ≥2 флоата; нижче = дешевша чистота = менша переплата). Один запис → н/д. Флоат-бонус береться з найкращого ROI контракту в наступну рідкість (10→1): чисті філери піднімають ранг рідкості лише коли чистіші входи справді дають цінніший вихід. Контрактна вага флоата w = (флоат − cap_min)/(cap_max − cap_min); вартість за флоат G = 100·(1−w)/ціна.',
+            'Просунутий режим: ціна рідкості для рангу — її НАЙДЕШЕВШИЙ запис (ціна філерів). Флоат-цінність — це націнка за чистоту ВСЕРЕДИНІ скіна: підлога = найдешевший запис скіна, і для запису чистішого підлоги націнка = (ціна − ціна підлоги)/(чистота − чистота підлоги) = $ за дод. одиницю чистоти (потрібно ≥2 флоата; нижче = дешевша чистота = менша переплата). Один запис → н/д. Флоат-бонус береться з найкращого ROI контракту в наступну рідкість (10→1): чисті філери піднімають ранг рідкості лише коли чистіші входи справді дають цінніший вихід. Контрактна вага флоата w = (флоат − cap_min)/(cap_max − cap_min). У просунутому режимі галочки «красиве/ліквідне» немає — її роль виконує флоат-бонус із контрактного ROI (опис галочки вище стосується простого режиму).',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Вкажи ціну, яку вважаєш справедливою для кожної якості. Постав галочку, "
@@ -2489,12 +2489,14 @@ def input_cost(W_bar, filler_skins, midpoint=False, n=10):
 
 
 def best_tradeup_roi(filler_skins, output_skins, midpoint=False, n=10, steps=100):
-    """Перебор средней чистоты входов W̄ ∈ [0,1]; максимизирует ROI=(E_выход−затраты)/затраты.
+    """Перебор среднего веса флоата входов W̄ ∈ [0,1] (0 = чистый FN, 1 = грязный BS);
+    максимизирует ROI=(E_выход−затраты)/затраты.
 
     Возвращает {roi, W_star, E_out, cost, overpay_clean} или None. overpay_clean:
-        'worth'    — оптимум в чистой зоне (доплата за чистоту оправдана),
-        'avoid'    — оптимум в грязной зоне (за чистоту не переплачивать, бери BS),
-        'moderate' — между.
+        'worth'        — оптимум в чистой зоне (низкий W̄; доплата за чистоту оправдана),
+        'avoid'        — оптимум в грязной зоне (высокий W̄; за чистоту не переплачивать, бери BS),
+        'moderate'     — между,
+        'unprofitable' — даже лучший ROI ≤ 0 (контракт убыточен).
     """
     if not filler_skins or not output_skins:
         return None
@@ -2799,7 +2801,7 @@ def _mode_5_advanced(currency, tp):
             verdict_txt = verdict_label.get(r["verdict"], "—")
             extra = ""
             if r["roi"] is not None and r["W_star"] is not None and r["verdict"] != "unprofitable":
-                extra = " " + _("(best ROI {roi}% at input cleanliness W̄={w})").format(
+                extra = " " + _("m5a_roi_at_wear").format(
                     roi=f"{r['roi']*100:.0f}", w=f"{r['W_star']:.2f}")
             parts.append(f"**{_('craft up')}:** {verdict_txt}{extra}")
         if fs and fs["best_premium"] is not None:
