@@ -262,6 +262,17 @@ TRANSLATIONS = {
             'Advanced mode: for each rarity add skins with their float cap and one or more quality records. The ranking then also accounts for float economics — the contract value of cleanliness. (The single-currency note still applies.)',
         'Default float = midpoint of (wear ∩ cap), instead of worst-in-wear':
             'Default float = midpoint of (wear ∩ cap), instead of worst-in-wear',
+        "m5a_midpoint_label":
+            "Use the wear's MIDPOINT float instead of its worst (dirtiest) — for records without an exact float",
+        "m5a_midpoint_help":
+            "Affects only quality records where you did NOT enter an exact float. OFF (default): the record's "
+            "float is taken as the WORST (dirtiest) end of (wear ∩ cap) — the conservative, cheapest-to-obtain "
+            "assumption. ON: the float is the MIDPOINT of (wear ∩ cap) — an average assumption. Records with an "
+            "exact float entered are unaffected either way.",
+        "m5_tp_help":
+            "When on, you can enter a Steam-market price next to each item. Each price is converted to your "
+            "real currency (via the rates and the Steam top-up bonus), and for every item the CHEAPER of the "
+            "external-market price and the Steam price is used in the ranking. Off: only external prices, one currency.",
         'Skins in this rarity':
             'Skins in this rarity',
         'Skin':
@@ -342,6 +353,11 @@ TRANSLATIONS = {
             "**Beauty / liquidity:** ticking a rarity adds +0.5 to its ratio and to the tier one below, "
             "+0.25 to the tier two below (nothing three below); it never affects a rarity above the "
             "ticked one. For the top rarity the bonus instead improves its reversed score.\n\n"
+            "**Rarity-position adjustments (rank only):** independent of beauty, the rank also shifts by "
+            "position among the rarities you actually entered — these touch ONLY the rank, never the displayed "
+            "ratio or any raw number/comparison. The lowest tier gets +0.25; the top tier an extra −0.5 (on top "
+            "of its reverse penalty); the 2nd-from-top −0.5, 3rd-from-top −0.35, 4th-from-top −0.25. In a small "
+            "collection one tier can be both 'lowest' and 'k-th from top' — the shifts simply add up.\n\n"
             "Empty/0 prices are skipped, so collections missing some rarities are handled. "
             "This is a heuristic on the prices you enter, not financial advice.",
     },
@@ -588,6 +604,37 @@ TRANSLATIONS = {
             'Продвинутый режим: для каждой редкости добавь скины с их резкой флоата и одной или несколькими записями качеств. Тогда ранжирование учитывает и экономику флоата — контрактную ценность чистоты. (Условие одной валюты по-прежнему действует.)',
         'Default float = midpoint of (wear ∩ cap), instead of worst-in-wear':
             'Дефолтный флоат = середина (качество ∩ резка), вместо «худшего в качестве»',
+        "m5a_midpoint_label":
+            "Брать СЕРЕДИНУ флоата качества вместо «худшего» (для записей без точного флоата)",
+        "m5a_midpoint_help":
+            "Влияет только на записи качества, где НЕ задан точный флоат. ВЫКЛ (по умолчанию): флоат берётся "
+            "как «худший» (самый грязный) край пересечения (качество ∩ резка) — консервативная оценка, такой "
+            "предмет проще всего получить. ВКЛ: флоат берётся как СЕРЕДИНА пересечения (качество ∩ резка) — "
+            "усреднённая оценка. На записи с введённым точным флоатом галочка не влияет.",
+        "m5_tp_help":
+            "Когда включено, рядом с каждым предметом можно ввести цену из Steam. Каждая цена приводится к "
+            "твоей реальной валюте (через курсы и бонус пополнения Steam), и для каждого предмета в ранжировании "
+            "берётся ДЕШЕВЛЕ из цены внешнего маркета и цены Steam. Выкл: только внешние цены, одна валюта.",
+        "Account for Steam (TP) prices":
+            "Учёт цен Steam (ТП)",
+        "Steam (TP) pricing settings":
+            "Настройки цен Steam (ТП)",
+        "External sites currency":
+            "Валюта внешних площадок",
+        "Steam currency":
+            "Валюта Steam",
+        "Real currency (you pay in)":
+            "Реальная валюта (которой платишь)",
+        "Steam top-up bonus %":
+            "Бонус пополнения Steam, %",
+        "Prices are converted to your real currency; for each item the CHEAPER of market vs Steam is used.":
+            "Цены приводятся к реальной валюте; для каждого предмета берётся ДЕШЕВЛЕ из маркета и Steam.",
+        "Steam price":
+            "Цена Steam",
+        "price from Steam":
+            "цена из Steam",
+        "price from market":
+            "цена с внешнего маркета",
         'Skins in this rarity':
             'Скинов в этой редкости',
         'Skin':
@@ -669,6 +716,12 @@ TRANSLATIONS = {
             "**Красота / ликвидность:** галочка добавляет +0.5 к соотношению этого качества и качества "
             "на 1 ниже, +0.25 к качеству на 2 ниже (на 3 ниже — ничего); на качество выше отмеченного "
             "бонус не влияет. Для высшего качества бонус, наоборот, улучшает его реверс-оценку.\n\n"
+            "**Позиционные корректировки (только ранг):** независимо от красоты, ранг дополнительно "
+            "сдвигается по позиции среди ВВЕДЁННЫХ редкостей — это влияет ТОЛЬКО на ранг, не на показанный "
+            "ratio и не на сырые цифры/сравнения. Самой нижней +0.25; высшей — дополнительный −0.5 (сверх её "
+            "реверс-штрафа); предпоследней −0.5, пред-предпоследней −0.35, пред-пред-предпоследней −0.25. В "
+            "маленькой коллекции одна редкость может быть и «самой нижней», и «k-й сверху» — сдвиги тогда "
+            "просто складываются.\n\n"
             "Пустые цены/0 пропускаются, поэтому коллекции без некоторых качеств учитываются. "
             "Это эвристика по введённым ценам, а не финансовая рекомендация.",
     },
@@ -915,6 +968,37 @@ TRANSLATIONS = {
             'Просунутий режим: для кожної рідкості додай скіни з їх різанням флоата та одним чи кількома записами якостей. Тоді ранжування враховує й економіку флоата — контрактну цінність чистоти. (Умова однієї валюти досі діє.)',
         'Default float = midpoint of (wear ∩ cap), instead of worst-in-wear':
             'Дефолтний флоат = середина (якість ∩ різання), замість «найгіршого в якості»',
+        "m5a_midpoint_label":
+            "Брати СЕРЕДИНУ флоата якості замість «найгіршого» (для записів без точного флоата)",
+        "m5a_midpoint_help":
+            "Впливає лише на записи якості, де НЕ задано точний флоат. ВИМК (за замовчуванням): флоат береться "
+            "як «найгірший» (найбрудніший) край перетину (якість ∩ різання) — консервативна оцінка, такий "
+            "предмет найпростіше отримати. УВІМК: флоат береться як СЕРЕДИНА перетину (якість ∩ різання) — "
+            "усереднена оцінка. На записи з уведеним точним флоатом галочка не впливає.",
+        "m5_tp_help":
+            "Коли увімкнено, поряд із кожним предметом можна ввести ціну зі Steam. Кожна ціна приводиться до "
+            "твоєї реальної валюти (через курси та бонус поповнення Steam), і для кожного предмета в ранжуванні "
+            "береться ДЕШЕВША з ціни зовнішнього маркету та ціни Steam. Вимк: лише зовнішні ціни, одна валюта.",
+        "Account for Steam (TP) prices":
+            "Облік цін Steam (ТП)",
+        "Steam (TP) pricing settings":
+            "Налаштування цін Steam (ТП)",
+        "External sites currency":
+            "Валюта зовнішніх майданчиків",
+        "Steam currency":
+            "Валюта Steam",
+        "Real currency (you pay in)":
+            "Реальна валюта (якою платиш)",
+        "Steam top-up bonus %":
+            "Бонус поповнення Steam, %",
+        "Prices are converted to your real currency; for each item the CHEAPER of market vs Steam is used.":
+            "Ціни приводяться до реальної валюти; для кожного предмета береться ДЕШЕВША з маркету та Steam.",
+        "Steam price":
+            "Ціна Steam",
+        "price from Steam":
+            "ціна зі Steam",
+        "price from market":
+            "ціна із зовнішнього маркету",
         'Skins in this rarity':
             'Скінів у цій рідкості',
         'Skin':
@@ -996,6 +1080,11 @@ TRANSLATIONS = {
             "**Краса / ліквідність:** галочка додає +0.5 до співвідношення цієї якості та якості на 1 "
             "нижче, +0.25 до якості на 2 нижче (на 3 нижче — нічого); на якість вище позначеної бонус "
             "не впливає. Для найвищої якості бонус навпаки покращує її реверс-оцінку.\n\n"
+            "**Позиційні корективи (лише ранг):** незалежно від краси, ранг додатково зсувається за позицією "
+            "серед ВВЕДЕНИХ рідкостей — це впливає ЛИШЕ на ранг, не на показаний ratio і не на сирі цифри/"
+            "порівняння. Найнижчій +0.25; найвищій — додатковий −0.5 (понад її реверс-штраф); передостанній "
+            "−0.5, перед-передостанній −0.35, перед-перед-передостанній −0.25. У маленькій колекції одна "
+            "рідкість може бути і «найнижчою», і «k-ю згори» — зсуви тоді просто додаються.\n\n"
             "Порожні ціни/0 пропускаються, тож колекції без деяких якостей враховуються. "
             "Це евристика за введеними цінами, а не фінансова порада.",
     },
@@ -1214,6 +1303,37 @@ def calculate_steam_real_cost(steam_price, deposit_profit_percent):
     if divisor <= 0:
         return 0.0
     return steam_price / divisor
+
+
+def effective_real_value(site_price, steam_price, rate_site_to_real,
+                         rate_steam_to_real, topup_pct):
+    """Эффективная стоимость предмета в РЕАЛЬНОЙ валюте — дешевле из внешней и Steam.
+
+    Внешняя -> реальная: site_price × rate_site_to_real (внешние цены уже в реальных
+    деньгах; курс лишь приводит к реальной валюте). Steam -> реальная:
+    (steam_price / (1 + topup%/100)) × rate_steam_to_real (учёт бонуса пополнения).
+    Если задана только одна цена — берётся она; если обе — берётся ДЕШЕВЛЕ.
+    Возвращает (value, source): source ∈ {'market', 'steam', None}; None — ни одной
+    цены (предмет исключается). Курсы/деления защищены от мусора.
+    """
+    site_real = None
+    if site_price and float(site_price) > 0:
+        site_real = float(site_price) * max(0.0, float(rate_site_to_real))
+    steam_real = None
+    if steam_price and float(steam_price) > 0:
+        sr = calculate_steam_real_cost(steam_price, topup_pct) * max(0.0, float(rate_steam_to_real))
+        # Отбрасываем вырожденный ноль (бонус <= -100%% — срабатывает защита деления
+        # в calculate_steam_real_cost — или курс 0): такой Steam-вариант недоступен,
+        # поэтому берём внешнюю цену, а не «бесплатный» Steam.
+        if sr > 0:
+            steam_real = sr
+    if site_real is None and steam_real is None:
+        return 0.0, None
+    if steam_real is None:
+        return site_real, "market"
+    if site_real is None:
+        return steam_real, "steam"
+    return (steam_real, "steam") if steam_real < site_real else (site_real, "market")
 
 
 def compare_purchase_options(site_real_cost, steam_real_cost):
@@ -1474,6 +1594,36 @@ def render_cross_currency_rates(key_prefix, spent_ccy, site_ccy, steam_ccy):
         )
     st.caption(_("Both rates are in the spent currency per 1 unit (a common base)."))
     return rate_site_to_spent, rate_steam_to_spent
+
+
+def render_m5_tp_block():
+    """Блок «учёт цен Steam (ТП)» для Режима 5. Рендерится ВНЕ формы, чтобы тумблер
+    сразу показывал/прятал поля. Возвращает dict: enabled, real_ccy, site_ccy,
+    steam_ccy, rate_site, rate_steam, topup. Курсы — «реальной валюты за 1 единицу»,
+    как в режимах 1–4. По умолчанию курсы 1.0 и бонус 0%% — тогда суммы не меняются."""
+    enabled = st.checkbox(_("Account for Steam (TP) prices"), value=False,
+                          key="m5_tp_enable", help=_("m5_tp_help"))
+    tp = {"enabled": bool(enabled), "real_ccy": "USD", "site_ccy": "USD",
+          "steam_ccy": "USD", "rate_site": 1.0, "rate_steam": 1.0, "topup": 0.0}
+    if not enabled:
+        return tp
+    st.markdown("#### 💱 " + _("Steam (TP) pricing settings"))
+    c1, c2, c3 = st.columns(3)
+    tp["site_ccy"] = c1.text_input(_("External sites currency"), value="USD", key="m5_tp_site_ccy")
+    tp["steam_ccy"] = c2.text_input(_("Steam currency"), value="USD", key="m5_tp_steam_ccy")
+    tp["real_ccy"] = c3.text_input(_("Real currency (you pay in)"), value="USD", key="m5_tp_real_ccy")
+    real_lbl = tp["real_ccy"] or "?"
+    r1, r2 = st.columns(2)
+    tp["rate_steam"] = r1.number_input(
+        _("Rate: how many {a} in 1 {b}").format(a=real_lbl, b=tp["steam_ccy"] or "?"),
+        min_value=0.0, value=1.0, step=0.5, key="m5_tp_rate_steam")
+    tp["rate_site"] = r2.number_input(
+        _("Rate: how many {a} in 1 {b}").format(a=real_lbl, b=tp["site_ccy"] or "?"),
+        min_value=0.0, value=1.0, step=0.5, key="m5_tp_rate_site")
+    tp["topup"] = st.number_input(_("Steam top-up bonus %"), min_value=-99.9, value=0.0,
+                                  step=1.0, key="m5_tp_topup")
+    st.caption(_("Prices are converted to your real currency; for each item the CHEAPER of market vs Steam is used."))
+    return tp
 
 
 # ===========================================================================
@@ -1921,6 +2071,34 @@ _RANK_COMMENT_KEYS = {
 _RANK_ORDER = {"A++": 7, "A+": 6, "A": 5, "B": 4, "C": 3, "D": 2, "E": 1, "F": 0}
 
 
+def _positional_rank_adjustments(n):
+    """Корректировки РАНГА по позиции редкости среди присутствующих (снизу вверх).
+
+    Влияют ТОЛЬКО на ранг (как бонус красоты), не на сырые цифры/ratio/сравнения.
+    Знак: «+» = ранг лучше (реверс-логика высшего качества учитывает знак сама).
+        самый нижний грейд (idx 0): +0.25 (бонус, ВСЕГДА; штрафы его НЕ касаются)
+        лестница штрафов СВЕРХУ — только для грейдов ВЫШЕ самого нижнего (idx > 0):
+            самая высокая (idx n-1):           -0.50 (доп. штраф сверх реверс-штрафа)
+            предпоследняя (idx n-2):           -0.50
+            пред-предпоследняя (idx n-3):      -0.35
+            пред-пред-предпоследняя (idx n-4): -0.25
+    В маленькой коллекции штрафы НЕ «сползают» на нижние грейды: при n=2 штраф только
+    на самом верхнем, при n=3 — на двух верхних и т.д. (нижний грейд защищён). Если
+    позиция штрафа совпала бы с самым нижним грейдом (idx 0) — штраф не ставится.
+    Возвращает список длины n.
+    """
+    adj = [0.0] * n
+    if n <= 0:
+        return adj
+    adj[0] += 0.25  # самый нижний грейд — только бонус, штрафы его не трогают
+    # Лестница штрафов сверху; ставится лишь грейдам ВЫШЕ самого нижнего (idx > 0),
+    # поэтому в маленькой коллекции штрафы не доходят до низа.
+    for idx, penalty in ((n - 1, -0.50), (n - 2, -0.50), (n - 3, -0.35), (n - 4, -0.25)):
+        if idx > 0:
+            adj[idx] += penalty
+    return adj
+
+
 def analyze_collection_rarities(tiers):
     """Считает соотношения и инвестиционные ранги для заполненных качеств коллекции.
 
@@ -1955,6 +2133,12 @@ def analyze_collection_rarities(tiers):
                 bonus[i - 1] += 0.5
             if i - 2 >= 0:
                 bonus[i - 2] += 0.25
+
+    # Позиционные корректировки РАНГА (только ранг, не сырые цифры/ratio): штрафы
+    # верхним редкостям и бонус самой нижней. Знак как у красоты: «+» = ранг лучше.
+    pos = _positional_rank_adjustments(n)
+    for i in range(n):
+        bonus[i] += pos[i]
 
     results = []
     for i, t in enumerate(tiers):
@@ -2388,6 +2572,9 @@ def analyze_collection_advanced(rarity_data, midpoint=False):
     if len(active) < 2:
         return []
     n = len(active)
+    # Позиционные корректировки РАНГА (только ранг, не сырые цифры): как в простом
+    # режиме. «+» = ранг лучше; штрафы верхним редкостям, бонус самой нижней.
+    pos = _positional_rank_adjustments(n)
     results = []
     for i, rar in enumerate(active):
         price = rar["price"]
@@ -2398,13 +2585,15 @@ def analyze_collection_advanced(rarity_data, midpoint=False):
                 float_bonus = tradeup_float_bonus(roi_info["roi"])
                 verdict = roi_info["overpay_clean"]
             base_ratio = active[i + 1]["price"] / price
-            idx = _ratio_rank_index(base_ratio + float_bonus)
+            idx = _ratio_rank_index(base_ratio + float_bonus + pos[i])
             role = "lower"
-        else:  # высшее: реверс + штраф, без флоат-бонуса
+        else:  # высшее: реверс + штраф (+ позиционный штраф), без флоат-бонуса
             base_ratio = price / active[i - 1]["price"]
             reversed_base = 7 - _ratio_rank_index(base_ratio)
             penalty = 2 if reversed_base >= 5 else 1
-            idx = max(0, min(7, reversed_base - penalty))
+            eff = max(0.0, base_ratio - pos[i])   # pos[i] (<0 у высшего) -> eff больше -> хуже
+            reversed_eff = 7 - _ratio_rank_index(eff)
+            idx = max(0, min(7, reversed_eff - penalty))
             role = "highest"
         results.append({
             "key": rar["key"], "price": price, "ratio": base_ratio,
@@ -2418,7 +2607,7 @@ def analyze_collection_advanced(rarity_data, midpoint=False):
     return results
 
 
-def _mode_5_advanced(currency):
+def _mode_5_advanced(currency, tp):
     """Продвинутый режим: ввод скинов с резкой и записями качеств, метрики флоата,
     агрегаты редкости, контрактный ROI и ранги с флоат-бонусом. Защита от поломок:
     вся валидация на месте, пустые/невалидные записи не ломают расчёт."""
@@ -2428,8 +2617,11 @@ def _mode_5_advanced(currency):
         "contract value of cleanliness. (The single-currency note still applies.)"
     ))
     midpoint = st.checkbox(
-        _("Default float = midpoint of (wear ∩ cap), instead of worst-in-wear"),
-        value=False, key="m5a_midpoint")
+        _("m5a_midpoint_label"),
+        value=False, key="m5a_midpoint", help=_("m5a_midpoint_help"))
+    # При учёте ТП цен суммы показываются в реальной валюте, иначе — в валюте отображения.
+    disp_ccy = tp["real_ccy"] if tp["enabled"] else currency
+    price_decimals = 0 if is_integer_currency(disp_ccy) else 2
 
     rarity_data = []
     for key, color in RARITY_DEFS:
@@ -2460,7 +2652,11 @@ def _mode_5_advanced(currency):
                     key=f"m5a_nrec_{key}_{si}"))
                 records = []
                 for ri in range(nrec):
-                    rc1, rc2, rc3 = st.columns([2, 2, 2])
+                    if tp["enabled"]:
+                        rc1, rc2, rc3, rc4 = st.columns([2, 2, 2, 2])
+                    else:
+                        rc1, rc2, rc3 = st.columns([2, 2, 2])
+                        rc4 = None
                     wear = rc1.selectbox(_("Quality (wear)"), options=inter,
                                          key=f"m5a_wear_{key}_{si}_{ri}")
                     use_exact = rc2.checkbox(_("Exact float"), value=False,
@@ -2473,17 +2669,36 @@ def _mode_5_advanced(currency):
                             step=0.000001, format="%.12f", key=f"m5a_exact_{key}_{si}_{ri}")
                     price = rc3.number_input(_("Price"), min_value=0.0, value=0.0, step=0.1,
                                              key=f"m5a_price_{key}_{si}_{ri}")
-                    rec = {"wear": wear, "exact_float": exact, "price": float(price)}
+                    # При учёте ТП цен цена записи = ДЕШЕВЛЕ из внешней и стим-цены (в
+                    # реальной валюте). На этой реальной цене считается ВСЯ флоат-
+                    # математика (наценка за чистоту, контракты, репрезент. цена).
+                    src = None
+                    if rc4 is not None:
+                        steam_price = rc4.number_input(
+                            _("Steam price"), min_value=0.0, value=0.0, step=0.1,
+                            key=f"m5a_steam_{key}_{si}_{ri}")
+                        eff_value, src = effective_real_value(
+                            price, steam_price, tp["rate_site"], tp["rate_steam"], tp["topup"])
+                    else:
+                        eff_value = float(price)
+                    rec = {"wear": wear, "exact_float": exact, "price": float(eff_value),
+                           "_price_source": src}
                     records.append(rec)
-                    if price > 0:
+                    if rec["price"] > 0:
                         errs = validate_record(rec, cap_lo, cap_hi)
                         if errs:
                             st.caption("⚠️ " + "; ".join(errs))
                         else:
                             m = record_metrics(rec, cap_lo, cap_hi, midpoint)
                             if m:
+                                note = ""
+                                if tp["enabled"]:
+                                    money_eff = format_currency(rec["price"], disp_ccy, price_decimals)
+                                    srctxt = (_("price from Steam") if src == "steam"
+                                              else _("price from market") if src == "market" else "")
+                                    note = f" · {money_eff}" + (f" ({srctxt})" if srctxt else "")
                                 st.caption(
-                                    f"{_('cleanliness')} = {m['q'] * 100:.1f}% · w = {m['w']:.12f}")
+                                    f"{_('cleanliness')} = {m['q'] * 100:.1f}% · w = {m['w']:.12f}" + note)
                 skin_obj = {"name": name or f"{_(key)} #{si + 1}",
                             "cap_lo": cap_lo, "cap_hi": cap_hi,
                             "records": records, "agg_choice": None}
@@ -2497,12 +2712,12 @@ def _mode_5_advanced(currency):
                         qp = f"{r['q'] * 100:.1f}%"
                         sc = scored.get(r["index"])
                         sct = f" · {_('score')} {sc:.0f}" if sc is not None else ""
-                        money = format_currency(r["price"], currency, price_decimals)
+                        money = format_currency(r["price"], disp_ccy, price_decimals)
                         if r["status"] == "floor":
                             lines.append(f"{wn} ({r['eff_float']:.3f}): {_('cleanliness')} {qp} · "
                                          f"{money} — {_('floor (cheapest)')}{sct}")
                         elif r["status"] == "premium":
-                            prem = format_currency(r["premium"], currency, price_decimals)
+                            prem = format_currency(r["premium"], disp_ccy, price_decimals)
                             lines.append(f"{wn} ({r['eff_float']:.3f}): {_('cleanliness')} {qp} · "
                                          f"{_('cleanliness premium')} {prem}/{_('unit')}{sct}")
                         else:
@@ -2524,7 +2739,6 @@ def _mode_5_advanced(currency):
         st.info(_("Add at least two rarities, each with a valid priced skin, to compare."))
         return
 
-    price_decimals = 0 if is_integer_currency(currency) else 2
     name_by_key = {k: _(k) for k, _c in RARITY_DEFS}
     color_by_key = {k: c for k, c in RARITY_DEFS}
 
@@ -2561,7 +2775,7 @@ def _mode_5_advanced(currency):
         rows.append(
             "<tr style='border-top:1px solid #3a3a3a;'>"
             f"<td style='text-align:left;padding:6px 10px;'>{name_cell}</td>"
-            f"<td style='text-align:right;padding:6px 10px;'>{format_currency(r['price'], currency, price_decimals)}</td>"
+            f"<td style='text-align:right;padding:6px 10px;'>{format_currency(r['price'], disp_ccy, price_decimals)}</td>"
             f"<td style='text-align:center;padding:6px 10px;font-size:0.85em;'>{ratio_str}</td>"
             f"<td style='text-align:center;padding:6px 10px;'>{bonus_str}</td>"
             f"<td style='text-align:center;padding:6px 10px;'>{badge}</td>"
@@ -2589,8 +2803,8 @@ def _mode_5_advanced(currency):
                     roi=f"{r['roi']*100:.0f}", w=f"{r['W_star']:.2f}")
             parts.append(f"**{_('craft up')}:** {verdict_txt}{extra}")
         if fs and fs["best_premium"] is not None:
-            best_p = format_currency(fs["best_premium"], currency, price_decimals)
-            avg_p = format_currency(fs["avg_premium"], currency, price_decimals)
+            best_p = format_currency(fs["best_premium"], disp_ccy, price_decimals)
+            avg_p = format_currency(fs["avg_premium"], disp_ccy, price_decimals)
             parts.append(_("cheapest cleanliness {b}/{u} ({skin}) · avg {a}/{u}").format(
                 b=best_p, a=avg_p, u=_("unit"), skin=fs["best_skin"]))
         else:
@@ -2613,8 +2827,11 @@ def calculate_mode_5(currency):
     st.subheader("🎚️ " + _("Best rarity to buy (collection)"))
     advanced = st.checkbox(_("Advanced float analysis (float & cut)"),
                            value=False, key="m5_advanced")
+    # Учёт цен Steam (ТП): общий блок для ОБОИХ режимов (простого и продвинутого).
+    # Рендерится ВНЕ формы — тумблер сразу показывает/прячет поля валют и курсов.
+    tp = render_m5_tp_block()
     if advanced:
-        _mode_5_advanced(currency)
+        _mode_5_advanced(currency, tp)
         return
 
     st.write(_(
@@ -2631,15 +2848,24 @@ def calculate_mode_5(currency):
             "Enter the price you consider fair for each rarity. Tick the box if you "
             "find that rarity's skins beautiful or especially liquid."
         ))
-        h_name, h_price, h_beauty = st.columns([2, 1, 1])
+        if tp["enabled"]:
+            h_name, h_price, h_steam, h_beauty = st.columns([2, 1, 1, 1])
+            h_steam.markdown("**" + _("Steam price") + "**")
+        else:
+            h_name, h_price, h_beauty = st.columns([2, 1, 1])
         h_name.markdown("**" + _("Rarity") + "**")
         h_price.markdown("**" + _("Price") + "**")
         h_beauty.markdown("**" + _("Beautiful / liquid?") + "**")
         prices = {}
+        steam_prices = {}
         beauty = {}
         for key, color in RARITY_DEFS:
             label = (f"<span style='color:{color};font-weight:600;'>● </span>" + _(key))
-            c_name, c_price, c_beauty = st.columns([2, 1, 1])
+            if tp["enabled"]:
+                c_name, c_price, c_steam, c_beauty = st.columns([2, 1, 1, 1])
+            else:
+                c_name, c_price, c_beauty = st.columns([2, 1, 1])
+                c_steam = None
             with c_name:
                 st.markdown("<div style='padding-top:0.5rem;'>" + label + "</div>",
                             unsafe_allow_html=True)
@@ -2648,6 +2874,12 @@ def calculate_mode_5(currency):
                     _(key), min_value=0.0, value=0.0, step=0.1,
                     key=f"m5_price_{key}", label_visibility="collapsed",
                 )
+            if c_steam is not None:
+                with c_steam:
+                    steam_prices[key] = st.number_input(
+                        _("Steam price"), min_value=0.0, value=0.0, step=0.1,
+                        key=f"m5_steam_{key}", label_visibility="collapsed",
+                    )
             with c_beauty:
                 beauty[key] = st.checkbox(
                     _("Beautiful / liquid?"), value=False,
@@ -2660,13 +2892,21 @@ def calculate_mode_5(currency):
         st.info(_("Press Calculate to see the results."))
         return
 
-    # Берём только заполненные качества (цена > 0), сохраняя порядок редкости.
+    # Берём только заполненные качества, сохраняя порядок редкости. При учёте ТП цен
+    # стоимость предмета = ДЕШЕВЛЕ из внешней и стим-цены (в реальной валюте), плюс
+    # помечаем источник цены.
     tiers = []
     for key, color in RARITY_DEFS:
-        price = prices.get(key, 0.0)
-        if price and price > 0:
+        if tp["enabled"]:
+            value, source = effective_real_value(
+                prices.get(key, 0.0), steam_prices.get(key, 0.0),
+                tp["rate_site"], tp["rate_steam"], tp["topup"])
+        else:
+            value, source = float(prices.get(key, 0.0)), None
+        if value and value > 0:
             tiers.append({"key": key, "name": _(key), "color": color,
-                          "price": float(price), "beautiful": bool(beauty.get(key))})
+                          "price": float(value), "beautiful": bool(beauty.get(key)),
+                          "source": source})
 
     if len(tiers) < 2:
         st.warning(_("Enter at least two rarity prices to compare."))
@@ -2689,8 +2929,10 @@ def calculate_mode_5(currency):
     )
     rows = []
     # Для целочисленных валют (₴, ¥, ₩, …) цены выводим без дробной части —
-    # как их показывает сам Steam (паритет с Режимами 1/2).
-    price_decimals = 0 if is_integer_currency(currency) else 2
+    # как их показывает сам Steam (паритет с Режимами 1/2). При учёте ТП цен суммы
+    # показываются в реальной валюте.
+    disp_ccy = tp["real_ccy"] if tp["enabled"] else currency
+    price_decimals = 0 if is_integer_currency(disp_ccy) else 2
     for r in results:
         rank = r["rank"]
         rank_color = RANK_COLORS.get(rank, "#9e9e9e")
@@ -2707,6 +2949,10 @@ def calculate_mode_5(currency):
             comment += " " + _("rk_top_note")
         if r["beautiful"]:
             comment += " ✨"
+        if r.get("source") == "steam":
+            comment += " · " + _("price from Steam")
+        elif r.get("source") == "market":
+            comment += " · " + _("price from market")
         if r["ratio"] is None:
             ratio_str = "—"
         elif r["role"] == "highest":
@@ -2721,7 +2967,7 @@ def calculate_mode_5(currency):
         rows.append(
             "<tr style='border-top:1px solid #3a3a3a;'>"
             f"<td style='text-align:left;padding:6px 10px;'>{name_cell}</td>"
-            f"<td style='text-align:right;padding:6px 10px;'>{format_currency(r['price'], currency, price_decimals)}</td>"
+            f"<td style='text-align:right;padding:6px 10px;'>{format_currency(r['price'], disp_ccy, price_decimals)}</td>"
             f"<td style='text-align:center;padding:6px 10px;font-size:0.85em;'>{ratio_str}</td>"
             f"<td style='text-align:center;padding:6px 10px;'>{rank_badge}</td>"
             f"<td style='text-align:left;padding:6px 10px;font-size:0.9em;'>{comment}</td>"
