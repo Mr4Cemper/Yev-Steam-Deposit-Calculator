@@ -12,6 +12,8 @@ This calculator for CS2 investors and traders, built with Python (Streamlit), he
 ## Legal Disclaimer
 **Not affiliated with Valve Corp.** This application is an independent analytical tool created for educational and utility purposes. It is NOT affiliated with, endorsed, sponsored, or specifically approved by Valve Corporation. "Counter-Strike", "CS2", "Steam", and their respective logos are trademarks and/or registered trademarks of Valve Corporation. All financial calculations are estimates; use at your own risk.
 
+Any trademarks contained in the source code, binaries, and/or in the documentation, are the sole property of their respective owners.
+
 ## License
 
 This project is licensed under the GNU Affero General Public License v3.0 or later.
