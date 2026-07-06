@@ -313,14 +313,26 @@ TRANSLATIONS = {
             'Trade-up & float details',
         'craft up':
             'craft up',
-        "m5a_roi_at_wear":
-            "(best ROI {roi}% at avg input wear W̄={w}; 0=clean … 1=worn)",
+        "m5a_craft_line":
+            "(filler: {skin} · {wear} · float {f}, w={w} · {price} ×{n} = {cost} → "
+            "avg output {eout} · ROI {roi}%)",
+        "m5a_cmode_label":
+            "Contract calculation (fillers)",
+        "m5a_cmode_cheapest":
+            "By cheapest fillers — the contract uses the cheapest record at its real float",
+        "m5a_cmode_best":
+            "By best price/quality — every record is tried, the best-ROI filler is used",
+        "m5a_cmode_help":
+            "Both modes run the contract on your ACTUAL records (10 copies of one filler). "
+            "The expected output is the average over ALL skins of the next rarity, each "
+            "priced at the float the contract yields from the filler's real float "
+            "(1 skin = 1 outcome). 'Cheapest' answers: what does the classic cheapest-filler "
+            "craft give? 'Best price/quality' additionally tries every entered record as the "
+            "filler and picks the one with the best ROI — the best craft-purchase option.",
         'clean pays off — worth buying low-float fillers':
             'clean pays off — worth buying low-float fillers',
         "don't overpay for clean — a dirty filler gives the same output":
             "don't overpay for clean — a dirty filler gives the same output",
-        'moderate — some cleanliness helps':
-            'moderate — some cleanliness helps',
         'trade-up into the next rarity is unprofitable':
             'trade-up into the next rarity is unprofitable',
         'MODE5_ADV_NOTE':
@@ -329,9 +341,11 @@ TRANSLATIONS = {
             "skin's cheapest record, and for a record cleaner than the floor the premium = "
             "(price − floor price)/(cleanliness − floor cleanliness) = $ per extra unit of "
             "cleanliness (needs ≥2 floats; lower = cheaper cleanliness = less overpay). One "
-            "record → n/a. The float bonus comes from the best contract ROI into the next "
-            "rarity (10→1): clean fillers raise a rarity's rank only when cleaner inputs "
-            "actually yield a more valuable output. Contract float weight w = (float − "
+            "record → n/a. The float bonus comes from the contract ROI into the next rarity "
+            "(10→1) computed on your ACTUAL records per the selected mode: 'cheapest' uses "
+            "the cheapest record at its real float, 'best price/quality' tries every record "
+            "and uses the best-ROI filler; the output is averaged over ALL next-rarity skins "
+            "priced at the produced float. Contract float weight w = (float − "
             "cap_min)/(cap_max − cap_min). In advanced mode there is no 'beautiful/liquid' "
             "checkbox — its role is played by the float bonus from contract ROI (the checkbox "
             "described above applies to the simple mode).",
@@ -681,18 +695,30 @@ TRANSLATIONS = {
             'Контракты и детали флоата',
         'craft up':
             'крафт вверх',
-        "m5a_roi_at_wear":
-            "(лучший ROI {roi}% при средней изношенности входов W̄={w}; 0=чистый … 1=грязный)",
+        "m5a_craft_line":
+            "(филлер: {skin} · {wear} · флоат {f}, w={w} · {price} ×{n} = {cost} → "
+            "ср. выход {eout} · ROI {roi}%)",
+        "m5a_cmode_label":
+            "Расчёт контрактов (филлеры)",
+        "m5a_cmode_cheapest":
+            "По самым дешёвым — контракт из самой дешёвой записи с её реальным флоатом",
+        "m5a_cmode_best":
+            "По лучшему соотношению цена/качество — перебираются все записи, берётся филлер с лучшим ROI",
+        "m5a_cmode_help":
+            "Оба режима считают контракт на твоих РЕАЛЬНЫХ записях (10 копий одного филлера). "
+            "Ожидаемый выход — среднее по ВСЕМ скинам следующей редкости, каждый оценён на "
+            "флоате, который даст контракт от реального флоата филлера (1 скин = 1 исход). "
+            "«По самым дешёвым» отвечает: что даёт классический крафт из самых дешёвых филлеров? "
+            "«По лучшему соотношению» дополнительно пробует каждую введённую запись как филлер "
+            "и берёт запись с лучшим ROI — лучший вариант для крафта-закупки.",
         'clean pays off — worth buying low-float fillers':
             'чистота окупается — есть смысл брать низкофлоатные филлеры',
         "don't overpay for clean — a dirty filler gives the same output":
             'не переплачивай за чистоту — грязный филлер даёт тот же выход',
-        'moderate — some cleanliness helps':
-            'умеренно — небольшая чистота помогает',
         'trade-up into the next rarity is unprofitable':
             'контракт в следующую редкость невыгоден',
         'MODE5_ADV_NOTE':
-            'Продвинутый режим: цена редкости для ранга — её САМАЯ ДЕШЁВАЯ запись (цена филлеров). Флоат-ценность — это наценка за чистоту ВНУТРИ скина: пол = самая дешёвая запись скина, и для записи чище пола наценка = (цена − цена пола)/(чистота − чистота пола) = $ за доп. единицу чистоты (нужно ≥2 флоата; ниже = дешевле чистота = меньше переплата). Одна запись → н/д. Флоат-бонус берётся из лучшего ROI контракта в следующую редкость (10→1): чистые филлеры поднимают ранг редкости только когда более чистые входы реально дают более ценный выход. Контрактный вес флоата w = (флоат − cap_min)/(cap_max − cap_min). В продвинутом режиме галочки «красивое/ликвидное» нет — её роль играет флоат-бонус из контрактного ROI (описание галочки выше относится к простому режиму).',
+            'Продвинутый режим: цена редкости для ранга — её САМАЯ ДЕШЁВАЯ запись (цена филлеров). Флоат-ценность — это наценка за чистоту ВНУТРИ скина: пол = самая дешёвая запись скина, и для записи чище пола наценка = (цена − цена пола)/(чистота − чистота пола) = $ за доп. единицу чистоты (нужно ≥2 флоата; ниже = дешевле чистота = меньше переплата). Одна запись → н/д. Флоат-бонус берётся из ROI контракта в следующую редкость (10→1), посчитанного на РЕАЛЬНЫХ записях по выбранному режиму: «по самым дешёвым» — самая дешёвая запись с её реальным флоатом, «по лучшему соотношению цена/качество» — перебираются все записи и берётся филлер с лучшим ROI; выход усредняется по ВСЕМ скинам следующей редкости на полученном флоате. Контрактный вес флоата w = (флоат − cap_min)/(cap_max − cap_min). В продвинутом режиме галочки «красивое/ликвидное» нет — её роль играет флоат-бонус из контрактного ROI (описание галочки выше относится к простому режиму).',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Укажи цену, которую считаешь справедливой для каждого качества. Отметь галочку, "
@@ -1041,18 +1067,30 @@ TRANSLATIONS = {
             'Контракти та деталі флоата',
         'craft up':
             'крафт вгору',
-        "m5a_roi_at_wear":
-            "(найкращий ROI {roi}% за середньою зношеністю входів W̄={w}; 0=чистий … 1=зношений)",
+        "m5a_craft_line":
+            "(філер: {skin} · {wear} · флоат {f}, w={w} · {price} ×{n} = {cost} → "
+            "сер. вихід {eout} · ROI {roi}%)",
+        "m5a_cmode_label":
+            "Розрахунок контрактів (філери)",
+        "m5a_cmode_cheapest":
+            "За найдешевшими — контракт із найдешевшого запису з його реальним флоатом",
+        "m5a_cmode_best":
+            "За найкращим співвідношенням ціна/якість — перебираються всі записи, береться філер із найкращим ROI",
+        "m5a_cmode_help":
+            "Обидва режими рахують контракт на твоїх РЕАЛЬНИХ записах (10 копій одного філера). "
+            "Очікуваний вихід — середнє за ВСІМА скінами наступної рідкості, кожен оцінений на "
+            "флоаті, який дасть контракт від реального флоата філера (1 скін = 1 результат). "
+            "«За найдешевшими» відповідає: що дає класичний крафт із найдешевших філерів? "
+            "«За найкращим співвідношенням» додатково пробує кожен уведений запис як філер "
+            "і бере запис із найкращим ROI — найкращий варіант для крафта-закупівлі.",
         'clean pays off — worth buying low-float fillers':
             'чистота окупається — є сенс брати низькофлоатні філери',
         "don't overpay for clean — a dirty filler gives the same output":
             'не переплачуй за чистоту — брудний філер дає той самий вихід',
-        'moderate — some cleanliness helps':
-            'помірно — невелика чистота допомагає',
         'trade-up into the next rarity is unprofitable':
             'контракт у наступну рідкість невигідний',
         'MODE5_ADV_NOTE':
-            'Просунутий режим: ціна рідкості для рангу — її НАЙДЕШЕВШИЙ запис (ціна філерів). Флоат-цінність — це націнка за чистоту ВСЕРЕДИНІ скіна: підлога = найдешевший запис скіна, і для запису чистішого підлоги націнка = (ціна − ціна підлоги)/(чистота − чистота підлоги) = $ за дод. одиницю чистоти (потрібно ≥2 флоата; нижче = дешевша чистота = менша переплата). Один запис → н/д. Флоат-бонус береться з найкращого ROI контракту в наступну рідкість (10→1): чисті філери піднімають ранг рідкості лише коли чистіші входи справді дають цінніший вихід. Контрактна вага флоата w = (флоат − cap_min)/(cap_max − cap_min). У просунутому режимі галочки «красиве/ліквідне» немає — її роль виконує флоат-бонус із контрактного ROI (опис галочки вище стосується простого режиму).',
+            'Просунутий режим: ціна рідкості для рангу — її НАЙДЕШЕВШИЙ запис (ціна філерів). Флоат-цінність — це націнка за чистоту ВСЕРЕДИНІ скіна: підлога = найдешевший запис скіна, і для запису чистішого підлоги націнка = (ціна − ціна підлоги)/(чистота − чистота підлоги) = $ за дод. одиницю чистоти (потрібно ≥2 флоата; нижче = дешевша чистота = менша переплата). Один запис → н/д. Флоат-бонус береться з ROI контракту в наступну рідкість (10→1), порахованого на РЕАЛЬНИХ записах за обраним режимом: «за найдешевшими» — найдешевший запис із його реальним флоатом, «за найкращим співвідношенням ціна/якість» — перебираються всі записи й береться філер із найкращим ROI; вихід усереднюється за ВСІМА скінами наступної рідкості на отриманому флоаті. Контрактна вага флоата w = (флоат − cap_min)/(cap_max − cap_min). У просунутому режимі галочки «красиве/ліквідне» немає — її роль виконує флоат-бонус із контрактного ROI (опис галочки вище стосується простого режиму).',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Вкажи ціну, яку вважаєш справедливою для кожної якості. Постав галочку, "
@@ -2449,74 +2487,92 @@ def expected_output_value(W_bar, output_skins, midpoint=False):
     return sum(vals) / len(vals)
 
 
-def _cleanliness_price_curve(filler_skins, midpoint=False):
-    """Отсортированные (w, минимальная цена) по записям филлеров — во сколько обходится
-    чистота w (для интерполяции стоимости входа)."""
-    pts = []
-    for s in filler_skins:
-        for rec in s.get("records", []):
-            rm = record_metrics(rec, s["cap_lo"], s["cap_hi"], midpoint)
+def _filler_candidate_records(filler_skins, midpoint=False):
+    """Все валидные записи редкости как кандидаты-филлеры контракта.
+
+    Возвращает список {skin, wear, f, w, price}: подпись скина (имя или #номер),
+    качество (введённое или по флоату), эффективный флоат, контрактный вес w и цена.
+    """
+    cands = []
+    for si, sk in enumerate(filler_skins):
+        label = (sk.get("name") or "").strip() or f"#{si + 1}"
+        for rec in sk.get("records", []):
+            rm = record_metrics(rec, sk["cap_lo"], sk["cap_hi"], midpoint)
             if rm is None or rm["w"] is None:
                 continue
-            pts.append((rm["w"], rec["price"]))
-    pts.sort()
-    return pts
+            cands.append({
+                "skin": label,
+                "wear": rec.get("wear") or wear_of_float(rm["eff_float"]) or "?",
+                "f": rm["eff_float"], "w": rm["w"], "price": rm["price"],
+            })
+    return cands
 
 
-def input_cost(W_bar, filler_skins, midpoint=False, n=10):
-    """Стоимость n входов средней чистоты W̄ (упрощение: n одинаковых филлеров чистоты
-    W̄, цена интерполируется по кривой чистоты). Оптимизация смеси — будущий режим."""
-    pts = _cleanliness_price_curve(filler_skins, midpoint)
-    if not pts:
-        return None
-    ws = [w for w, _ in pts]
-    ps = [p for _, p in pts]
-    if W_bar <= ws[0]:
-        price = ps[0]
-    elif W_bar >= ws[-1]:
-        price = ps[-1]
-    else:
-        price = ps[-1]
-        for i in range(1, len(ws)):
-            if W_bar <= ws[i]:
-                if ws[i] == ws[i - 1]:
-                    price = min(ps[i - 1], ps[i])
-                else:
-                    t = (W_bar - ws[i - 1]) / (ws[i] - ws[i - 1])
-                    price = ps[i - 1] + t * (ps[i] - ps[i - 1])
-                break
-    return n * price
+def best_tradeup_roi(filler_skins, output_skins, midpoint=False, n=10,
+                     contract_mode="cheapest"):
+    """Контракт R→R+1 на РЕАЛЬНЫХ записях (без интерполяции гипотетических филлеров).
 
+    Кандидат-филлер = валидная запись редкости; контракт = n её копий: W̄ = её
+    контрактный вес w, затраты = n × её цена. Ожидаемый выход = среднее по ВСЕМ
+    скинам следующей редкости, каждый оценён на флоате f_out = cap_lo + W̄·(cap_hi −
+    cap_lo) (1 скин = 1 равновероятный исход; цена берётся из введённых записей
+    этого скина в полученном качестве, при отсутствии записи — ближайшее качество).
 
-def best_tradeup_roi(filler_skins, output_skins, midpoint=False, n=10, steps=100):
-    """Перебор среднего веса флоата входов W̄ ∈ [0,1] (0 = чистый FN, 1 = грязный BS);
-    максимизирует ROI=(E_выход−затраты)/затраты.
+    contract_mode:
+        'cheapest' — филлер = САМАЯ ДЕШЁВАЯ запись (считаем её реальный флоат;
+                     при равной цене берётся более чистая);
+        'best'     — перебираются ВСЕ записи, берётся филлер с ЛУЧШИМ ROI
+                     (лучшее соотношение цена/качество для крафта-закупки).
 
-    Возвращает {roi, W_star, E_out, cost, overpay_clean} или None. overpay_clean:
-        'worth'        — оптимум в чистой зоне (низкий W̄; доплата за чистоту оправдана),
-        'avoid'        — оптимум в грязной зоне (высокий W̄; за чистоту не переплачивать, бери BS),
-        'moderate'     — между,
-        'unprofitable' — даже лучший ROI ≤ 0 (контракт убыточен).
+    Возвращает {roi, W_star, E_out, cost, filler, n_candidates, overpay_clean}
+    или None (нет валидных данных). filler = {skin, wear, f, price}. overpay_clean:
+        'worth'        — (только 'best') лучший филлер дороже самого дешёвого, но его
+                         ROI выше: доплата за чистоту окупается,
+        'avoid'        — (только 'best') самый дешёвый филлер и есть лучший:
+                         за чистоту не переплачивать,
+        'unprofitable' — ROI выбранного филлера ≤ 0 (крафт убыточен),
+        None           — режим 'cheapest' при ROI > 0 (чистоту не сравнивали).
     """
-    if not filler_skins or not output_skins:
+    if not output_skins:
         return None
-    best = None
-    for k in range(steps + 1):
-        W = k / steps
-        e = expected_output_value(W, output_skins, midpoint)
-        c = input_cost(W, filler_skins, midpoint, n)
-        if e is None or c is None or c <= 0:
-            continue
-        roi = (e - c) / c
-        if best is None or roi > best["roi"]:
-            best = {"roi": roi, "W_star": W, "E_out": e, "cost": c}
+    cands = _filler_candidate_records(filler_skins, midpoint)
+    if not cands:
+        return None
+
+    def _stats(c):
+        e = expected_output_value(c["w"], output_skins, midpoint)
+        cost = n * c["price"]
+        if e is None or cost <= 0:
+            return None
+        return {"roi": (e - cost) / cost, "W_star": c["w"], "E_out": e, "cost": cost,
+                "filler": {"skin": c["skin"], "wear": c["wear"], "f": c["f"],
+                           "price": c["price"]}}
+
+    # Самая дешёвая запись; при равной цене — более чистая (строго не хуже).
+    cheapest_stats = _stats(min(cands, key=lambda c: (c["price"], c["w"])))
+    if contract_mode != "best":
+        best = cheapest_stats
+    else:
+        best = None
+        for c in cands:
+            st_c = _stats(c)
+            if st_c is None:
+                continue
+            if (best is None or st_c["roi"] > best["roi"]
+                    or (st_c["roi"] == best["roi"]
+                        and (st_c["cost"], st_c["W_star"]) < (best["cost"], best["W_star"]))):
+                best = st_c
     if best is None:
         return None
-    W = best["W_star"]
+    best["n_candidates"] = len(cands)
     if best["roi"] <= 0:
-        best["overpay_clean"] = "unprofitable"   # даже оптимум убыточен — крафт не имеет смысла
+        best["overpay_clean"] = "unprofitable"
+    elif contract_mode != "best":
+        best["overpay_clean"] = None  # в режиме «по самым дешёвым» чистоту не сравниваем
+    elif cheapest_stats is None or best["roi"] > cheapest_stats["roi"] + 1e-12:
+        best["overpay_clean"] = "worth"
     else:
-        best["overpay_clean"] = "worth" if W <= 0.15 else ("avoid" if W >= 0.45 else "moderate")
+        best["overpay_clean"] = "avoid"
     return best
 
 
@@ -2554,17 +2610,20 @@ def rarity_representative_price(skins, midpoint=False):
     return min(prices)
 
 
-def analyze_collection_advanced(rarity_data, midpoint=False):
+def analyze_collection_advanced(rarity_data, midpoint=False, contract_mode="cheapest"):
     """Ранжирование редкостей в продвинутом режиме (с учётом резки и флоат-экономики).
 
     rarity_data — список (key, skins) ПО ВОЗРАСТАНИЮ редкости. Учитываются редкости,
     у которых есть хотя бы один валидный скин с ценой. Логика ценового ранга та же,
     что в простом режиме (ratio соседних цен, реверс+штраф для высшего), НО к ratio
-    нижних редкостей добавляется флоат-бонус из ROI лучшего контракта R→R+1
-    (tradeup_float_bonus). Высшее качество флоат-бонус не получает (из него не крафтят).
+    нижних редкостей добавляется флоат-бонус из ROI контракта R→R+1 на РЕАЛЬНЫХ
+    записях (best_tradeup_roi; contract_mode: 'cheapest' — самая дешёвая запись,
+    'best' — запись с лучшим ROI). Высшее качество флоат-бонус не получает
+    (из него не крафтят).
 
     Возвращает список dict: key, price, ratio, rank, rank_index, role, float_bonus,
-    roi, W_star, verdict (overpay_clean), float_summary (наценка за чистоту по редкости).
+    roi, W_star, E_out, cost, filler, n_candidates, verdict (overpay_clean),
+    float_summary (наценка за чистоту по редкости).
     """
     active = []
     for key, skins in rarity_data:
@@ -2582,7 +2641,8 @@ def analyze_collection_advanced(rarity_data, midpoint=False):
         price = rar["price"]
         float_bonus, verdict, roi_info = 0.0, None, None
         if i < n - 1:  # не высшее: возможен контракт R -> R+1
-            roi_info = best_tradeup_roi(rar["skins"], active[i + 1]["skins"], midpoint)
+            roi_info = best_tradeup_roi(rar["skins"], active[i + 1]["skins"], midpoint,
+                                        contract_mode=contract_mode)
             if roi_info:
                 float_bonus = tradeup_float_bonus(roi_info["roi"])
                 verdict = roi_info["overpay_clean"]
@@ -2603,6 +2663,10 @@ def analyze_collection_advanced(rarity_data, midpoint=False):
             "float_bonus": float_bonus,
             "roi": (roi_info["roi"] if roi_info else None),
             "W_star": (roi_info["W_star"] if roi_info else None),
+            "E_out": (roi_info["E_out"] if roi_info else None),
+            "cost": (roi_info["cost"] if roi_info else None),
+            "filler": (roi_info["filler"] if roi_info else None),
+            "n_candidates": (roi_info["n_candidates"] if roi_info else None),
             "verdict": verdict,
             "float_summary": rarity_float_summary(rar["skins"], midpoint),
         })
@@ -2621,6 +2685,11 @@ def _mode_5_advanced(currency, tp):
     midpoint = st.checkbox(
         _("m5a_midpoint_label"),
         value=False, key="m5a_midpoint", help=_("m5a_midpoint_help"))
+    # Режим расчёта контрактов: «по самым дешёвым» / «по лучшему соотношению».
+    contract_mode = st.radio(
+        _("m5a_cmode_label"), options=["cheapest", "best"],
+        format_func=lambda v: _("m5a_cmode_cheapest") if v == "cheapest" else _("m5a_cmode_best"),
+        key="m5a_contract_mode", help=_("m5a_cmode_help"))
     # При учёте ТП цен суммы показываются в реальной валюте, иначе — в валюте отображения.
     disp_ccy = tp["real_ccy"] if tp["enabled"] else currency
     price_decimals = 0 if is_integer_currency(disp_ccy) else 2
@@ -2735,7 +2804,7 @@ def _mode_5_advanced(currency, tp):
             if skins:
                 rarity_data.append((key, skins))
 
-    results = analyze_collection_advanced(rarity_data, midpoint)
+    results = analyze_collection_advanced(rarity_data, midpoint, contract_mode)
     st.divider()
     if not results:
         st.info(_("Add at least two rarities, each with a valid priced skin, to compare."))
@@ -2748,9 +2817,7 @@ def _mode_5_advanced(currency, tp):
     verdict_label = {
         "worth": _("clean pays off — worth buying low-float fillers"),
         "avoid": _("don't overpay for clean — a dirty filler gives the same output"),
-        "moderate": _("moderate — some cleanliness helps"),
         "unprofitable": _("trade-up into the next rarity is unprofitable"),
-        None: "—",
     }
     header = (
         "<tr>"
@@ -2797,13 +2864,18 @@ def _mode_5_advanced(currency, tp):
         nm = name_by_key.get(r["key"], r["key"])
         fs = r["float_summary"]
         parts = []
-        if r["verdict"] is not None:
-            verdict_txt = verdict_label.get(r["verdict"], "—")
-            extra = ""
-            if r["roi"] is not None and r["W_star"] is not None and r["verdict"] != "unprofitable":
-                extra = " " + _("m5a_roi_at_wear").format(
-                    roi=f"{r['roi']*100:.0f}", w=f"{r['W_star']:.2f}")
-            parts.append(f"**{_('craft up')}:** {verdict_txt}{extra}")
+        if r["roi"] is not None and r.get("filler") is not None:
+            fl = r["filler"]
+            line = _("m5a_craft_line").format(
+                skin=fl["skin"], wear=fl["wear"], f=f"{fl['f']:.4f}",
+                w=f"{r['W_star']:.2f}",
+                price=format_currency(fl["price"], disp_ccy, price_decimals),
+                n=10, cost=format_currency(r["cost"], disp_ccy, price_decimals),
+                eout=format_currency(r["E_out"], disp_ccy, price_decimals),
+                roi=f"{r['roi']*100:.0f}")
+            verdict_txt = verdict_label.get(r["verdict"])
+            parts.append(f"**{_('craft up')}:** "
+                         + (verdict_txt + " " + line if verdict_txt else line))
         if fs and fs["best_premium"] is not None:
             best_p = format_currency(fs["best_premium"], disp_ccy, price_decimals)
             avg_p = format_currency(fs["avg_premium"], disp_ccy, price_decimals)
