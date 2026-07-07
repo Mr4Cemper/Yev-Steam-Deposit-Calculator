@@ -313,6 +313,12 @@ TRANSLATIONS = {
             'Trade-up & float details',
         'craft up':
             'craft up',
+        "m5a_tpl_caption":
+            "Loading fills every field for this collection (fully editable). It OVERWRITES "
+            "the current advanced-mode input. Prices are approximate USD starting values — "
+            "update them to the current market before relying on the result.",
+        "m5a_tpl_loaded_msg":
+            "Loaded template: {name} · update the prices to the current market.",
         "m5a_craft_line":
             "(filler: {skin} · {wear} · float {f}, w={w} · {price} ×{n} = {cost} → "
             "avg output {eout} · ROI {roi}%)",
@@ -695,6 +701,16 @@ TRANSLATIONS = {
             'Контракты и детали флоата',
         'craft up':
             'крафт вверх',
+        "Collection template":
+            "Шаблон коллекции",
+        "Load template":
+            "Загрузить шаблон",
+        "m5a_tpl_caption":
+            "Загрузка заполняет все поля этой коллекции (всё редактируемо). Она ПЕРЕЗАПИСЫВАЕТ "
+            "текущий ввод продвинутого режима. Цены — ориентировочные стартовые "
+            "значения (USD); перед использованием обнови их под текущий рынок.",
+        "m5a_tpl_loaded_msg":
+            "Загружен шаблон: {name} · обнови цены под текущий рынок.",
         "m5a_craft_line":
             "(филлер: {skin} · {wear} · флоат {f}, w={w} · {price} ×{n} = {cost} → "
             "ср. выход {eout} · ROI {roi}%)",
@@ -1067,6 +1083,16 @@ TRANSLATIONS = {
             'Контракти та деталі флоата',
         'craft up':
             'крафт вгору',
+        "Collection template":
+            "Шаблон колекції",
+        "Load template":
+            "Завантажити шаблон",
+        "m5a_tpl_caption":
+            "Завантаження заповнює всі поля цієї колекції (усе редаговане). Воно ПЕРЕЗАПИСУЄ "
+            "поточний ввід просунутого режиму. Ціни — орієнтовні стартові "
+            "значення (USD); перед використанням онови їх під поточний ринок.",
+        "m5a_tpl_loaded_msg":
+            "Завантажено шаблон: {name} · онови ціни під поточний ринок.",
         "m5a_craft_line":
             "(філер: {skin} · {wear} · флоат {f}, w={w} · {price} ×{n} = {cost} → "
             "сер. вихід {eout} · ROI {roi}%)",
@@ -2673,6 +2699,155 @@ def analyze_collection_advanced(rarity_data, midpoint=False, contract_mode="chea
     return results
 
 
+# ===========================================================================
+# ШАБЛОНЫ СУЩЕСТВУЮЩИХ КОЛЛЕКЦИЙ (для продвинутого режима)
+# Данные статичны (зашиты в коде): названия/резки/качества/флоаты неизменны,
+# со временем меняются только цены — пользователь правит их сам после загрузки.
+# Внешнего ввода (файлы/сеть) нет — источник уязвимостей отсутствует.
+# ФЛОАТЫ: если указан exact_float — берётся он (точнее для контрактов); None —
+# качество без точного флоата (калькулятор возьмёт «худший в качестве»/середину).
+# ===========================================================================
+COLLECTION_TEMPLATES = {
+    "cobblestone": {
+        "name": "Cobblestone",
+        "data": {
+            "rarity_covert": [
+                {"name": "AWP | Dragon Lore", "cap_lo": 0.00, "cap_hi": 0.70, "records": [
+                    {"wear": "FN", "exact_float": 0.0646, "price": 11172.0},
+                    {"wear": "MW", "exact_float": 0.0941, "price": 8300.0},
+                    {"wear": "FT", "exact_float": 0.288, "price": 6140.0},
+                    {"wear": "WW", "exact_float": 0.446, "price": 5318.0},
+                    {"wear": "BS", "exact_float": 0.518, "price": 4549.0},
+                ]},
+            ],
+            "rarity_classified": [
+                {"name": "M4A1-S | Knight", "cap_lo": 0.00, "cap_hi": 0.10, "records": [
+                    {"wear": "FN", "exact_float": 0.034, "price": 2360.0},
+                    {"wear": "MW", "exact_float": None, "price": 2185.0},
+                ]},
+            ],
+            "rarity_restricted": [
+                {"name": "Desert Eagle | Hand Cannon", "cap_lo": 0.01, "cap_hi": 0.70, "records": [
+                    {"wear": "FN", "exact_float": 0.056, "price": 441.0},
+                    {"wear": "MW", "exact_float": 0.084, "price": 301.0},
+                    {"wear": "FT", "exact_float": 0.304, "price": 276.0},
+                    {"wear": "WW", "exact_float": 0.407, "price": 350.0},
+                    {"wear": "BS", "exact_float": 0.627, "price": 302.0},
+                ]},
+                {"name": "CZ75-Auto | Chalice", "cap_lo": 0.00, "cap_hi": 0.10, "records": [
+                    {"wear": "FN", "exact_float": 0.041, "price": 280.0},
+                    {"wear": "MW", "exact_float": 0.071, "price": 279.0},
+                ]},
+            ],
+            "rarity_milspec": [
+                {"name": "P2000 | Chainmail", "cap_lo": 0.00, "cap_hi": 0.22, "records": [
+                    {"wear": "FN", "exact_float": 0.0267, "price": 45.73},
+                    {"wear": "MW", "exact_float": 0.086, "price": 40.0},
+                    {"wear": "FT", "exact_float": 0.163, "price": 38.0},
+                ]},
+                {"name": "MP9 | Dark Age", "cap_lo": 0.00, "cap_hi": 0.22, "records": [
+                    {"wear": "FN", "exact_float": 0.0275, "price": 55.4},
+                    {"wear": "MW", "exact_float": 0.089, "price": 42.5},
+                    {"wear": "FT", "exact_float": 0.206, "price": 40.25},
+                ]},
+            ],
+            "rarity_industrial": [
+                {"name": "USP-S | Royal Blue", "cap_lo": 0.06, "cap_hi": 0.80, "records": [
+                    {"wear": "FN", "exact_float": 0.0697, "price": 117.0},
+                    {"wear": "MW", "exact_float": 0.130, "price": 37.0},
+                    {"wear": "FT", "exact_float": 0.378, "price": 8.87},
+                    {"wear": "WW", "exact_float": 0.386, "price": 9.8},
+                    {"wear": "BS", "exact_float": 0.521, "price": 8.73},
+                ]},
+                {"name": "MAG-7 | Silver", "cap_lo": 0.00, "cap_hi": 0.08, "records": [
+                    {"wear": "FN", "exact_float": 0.0255, "price": 16.0},
+                    {"wear": "MW", "exact_float": 0.074, "price": 20.0},
+                ]},
+                {"name": "Nova | Green Apple", "cap_lo": 0.00, "cap_hi": 0.30, "records": [
+                    {"wear": "FN", "exact_float": 0.056, "price": 9.13},
+                    {"wear": "MW", "exact_float": 0.129, "price": 8.0},
+                    {"wear": "FT", "exact_float": 0.243, "price": 8.0},
+                ]},
+                {"name": "Sawed-Off | Rust Coat", "cap_lo": 0.00, "cap_hi": 0.80, "records": [
+                    {"wear": "FN", "exact_float": 0.018, "price": 17.5},
+                    {"wear": "MW", "exact_float": 0.134, "price": 7.5},
+                    {"wear": "FT", "exact_float": 0.257, "price": 6.2},
+                    {"wear": "WW", "exact_float": 0.4, "price": 12.0},
+                    {"wear": "BS", "exact_float": 0.491, "price": 6.16},
+                ]},
+            ],
+            "rarity_consumer": [
+                {"name": "MAC-10 | Indigo", "cap_lo": 0.06, "cap_hi": 0.80, "records": [
+                    {"wear": "FN", "exact_float": 0.065, "price": 28.4},
+                    {"wear": "MW", "exact_float": 0.128, "price": 4.18},
+                    {"wear": "FT", "exact_float": 0.353, "price": 1.91},
+                    {"wear": "WW", "exact_float": 0.4, "price": 1.6},
+                    {"wear": "BS", "exact_float": 0.76, "price": 1.5},
+                ]},
+                {"name": "P90 | Storm", "cap_lo": 0.06, "cap_hi": 0.80, "records": [
+                    {"wear": "FN", "exact_float": 0.0652, "price": 23.42},
+                    {"wear": "MW", "exact_float": 0.140, "price": 3.2},
+                    {"wear": "FT", "exact_float": 0.274, "price": 1.84},
+                    {"wear": "WW", "exact_float": 0.4, "price": 1.84},
+                    {"wear": "BS", "exact_float": None, "price": 1.6},
+                ]},
+                {"name": "UMP-45 | Indigo", "cap_lo": 0.06, "cap_hi": 0.80, "records": [
+                    {"wear": "FN", "exact_float": 0.065, "price": 17.0},
+                    {"wear": "MW", "exact_float": 0.124, "price": 3.12},
+                    {"wear": "FT", "exact_float": 0.23, "price": 2.0},
+                    {"wear": "WW", "exact_float": None, "price": 1.8},
+                    {"wear": "BS", "exact_float": None, "price": 2.0},
+                ]},
+                {"name": "Dual Berettas | Briar", "cap_lo": 0.00, "cap_hi": 0.22, "records": [
+                    {"wear": "FN", "exact_float": 0.0446, "price": 3.7},
+                    {"wear": "MW", "exact_float": 0.0879, "price": 2.2},
+                    {"wear": "FT", "exact_float": 0.188, "price": 2.22},
+                ]},
+                {"name": "SCAR-20 | Storm", "cap_lo": 0.06, "cap_hi": 0.80, "records": [
+                    {"wear": "FN", "exact_float": 0.069, "price": 14.37},
+                    {"wear": "MW", "exact_float": 0.124, "price": 3.3},
+                    {"wear": "FT", "exact_float": 0.339, "price": 1.8},
+                    {"wear": "WW", "exact_float": 0.38, "price": 2.0},
+                    {"wear": "BS", "exact_float": 0.57, "price": 1.7},
+                ]},
+            ],
+        },
+    },
+}
+
+
+def _m5a_load_template():
+    """Колбэк кнопки «Загрузить шаблон»: заполняет session_state полей продвинутого
+    режима значениями выбранной коллекции. Выполняется ДО перерисовки (on_click),
+    поэтому виджеты подхватывают значения на следующем ране. Полностью перезаписывает
+    прежний ввод: сначала чистит поля скинов, затем ставит данные шаблона. Данные
+    статичны (в коде), внешнего ввода нет — безопасно."""
+    tpl = COLLECTION_TEMPLATES.get(st.session_state.get("m5a_tpl_select"))
+    if not tpl:
+        return
+    skin_prefixes = ("m5a_n_", "m5a_name_", "m5a_caplo_", "m5a_caphi_", "m5a_nrec_",
+                     "m5a_wear_", "m5a_exon_", "m5a_exact_", "m5a_price_", "m5a_steam_")
+    for k in list(st.session_state.keys()):
+        if k.startswith(skin_prefixes):
+            del st.session_state[k]
+    for rkey, skins in tpl["data"].items():
+        st.session_state[f"m5a_n_{rkey}"] = len(skins)
+        for si, sk in enumerate(skins):
+            st.session_state[f"m5a_name_{rkey}_{si}"] = sk["name"]
+            st.session_state[f"m5a_caplo_{rkey}_{si}"] = float(sk["cap_lo"])
+            st.session_state[f"m5a_caphi_{rkey}_{si}"] = float(sk["cap_hi"])
+            recs = sk["records"]
+            st.session_state[f"m5a_nrec_{rkey}_{si}"] = len(recs)
+            for ri, rec in enumerate(recs):
+                st.session_state[f"m5a_wear_{rkey}_{si}_{ri}"] = rec["wear"]
+                has_f = rec.get("exact_float") is not None
+                st.session_state[f"m5a_exon_{rkey}_{si}_{ri}"] = has_f
+                if has_f:
+                    st.session_state[f"m5a_exact_{rkey}_{si}_{ri}"] = float(rec["exact_float"])
+                st.session_state[f"m5a_price_{rkey}_{si}_{ri}"] = float(rec["price"])
+    st.session_state["m5a_tpl_just_loaded"] = tpl["name"]
+
+
 def _mode_5_advanced(currency, tp):
     """Продвинутый режим: ввод скинов с резкой и записями качеств, метрики флоата,
     агрегаты редкости, контрактный ROI и ранги с флоат-бонусом. Защита от поломок:
@@ -2693,6 +2868,23 @@ def _mode_5_advanced(currency, tp):
     # При учёте ТП цен суммы показываются в реальной валюте, иначе — в валюте отображения.
     disp_ccy = tp["real_ccy"] if tp["enabled"] else currency
     price_decimals = 0 if is_integer_currency(disp_ccy) else 2
+
+    # Шаблоны готовых коллекций: одна кнопка заполняет все поля (правишь только цены).
+    # Загрузка ПЕРЕЗАПИСЫВАЕТ текущий ввод продвинутого режима.
+    if COLLECTION_TEMPLATES:
+        tc1, tc2 = st.columns([3, 1])
+        with tc1:
+            st.selectbox(
+                _("Collection template"), options=list(COLLECTION_TEMPLATES.keys()),
+                format_func=lambda t: COLLECTION_TEMPLATES[t]["name"], key="m5a_tpl_select")
+        with tc2:
+            st.markdown("<div style='height:1.75rem;'></div>", unsafe_allow_html=True)
+            st.button(_("Load template"), on_click=_m5a_load_template,
+                      key="m5a_tpl_load", use_container_width=True)
+        _just = st.session_state.pop("m5a_tpl_just_loaded", None)
+        if _just:
+            st.success(_("m5a_tpl_loaded_msg").format(name=_just))
+        st.caption(_("m5a_tpl_caption"))
 
     rarity_data = []
     for key, color in RARITY_DEFS:
