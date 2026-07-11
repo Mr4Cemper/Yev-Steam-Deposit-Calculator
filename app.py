@@ -67,7 +67,7 @@ from datetime import date
 import streamlit as st
 
 # Версия приложения — ЕДИНСТВЕННЫЙ источник истины (показывается в интерфейсе).
-APP_VERSION = "2.16"
+APP_VERSION = "2.17"
 
 # ===========================================================================
 # КОНФИГУРАЦИЯ И КОНСТАНТЫ
@@ -332,6 +332,14 @@ TRANSLATIONS = {
             'craft up',
         "News":
             "News",
+        "rate_zero_warning":
+            "A rate of 0 zeroes out every real-money figure (costs, profit, %). "
+            "Enter the actual exchange rate.",
+        "m5a_tpl_skipped_msg":
+            "{n} template record(s) skipped: the quality does not intersect the skin's float cap, "
+            "or the cap is invalid.",
+        "m4_converted_note":
+            "the two figures above are converted to {ccy}",
         "Show all news":
             "Show all news",
         "m5a_cands_title":
@@ -749,6 +757,12 @@ TRANSLATIONS = {
             'крафт вверх',
         "News":
             "Новости",
+        "rate_zero_warning":
+            "Курс 0 обнуляет все реальные суммы (затраты, прибыль, %). Укажи фактический курс.",
+        "m5a_tpl_skipped_msg":
+            "Пропущено записей шаблона: {n} — качество не пересекается с резкой скина или резка некорректна.",
+        "m4_converted_note":
+            "обе суммы выше приведены к {ccy}",
         "Show all news":
             "Показать все новости",
         "m5a_cands_title":
@@ -1158,6 +1172,12 @@ TRANSLATIONS = {
             'крафт вгору',
         "News":
             "Новини",
+        "rate_zero_warning":
+            "Курс 0 обнуляє всі реальні суми (витрати, прибуток, %). Вкажи фактичний курс.",
+        "m5a_tpl_skipped_msg":
+            "Пропущено записів шаблону: {n} — якість не перетинається з різанням скіна або різання некоректне.",
+        "m4_converted_note":
+            "обидві суми вище приведені до {ccy}",
         "Show all news":
             "Показати всі новини",
         "m5a_cands_title":
@@ -1309,10 +1329,15 @@ def round_half_up_int(value):
     логику, чтобы интерфейс и расчёт не расходились на 1 единицу для
     целочисленных валют (например, при вводе 14.5 или 16.5 с шагом 0.5).
 
-    Цены всегда неотрицательны (min_value=0.0 во всех полях), поэтому простого
-    int(value + 0.5) достаточно; на всякий случай вход приводится к >= 0.
+    Цены всегда неотрицательны (min_value=0.0 во всех полях), поэтому вход
+    приводится к >= 0.
+
+    Микро-эпсилон 1e-9 компенсирует погрешность double: значение, которое в
+    десятичном виде равно ровно X.5, в двоичном может храниться как X.4999999999,
+    и тогда int(v + 0.5) дал бы X вместо X+1. На корректные значения эпсилон не
+    влияет (шаг цен несопоставимо больше 1e-9).
     """
-    return int(max(0.0, float(value)) + 0.5)
+    return int(max(0.0, float(value)) + 0.5 + 1e-9)
 
 
 def calculate_exact_steam_revenue(steam_buyer_price, is_integer_currency,
@@ -1523,7 +1548,7 @@ def compare_purchase_options(site_real_cost, steam_real_cost):
 
 def calculate_cashout(steam_price, site_sell_price, quantity=1,
                       sales_fee_percent=0.0, withdrawal_fee_percent=0.0,
-                      withdrawal_fixed_fee=0.0):
+                      withdrawal_fixed_fee=0.0, same_currency=True):
     """Вывод баланса Steam в реальные деньги через продажу предмета на сайте.
 
     Модель денежного потока (все суммы — в одной валюте; конвертация, если
@@ -1546,6 +1571,11 @@ def calculate_cashout(steam_price, site_sell_price, quantity=1,
         net_profit     — real_received - steam_spent (обычно отрицательна);
         ratio_percent  — (real_received / steam_spent) * 100; 0 при нулевых затратах.
 
+    same_currency=False — вызывающий код передал steam_price и site_sell_price в
+    РАЗНЫХ валютах (кросс-валютный режим) и сам приведёт стороны к общей базе.
+    Тогда net_profit и ratio_percent возвращаются как None: вычитать и делить суммы
+    в разных валютах нельзя, и такие поля не должны случайно попасть в интерфейс.
+
     Все числовые аргументы приводятся к неотрицательным значениям; проценты
     выше 100 дают нулевую (а не отрицательную) выручку на соответствующем шаге.
     """
@@ -1562,8 +1592,13 @@ def calculate_cashout(steam_price, site_sell_price, quantity=1,
     real_received = after_sales * max(0.0, 1.0 - withdrawal_fee_percent / 100.0)
     real_received = max(0.0, real_received - withdrawal_fixed_fee)
 
-    net_profit = real_received - steam_spent
-    ratio_percent = (real_received / steam_spent) * 100.0 if steam_spent > 0 else 0.0
+    if same_currency:
+        net_profit = real_received - steam_spent
+        ratio_percent = (real_received / steam_spent) * 100.0 if steam_spent > 0 else 0.0
+    else:
+        # Разные валюты: разность и отношение бессмысленны до приведения к общей базе.
+        net_profit = None
+        ratio_percent = None
 
     return {
         "steam_spent": steam_spent,
@@ -1766,6 +1801,8 @@ def render_cross_currency_rates(key_prefix, spent_ccy, site_ccy, steam_ccy):
             _("Rate: how many {a} in 1 {b}").format(a=spent_lbl, b=steam_ccy or "?"),
             min_value=0.0, value=45.0, step=0.5, key=f"{key_prefix}_rate_steam",
         )
+    if rate_site_to_spent <= 0 or rate_steam_to_spent <= 0:
+        st.warning("⚠️ " + _("rate_zero_warning"))
     st.caption(_("Both rates are in the spent currency per 1 unit (a common base)."))
     return rate_site_to_spent, rate_steam_to_spent
 
@@ -1796,6 +1833,8 @@ def render_m5_tp_block():
         min_value=0.0, value=1.0, step=0.5, key="m5_tp_rate_site")
     tp["topup"] = st.number_input(_("Steam top-up bonus %"), min_value=-99.9, value=0.0,
                                   step=1.0, key="m5_tp_topup")
+    if tp["rate_site"] <= 0 or tp["rate_steam"] <= 0:
+        st.warning("⚠️ " + _("rate_zero_warning"))
     st.caption(_("Prices are converted to your real currency; for each item the CHEAPER of market vs Steam is used."))
     return tp
 
@@ -1826,6 +1865,9 @@ def render_m5_tp_block():
 # Порядок в списке не важен: лента сама сортируется по дате (новые сверху).
 # В тексте работает markdown: **жирный**, *курсив*, [ссылка](https://...).
 # HTML намеренно НЕ выполняется (st.markdown без unsafe_allow_html) — безопасно.
+MAX_M5A_SKINS = 10     # предел виджета «скинов в редкости» (Режим 5, продвинутый)
+MAX_M5A_RECORDS = 5    # предел виджета «записей качества» у одного скина
+
 NEWS_KIND_ICONS = {"info": "📣", "update": "🆕", "fix": "🔧", "warning": "⚠️"}
 NEWS_FRESH_DAYS = 14   # сколько дней новость считается свежей (лента раскрыта сразу)
 NEWS_MAX_SHOWN = 5     # сколько последних новостей показывать без «показать все»
@@ -3201,13 +3243,33 @@ def _m5a_load_template():
     for k in list(st.session_state.keys()):
         if k.startswith(skin_prefixes):
             del st.session_state[k]
+    # Санитизация данных шаблона ПЕРЕД записью в session_state. Это не паранойя:
+    # если в шаблон закрадётся качество, не пересекающееся с резкой скина, то
+    # st.selectbox получит значение вне своего списка options и Streamlit УПАДЁТ
+    # с ошибкой. Также клампим количества под границы виджетов (скинов 0..10,
+    # записей 1..5) — выход за них тоже роняет приложение.
+    skipped = 0
     for rkey, skins in tpl["data"].items():
-        st.session_state[f"m5a_n_{rkey}"] = len(skins)
-        for si, sk in enumerate(skins):
-            st.session_state[f"m5a_name_{rkey}_{si}"] = sk["name"]
-            st.session_state[f"m5a_caplo_{rkey}_{si}"] = float(sk["cap_lo"])
-            st.session_state[f"m5a_caphi_{rkey}_{si}"] = float(sk["cap_hi"])
-            recs = sk["records"]
+        loadable = []
+        for sk in skins:
+            cap_lo, cap_hi = float(sk.get("cap_lo", 0.0)), float(sk.get("cap_hi", 1.0))
+            raw_recs = list(sk.get("records", []))
+            if validate_cap(cap_lo, cap_hi):       # некорректная резка — скин целиком мимо
+                skipped += len(raw_recs)
+                continue
+            inter = wears_intersecting_cap(cap_lo, cap_hi)
+            recs = [r for r in raw_recs if r.get("wear") in inter][:MAX_M5A_RECORDS]
+            skipped += len(raw_recs) - len(recs)
+            if recs:
+                loadable.append((sk, cap_lo, cap_hi, recs))
+        if len(loadable) > MAX_M5A_SKINS:
+            skipped += sum(len(r) for _sk, _lo, _hi, r in loadable[MAX_M5A_SKINS:])
+            loadable = loadable[:MAX_M5A_SKINS]
+        st.session_state[f"m5a_n_{rkey}"] = len(loadable)
+        for si, (sk, cap_lo, cap_hi, recs) in enumerate(loadable):
+            st.session_state[f"m5a_name_{rkey}_{si}"] = sk.get("name", "")
+            st.session_state[f"m5a_caplo_{rkey}_{si}"] = cap_lo
+            st.session_state[f"m5a_caphi_{rkey}_{si}"] = cap_hi
             st.session_state[f"m5a_nrec_{rkey}_{si}"] = len(recs)
             for ri, rec in enumerate(recs):
                 st.session_state[f"m5a_wear_{rkey}_{si}_{ri}"] = rec["wear"]
@@ -3217,6 +3279,7 @@ def _m5a_load_template():
                     st.session_state[f"m5a_exact_{rkey}_{si}_{ri}"] = float(rec["exact_float"])
                 st.session_state[f"m5a_price_{rkey}_{si}_{ri}"] = float(rec["price"])
     st.session_state["m5a_tpl_just_loaded"] = tpl["name"]
+    st.session_state["m5a_tpl_skipped"] = skipped
 
 
 def _mode_5_advanced(currency, tp):
@@ -3253,15 +3316,18 @@ def _mode_5_advanced(currency, tp):
             st.button(_("Load template"), on_click=_m5a_load_template,
                       key="m5a_tpl_load", use_container_width=True)
         _just = st.session_state.pop("m5a_tpl_just_loaded", None)
+        _skipped = st.session_state.pop("m5a_tpl_skipped", 0)
         if _just:
             st.success(_("m5a_tpl_loaded_msg").format(name=_just))
+            if _skipped:
+                st.warning("⚠️ " + _("m5a_tpl_skipped_msg").format(n=_skipped))
         st.caption(_("m5a_tpl_caption"))
 
     rarity_data = []
     for key, color in RARITY_DEFS:
         with st.expander("● " + _(key), expanded=False):
             nskins = int(st.number_input(
-                _("Skins in this rarity"), min_value=0, max_value=10, value=0, step=1,
+                _("Skins in this rarity"), min_value=0, max_value=MAX_M5A_SKINS, value=0, step=1,
                 key=f"m5a_n_{key}"))
             skins = []
             for si in range(nskins):
@@ -3282,7 +3348,7 @@ def _mode_5_advanced(currency, tp):
                 if not inter:
                     inter = list(WEAR_ORDER)
                 nrec = int(st.number_input(
-                    _("Quality records"), min_value=1, max_value=5, value=1, step=1,
+                    _("Quality records"), min_value=1, max_value=MAX_M5A_RECORDS, value=1, step=1,
                     key=f"m5a_nrec_{key}_{si}"))
                 records = []
                 for ri in range(nrec):
@@ -3477,7 +3543,7 @@ def _mode_5_advanced(currency, tp):
                         f"<tr style='border-top:1px solid #3a3a3a;{style}'>"
                         f"<td style='text-align:left;padding:6px 10px;'>{mark}{_esc(c['skin'])}</td>"
                         f"<td style='text-align:center;padding:6px 10px;'>{_esc(c['wear'])}</td>"
-                        f"<td style='text-align:center;padding:6px 10px;font-size:0.85em;'>{c['f']:.4f}</td>"
+                        f"<td style='text-align:center;padding:6px 10px;font-size:0.85em;'>{c['f']:.6f}</td>"
                         f"<td style='text-align:center;padding:6px 10px;font-size:0.85em;'>{c['w']:.2f}</td>"
                         f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['price'], disp_ccy, price_decimals)}</td>"
                         f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['cost'], disp_ccy, price_decimals)}</td>"
@@ -3830,7 +3896,8 @@ def calculate_mode_4(currency, advanced):
         st.caption(
             f"{_('Site')} → real: {format_currency(result_site['real_money'], site_ccy or '?')} · "
             f"{_('Steam Market')} → balance: "
-            f"{format_currency(result_steam['steam_balance'], steam_side_ccy or '?')}"
+            f"{format_currency(result_steam['steam_balance'], steam_side_ccy or '?')} · "
+            + _("m4_converted_note").format(ccy=output_ccy)
         )
 
     # --- Вердикт ---
@@ -3965,6 +4032,10 @@ def calculate_mode_3(currency, advanced):
         steam_price=steam_price, site_sell_price=site_sell_price, quantity=quantity,
         sales_fee_percent=sales_fee, withdrawal_fee_percent=withdrawal_fee,
         withdrawal_fixed_fee=fixed_in_site,
+        # В продвинутом режиме цена Steam и цена сайта — в РАЗНЫХ валютах, поэтому
+        # net_profit/ratio_percent внутри функции не считаются (см. её докстринг):
+        # к общей базе стороны приводятся ниже.
+        same_currency=not advanced,
     )
 
     # Приведение к базовой валюте (карты).
