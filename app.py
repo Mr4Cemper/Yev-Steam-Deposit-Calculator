@@ -67,7 +67,7 @@ from datetime import date
 import streamlit as st
 
 # Версия приложения — ЕДИНСТВЕННЫЙ источник истины (показывается в интерфейсе).
-APP_VERSION = "2.18"
+APP_VERSION = "2.19"
 
 # ===========================================================================
 # КОНФИГУРАЦИЯ И КОНСТАНТЫ
@@ -332,6 +332,13 @@ TRANSLATIONS = {
             'craft up',
         "News":
             "News",
+        "m5a_subs_warning":
+            "Estimate: some output skins have no price in the quality the contract actually "
+            "produces, so the nearest quality was used. Add the missing prices: {items}",
+        "na_zero_spent":
+            "n/a — zero cost (no purchase price)",
+        "na_zero_steam_cost":
+            "n/a — zero Steam cost (no price)",
         "rate_zero_warning":
             "A rate of 0 zeroes out every real-money figure (costs, profit, %). "
             "Enter the actual exchange rate.",
@@ -757,6 +764,12 @@ TRANSLATIONS = {
             'крафт вверх',
         "News":
             "Новости",
+        "m5a_subs_warning":
+            "Оценка: у части выходных скинов нет цены в том качестве, которое реально даёт контракт — взято ближайшее. Впиши недостающие цены: {items}",
+        "na_zero_spent":
+            "н/д — затраты 0 (не введена цена покупки)",
+        "na_zero_steam_cost":
+            "н/д — затраты Steam 0 (не введена цена)",
         "rate_zero_warning":
             "Курс 0 обнуляет все реальные суммы (затраты, прибыль, %). Укажи фактический курс.",
         "m5a_tpl_skipped_msg":
@@ -1172,6 +1185,12 @@ TRANSLATIONS = {
             'крафт вгору',
         "News":
             "Новини",
+        "m5a_subs_warning":
+            "Оцінка: у частини вихідних скінів немає ціни в тій якості, яку реально дає контракт — узято найближчу. Впиши відсутні ціни: {items}",
+        "na_zero_spent":
+            "н/д — витрати 0 (не введено ціну покупки)",
+        "na_zero_steam_cost":
+            "н/д — витрати Steam 0 (не введено ціну)",
         "rate_zero_warning":
             "Курс 0 обнуляє всі реальні суми (витрати, прибуток, %). Вкажи фактичний курс.",
         "m5a_tpl_skipped_msg":
@@ -2123,11 +2142,20 @@ def calculate_mode_1(currency, advanced):
     m_spent.metric(_("Real spent"), format_currency(real_spent_base, output_ccy))
     m_received.metric(_("Steam received"),
                       format_currency(steam_received_base, output_ccy, received_decimals))
-    m_profit.metric(
-        _("Net profit"),
-        format_currency(profit_amount, output_ccy),
-        delta=f"{profit_percent:+.2f}%",   # зелёный для плюса, красный для минуса
-    )
+    if real_spent_base > 0:
+        m_profit.metric(
+            _("Net profit"),
+            format_currency(profit_amount, output_ccy),
+            delta=f"{profit_percent:+.2f}%",   # зелёный для плюса, красный для минуса
+        )
+    else:
+        # Затраты 0 => процент не определён (деление на ноль). Показываем ПРИЧИНУ,
+        # а не «+0.00%», который читается как «нулевая доходность».
+        m_profit.metric(
+            _("Net profit"),
+            format_currency(profit_amount, output_ccy),
+            delta=_("na_zero_spent"), delta_color="off",
+        )
 
     # Пояснение для целочисленного режима (за 1 предмет).
     if integer_mode and integer_detail is not None:
@@ -2774,34 +2802,48 @@ def _price_by_wear_map(skin, midpoint=False):
     return m
 
 
-def skin_price_at_wear(skin, target_wear, midpoint=False):
-    """Цена скина в заданном качестве; если записи нет — ближайшее качество по индексу
-    (оценка). None, если у скина нет валидных записей."""
-    m = _price_by_wear_map(skin, midpoint)
-    if not m:
-        return None
-    if target_wear in m:
-        return m[target_wear]
-    ti = WEAR_ORDER.index(target_wear)
-    nearest = min(m.keys(), key=lambda w: abs(WEAR_ORDER.index(w) - ti))
-    return m[nearest]
+def _output_value_details(W_bar, output_skins, midpoint=False):
+    """Ожидаемый выход контракта + список ПОДСТАНОВОК цены.
 
+    Для каждого выходного скина берётся его цена в том качестве, которое реально
+    даёт контракт (из флоата f_out). Если цены ИМЕННО в этом качестве не введено,
+    подставляется ближайшее качество — это ОЦЕНКА, а не факт, поэтому такой случай
+    попадает в subs: {'skin', 'target', 'used'} (у кого, какое качество нужно было,
+    какое взято). Пустой subs = все цены заданы точно.
 
-def expected_output_value(W_bar, output_skins, midpoint=False):
-    """E(выход, W̄) — средняя цена по выходным скинам на полученном флоате
-    (равновероятный исход контракта одной коллекции). None, если данных нет."""
-    vals = []
+    Возвращает (avg, subs); avg = None, если цен нет вовсе. Единая математика для
+    expected_output_value и для предупреждения в интерфейсе — разойтись не могут.
+    """
+    vals, subs = [], []
     for s in output_skins:
         f = contract_output_float(W_bar, s["cap_lo"], s["cap_hi"])
         wear = wear_of_float(f)
         if wear is None:
             continue
-        p = skin_price_at_wear(s, wear, midpoint)
-        if p is not None:
-            vals.append(p)
+        by_wear = _price_by_wear_map(s, midpoint)
+        if not by_wear:
+            continue
+        if wear in by_wear:
+            vals.append(by_wear[wear])
+            continue
+        ti = WEAR_ORDER.index(wear)
+        used = min(by_wear.keys(), key=lambda w: abs(WEAR_ORDER.index(w) - ti))
+        vals.append(by_wear[used])
+        subs.append({"skin": (s.get("name") or "").strip() or "?",
+                     "target": wear, "used": used})
     if not vals:
-        return None
-    return sum(vals) / len(vals)
+        return None, subs
+    return sum(vals) / len(vals), subs
+
+
+def expected_output_value(W_bar, output_skins, midpoint=False):
+    """E(выход, W̄) — средняя цена по выходным скинам на полученном флоате
+    (равновероятный исход контракта одной коллекции). None, если данных нет.
+
+    Тонкая обёртка над _output_value_details (см. там же про подстановки цен).
+    """
+    avg, _subs = _output_value_details(W_bar, output_skins, midpoint)
+    return avg
 
 
 def _filler_candidate_records(filler_skins, midpoint=False):
@@ -2842,18 +2884,21 @@ def tradeup_candidates(filler_skins, output_skins, midpoint=False, n=10):
 
     Единый источник математики: этим пользуются и выбор филлера (best_tradeup_roi),
     и таблица «что покупать» в интерфейсе — расчёты не могут разойтись.
-    Возвращает список {skin, wear, f, w, price, cost, E_out, net_roi, roi_full}.
+    Возвращает список {skin, wear, f, w, price, cost, E_out, net_roi, roi_full, subs},
+    где subs — подстановки цен выходных скинов (пусто = все цены точные).
     """
     if not output_skins:
         return []
     out = []
     for c in _filler_candidate_records(filler_skins, midpoint):
-        e = expected_output_value(c["w"], output_skins, midpoint)
+        e, subs = _output_value_details(c["w"], output_skins, midpoint)
         cost = n * c["price"]
         if e is None or cost <= 0:
             continue
+        # subs — скины, у которых нет цены в нужном качестве (цена взята из соседнего).
         out.append({**c, "cost": cost, "E_out": e,
-                    "net_roi": (e - cost) / cost, "roi_full": e / cost})
+                    "net_roi": (e - cost) / cost, "roi_full": e / cost,
+                    "subs": subs})
     return out
 
 
@@ -2900,6 +2945,7 @@ def best_tradeup_roi(filler_skins, output_skins, midpoint=False, n=10,
         "net_roi": chosen["net_roi"], "roi_full": chosen["roi_full"],
         "W_star": chosen["w"], "E_out": chosen["E_out"],
         "cost": chosen["cost"], "n_candidates": len(cands),
+        "subs": chosen.get("subs", []),
         "filler": {"skin": chosen["skin"], "wear": chosen["wear"],
                    "f": chosen["f"], "price": chosen["price"]},
     }
@@ -3007,6 +3053,7 @@ def analyze_collection_advanced(rarity_data, midpoint=False, contract_mode="chea
             "cost": (roi_info["cost"] if roi_info else None),
             "filler": (roi_info["filler"] if roi_info else None),
             "n_candidates": (roi_info["n_candidates"] if roi_info else None),
+            "subs": (roi_info["subs"] if roi_info else []),
             "candidates": cands,
             "verdict": verdict,
             "float_summary": rarity_float_summary(rar["skins"], midpoint),
@@ -3544,6 +3591,13 @@ def _mode_5_advanced(currency, tp):
 
         # Что конкретно покупать: все кандидаты-филлеры этой редкости в порядке
         # выбранного режима (первый ✅ — тот, который берёт контракт).
+        # Предупреждение: у части выходных скинов нет цены в нужном качестве —
+        # цена взята из соседнего (это оценка, а не факт). Данные надо дописать.
+        subs = r.get("subs") or []
+        if subs:
+            items = ", ".join(f"{_esc(x['skin'])} ({x['target']} → {x['used']})" for x in subs)
+            st.warning("⚠️ " + _("m5a_subs_warning").format(items=items))
+
         cands = r.get("candidates") or []
         if cands:
             with st.expander("🛒 " + _("m5a_cands_title").format(n=len(cands)), expanded=False):
@@ -3574,7 +3628,8 @@ def _mode_5_advanced(currency, tp):
                         f"<td style='text-align:center;padding:6px 10px;font-size:0.85em;'>{c['w']:.2f}</td>"
                         f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['price'], disp_ccy, price_decimals)}</td>"
                         f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['cost'], disp_ccy, price_decimals)}</td>"
-                        f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['E_out'], disp_ccy, price_decimals)}</td>"
+                        f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['E_out'], disp_ccy, price_decimals)}"
+                        f"{' ⚠️' if c.get('subs') else ''}</td>"
                         f"<td style='text-align:center;padding:6px 10px;color:{roi_color};'>{c['roi_full'] * 100:.0f}%</td>"
                         "</tr>")
                 st.markdown("<table style='width:100%;border-collapse:collapse;'><thead>" + chead +
@@ -4094,6 +4149,10 @@ def calculate_mode_3(currency, advanced):
         net_result_base = net_profit_base
 
     base_ratio_delta = display_ratio - 100.0
+    # Коэффициент определён только при ненулевых затратах Steam; иначе показываем
+    # «н/д» с причиной вместо 0% / −100%, которые читаются как «полный убыток».
+    ratio_defined = (real_steam_cost_base if use_deposit else steam_spent_base) > 0
+    ratio_txt = f"{display_ratio:.1f}%" if ratio_defined else _("na_zero_steam_cost")
 
     m_spent, m_received, m_ratio = st.columns(3)
 
@@ -4109,21 +4168,28 @@ def calculate_mode_3(currency, advanced):
         )
         m_ratio.metric(
             _("Effective cashout ratio"),
-            f"{display_ratio:.1f}%",
+            ratio_txt,
             help=_("Top-up profit factored in. Ratio > 100% means you profit even after cashing out."),
         )
     else:
         m_spent.metric(_("Total Steam spent"), format_currency(steam_spent_base, output_ccy))
-        m_ratio.metric(_("Cashout ratio"), f"{display_ratio:.1f}%")
+        m_ratio.metric(_("Cashout ratio"), ratio_txt)
 
     m_received.metric(_("Real money received"), format_currency(real_received_base, output_ccy))
 
     # Чистый результат: знак процента используется как delta (красный для минуса).
-    st.metric(
-        _("Net profit / loss"),
-        format_currency(net_result_base, output_ccy),
-        delta=f"{base_ratio_delta:+.1f}%",
-    )
+    if ratio_defined:
+        st.metric(
+            _("Net profit / loss"),
+            format_currency(net_result_base, output_ccy),
+            delta=f"{base_ratio_delta:+.1f}%",
+        )
+    else:
+        st.metric(
+            _("Net profit / loss"),
+            format_currency(net_result_base, output_ccy),
+            delta=_("na_zero_steam_cost"), delta_color="off",
+        )
 
     # В продвинутом режиме — промежуточные суммы в исходных валютах.
     if advanced:
