@@ -19,7 +19,8 @@
 Yev Steam Deposit Calculator
 ============================
 
-Version: 2.5
+Версия: единственный источник истины — константа APP_VERSION ниже
+(в докстринге номер намеренно не дублируется, чтобы он не устаревал).
 
 Streamlit-приложение для оценки экономики торговли скинами CS2. Оно сравнивает
 стоимость покупки/продажи предмета на стороннем сайте за реальные деньги с
@@ -34,25 +35,33 @@ Streamlit-приложение для оценки экономики торго
         сайте и вывод выручки на карту/крипту.
     Режим 4 — где продать выгоднее: на стороннем сайте (с пополнением Steam в
         плюс) или напрямую на Торговой площадке Steam.
-    Режим 5 — лучшее качество для покупки в коллекции по соотношению цен
-        соседних качеств.
+    Режим 5 — оценка коллекции: ранг каждой редкости по соотношению цен соседних
+        редкостей. Простой режим — одна цена на редкость (+ бонус «красивое/
+        ликвидное»). Продвинутый режим — резка флоата, наценка за чистоту внутри
+        скина и экономика контрактов 10→1 на реальных записях (два режима подбора
+        филлеров: по самым дешёвым либо по лучшему соотношению цена/качество),
+        опциональный учёт цен Steam (ТП) и готовые шаблоны коллекций.
 
 Структура модуля:
-    * Расчётные функции (calculate_*, get_valid_steam_price) не зависят от
-      Streamlit и не имеют побочных эффектов; их можно тестировать и
-      переиспользовать отдельно от интерфейса.
-    * Локализация (en / ru / uk) реализована через словарь переводов и функцию
-      доступа _(); английский текст служит ключом перевода.
+    * Расчётные функции (calculate_*, get_valid_steam_price, движок контрактов)
+      не зависят от Streamlit и не имеют побочных эффектов; их можно тестировать
+      и переиспользовать отдельно от интерфейса.
+    * Локализация (en / ru / ua) реализована через словарь переводов и функцию
+      доступа _(); английский текст служит ключом перевода. Код языка украинского
+      именно 'ua' (а не ISO 'uk') — так его не путают с United Kingdom.
     * Функции calculate_mode_1..calculate_mode_5 строят интерфейс соответствующих
       режимов, main() настраивает страницу и является точкой входа.
 
 Запуск:
-    streamlit run app.py
+    streamlit run SteamCalcu<версия>.py
 """
 
 import html
 
 import streamlit as st
+
+# Версия приложения — ЕДИНСТВЕННЫЙ источник истины (показывается в интерфейсе).
+APP_VERSION = "2.14"
 
 # ===========================================================================
 # КОНФИГУРАЦИЯ И КОНСТАНТЫ
@@ -318,11 +327,13 @@ TRANSLATIONS = {
         "m5a_cands_title":
             "Filler candidates: what to buy ({n})",
         "m5a_cands_hint_cheapest":
-            "Sorted by price — cheapest first. The contract uses the top row (✅). "
-            "ROI is what a contract of 10 copies of that exact record would return.",
+            "Sorted by price — cheapest first. The contract uses the top row (✅). Each row is "
+            "a contract of 10 copies of that exact record. Return = output ÷ input: 100% = you "
+            "get your money back (break-even), 105% = +5% profit, below 100% = a loss.",
         "m5a_cands_hint_best":
-            "Sorted by contract ROI — best price/quality first. The contract uses the top "
-            "row (✅). Each row = a contract of 10 copies of that exact skin+quality.",
+            "Sorted by return — best price/quality first. The contract uses the top row (✅). "
+            "Each row is a contract of 10 copies of that exact skin+quality. Return = output ÷ "
+            "input: 100% = break-even, 105% = +5% profit, below 100% = a loss.",
         "m5a_col_skin":
             "Skin",
         "m5a_col_wear":
@@ -341,7 +352,9 @@ TRANSLATIONS = {
             "Loaded template: {name} · update the prices to the current market.",
         "m5a_craft_line":
             "(filler: {skin} · {wear} · float {f}, w={w} · {price} ×{n} = {cost} → "
-            "avg output {eout} · ROI {roi}%)",
+            "avg output {eout} · return {roi}% (profit {profit}%))",
+        "m5a_col_roi":
+            "Return (ROI)",
         "m5a_cmode_label":
             "Contract calculation (fillers)",
         "m5a_cmode_cheapest":
@@ -354,7 +367,8 @@ TRANSLATIONS = {
             "priced at the float the contract yields from the filler's real float "
             "(1 skin = 1 outcome). 'Cheapest' answers: what does the classic cheapest-filler "
             "craft give? 'Best price/quality' additionally tries every entered record as the "
-            "filler and picks the one with the best ROI — the best craft-purchase option.",
+            "filler and picks the one with the best return — the best craft-purchase option. "
+            "Return is output ÷ input (100% = break-even, 105% = +5% profit).",
         'clean pays off — worth buying low-float fillers':
             'clean pays off — worth buying low-float fillers',
         "don't overpay for clean — a dirty filler gives the same output":
@@ -370,8 +384,10 @@ TRANSLATIONS = {
             "record → n/a. The float bonus comes from the contract ROI into the next rarity "
             "(10→1) computed on your ACTUAL records per the selected mode: 'cheapest' uses "
             "the cheapest record at its real float, 'best price/quality' tries every record "
-            "and uses the best-ROI filler; the output is averaged over ALL next-rarity skins "
-            "priced at the produced float. Contract float weight w = (float − "
+            "and uses the best-return filler; the output is averaged over ALL next-rarity skins "
+            "priced at the produced float. Return is shown as output ÷ input (100% = "
+            "break-even, 105% = +5% profit); the rank bonus only applies above 100%. "
+            "Contract float weight w = (float − "
             "cap_min)/(cap_max − cap_min). In advanced mode there is no 'beautiful/liquid' "
             "checkbox — its role is played by the float bonus from contract ROI (the checkbox "
             "described above applies to the simple mode).",
@@ -424,8 +440,8 @@ TRANSLATIONS = {
             "Это аналитический инструмент, а не финансовая рекомендация. Все инвестиции сопряжены с рисками.",
         "All prices are entered manually. This is a calculator, not financial advice.":
             "Все цены вводятся вручную. Это калькулятор, а не финансовая рекомендация.",
-        "Steam balance top-up profit calculator and skin purchase analyzer":
-            "Калькулятор выгоды пополнения баланса Steam и анализа покупок скинов",
+        "Steam top-up profit, skin purchase and CS2 collection analyzer":
+            "Калькулятор выгоды пополнения Steam, покупок скинов и анализа коллекций CS2",
         # --- вкладки ---
         "Balance top-up (profit)": "Пополнение баланса (профит)",
         "Where to buy cheaper?": "Где купить выгоднее?",
@@ -725,10 +741,12 @@ TRANSLATIONS = {
             "Кандидаты-филлеры: что покупать ({n})",
         "m5a_cands_hint_cheapest":
             "Отсортировано по цене — сначала самые дешёвые. Контракт берёт верхнюю строку (✅). "
-            "ROI — что даст контракт из 10 копий именно этой записи.",
+            "Каждая строка = контракт из 10 копий именно этой записи. Возврат = выход ÷ вход: "
+            "100% = вложенное вернулось (в ноль), 105% = +5% прибыли, ниже 100% = убыток.",
         "m5a_cands_hint_best":
-            "Отсортировано по ROI контракта — сначала лучшее соотношение цена/качество. Контракт берёт "
-            "верхнюю строку (✅). Каждая строка = контракт из 10 копий этого скина в этом качестве.",
+            "Отсортировано по возврату — сначала лучшее соотношение цена/качество. Контракт берёт "
+            "верхнюю строку (✅). Каждая строка = контракт из 10 копий этого скина в этом качестве. "
+            "Возврат = выход ÷ вход: 100% = в ноль, 105% = +5% прибыли, ниже 100% = убыток.",
         "m5a_col_skin":
             "Скин",
         "m5a_col_wear":
@@ -751,7 +769,9 @@ TRANSLATIONS = {
             "Загружен шаблон: {name} · обнови цены под текущий рынок.",
         "m5a_craft_line":
             "(филлер: {skin} · {wear} · флоат {f}, w={w} · {price} ×{n} = {cost} → "
-            "ср. выход {eout} · ROI {roi}%)",
+            "ср. выход {eout} · возврат {roi}% (прибыль {profit}%))",
+        "m5a_col_roi":
+            "Возврат (ROI)",
         "m5a_cmode_label":
             "Расчёт контрактов (филлеры)",
         "m5a_cmode_cheapest":
@@ -764,7 +784,8 @@ TRANSLATIONS = {
             "флоате, который даст контракт от реального флоата филлера (1 скин = 1 исход). "
             "«По самым дешёвым» отвечает: что даёт классический крафт из самых дешёвых филлеров? "
             "«По лучшему соотношению» дополнительно пробует каждую введённую запись как филлер "
-            "и берёт запись с лучшим ROI — лучший вариант для крафта-закупки.",
+            "и берёт запись с лучшим возвратом — лучший вариант для крафта-закупки. Возврат = "
+            "выход ÷ вход (100% = в ноль, 105% = +5% прибыли).",
         'clean pays off — worth buying low-float fillers':
             'чистота окупается — есть смысл брать низкофлоатные филлеры',
         "don't overpay for clean — a dirty filler gives the same output":
@@ -772,7 +793,7 @@ TRANSLATIONS = {
         'trade-up into the next rarity is unprofitable':
             'контракт в следующую редкость невыгоден',
         'MODE5_ADV_NOTE':
-            'Продвинутый режим: цена редкости для ранга — её САМАЯ ДЕШЁВАЯ запись (цена филлеров). Флоат-ценность — это наценка за чистоту ВНУТРИ скина: пол = самая дешёвая запись скина, и для записи чище пола наценка = (цена − цена пола)/(чистота − чистота пола) = $ за доп. единицу чистоты (нужно ≥2 флоата; ниже = дешевле чистота = меньше переплата). Одна запись → н/д. Флоат-бонус берётся из ROI контракта в следующую редкость (10→1), посчитанного на РЕАЛЬНЫХ записях по выбранному режиму: «по самым дешёвым» — самая дешёвая запись с её реальным флоатом, «по лучшему соотношению цена/качество» — перебираются все записи и берётся филлер с лучшим ROI; выход усредняется по ВСЕМ скинам следующей редкости на полученном флоате. Контрактный вес флоата w = (флоат − cap_min)/(cap_max − cap_min). В продвинутом режиме галочки «красивое/ликвидное» нет — её роль играет флоат-бонус из контрактного ROI (описание галочки выше относится к простому режиму).',
+            'Продвинутый режим: цена редкости для ранга — её САМАЯ ДЕШЁВАЯ запись (цена филлеров). Флоат-ценность — это наценка за чистоту ВНУТРИ скина: пол = самая дешёвая запись скина, и для записи чище пола наценка = (цена − цена пола)/(чистота − чистота пола) = $ за доп. единицу чистоты (нужно ≥2 флоата; ниже = дешевле чистота = меньше переплата). Одна запись → н/д. Флоат-бонус берётся из ROI контракта в следующую редкость (10→1), посчитанного на РЕАЛЬНЫХ записях по выбранному режиму: «по самым дешёвым» — самая дешёвая запись с её реальным флоатом, «по лучшему соотношению цена/качество» — перебираются все записи и берётся филлер с лучшим возвратом; выход усредняется по ВСЕМ скинам следующей редкости на полученном флоате. Возврат показывается как выход ÷ вход (100% = в ноль, 105% = +5% прибыли); ранговый бонус даётся только выше 100%. Контрактный вес флоата w = (флоат − cap_min)/(cap_max − cap_min). В продвинутом режиме галочки «красивое/ликвидное» нет — её роль играет флоат-бонус из контрактного ROI (описание галочки выше относится к простому режиму).',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Укажи цену, которую считаешь справедливой для каждого качества. Отметь галочку, "
@@ -824,8 +845,8 @@ TRANSLATIONS = {
             "Це аналітичний інструмент, а не фінансова порада. Усі інвестиції пов'язані з ризиками.",
         "All prices are entered manually. This is a calculator, not financial advice.":
             "Усі ціни вводяться вручну. Це калькулятор, а не фінансова порада.",
-        "Steam balance top-up profit calculator and skin purchase analyzer":
-            "Калькулятор вигоди поповнення балансу Steam та аналізу покупок скінів",
+        "Steam top-up profit, skin purchase and CS2 collection analyzer":
+            "Калькулятор вигоди поповнення Steam, покупок скінів та аналізу колекцій CS2",
         # --- вкладки ---
         "Balance top-up (profit)": "Поповнення балансу (профіт)",
         "Where to buy cheaper?": "Де купити вигідніше?",
@@ -1125,10 +1146,12 @@ TRANSLATIONS = {
             "Кандидати-філери: що купувати ({n})",
         "m5a_cands_hint_cheapest":
             "Відсортовано за ціною — спочатку найдешевші. Контракт бере верхній рядок (✅). "
-            "ROI — що дасть контракт із 10 копій саме цього запису.",
+            "Кожен рядок = контракт із 10 копій саме цього запису. Повернення = вихід ÷ вхід: "
+            "100% = вкладене повернулося (у нуль), 105% = +5% прибутку, нижче 100% = збиток.",
         "m5a_cands_hint_best":
-            "Відсортовано за ROI контракту — спочатку найкраще співвідношення ціна/якість. Контракт бере "
-            "верхній рядок (✅). Кожен рядок = контракт із 10 копій цього скіна в цій якості.",
+            "Відсортовано за поверненням — спочатку найкраще співвідношення ціна/якість. Контракт бере "
+            "верхній рядок (✅). Кожен рядок = контракт із 10 копій цього скіна в цій якості. "
+            "Повернення = вихід ÷ вхід: 100% = у нуль, 105% = +5% прибутку, нижче 100% = збиток.",
         "m5a_col_skin":
             "Скін",
         "m5a_col_wear":
@@ -1151,7 +1174,9 @@ TRANSLATIONS = {
             "Завантажено шаблон: {name} · онови ціни під поточний ринок.",
         "m5a_craft_line":
             "(філер: {skin} · {wear} · флоат {f}, w={w} · {price} ×{n} = {cost} → "
-            "сер. вихід {eout} · ROI {roi}%)",
+            "сер. вихід {eout} · повернення {roi}% (прибуток {profit}%))",
+        "m5a_col_roi":
+            "Повернення (ROI)",
         "m5a_cmode_label":
             "Розрахунок контрактів (філери)",
         "m5a_cmode_cheapest":
@@ -1164,7 +1189,8 @@ TRANSLATIONS = {
             "флоаті, який дасть контракт від реального флоата філера (1 скін = 1 результат). "
             "«За найдешевшими» відповідає: що дає класичний крафт із найдешевших філерів? "
             "«За найкращим співвідношенням» додатково пробує кожен уведений запис як філер "
-            "і бере запис із найкращим ROI — найкращий варіант для крафта-закупівлі.",
+            "і бере запис із найкращим поверненням — найкращий варіант для крафта-закупівлі. Повернення = "
+            "вихід ÷ вхід (100% = у нуль, 105% = +5% прибутку).",
         'clean pays off — worth buying low-float fillers':
             'чистота окупається — є сенс брати низькофлоатні філери',
         "don't overpay for clean — a dirty filler gives the same output":
@@ -1172,7 +1198,7 @@ TRANSLATIONS = {
         'trade-up into the next rarity is unprofitable':
             'контракт у наступну рідкість невигідний',
         'MODE5_ADV_NOTE':
-            'Просунутий режим: ціна рідкості для рангу — її НАЙДЕШЕВШИЙ запис (ціна філерів). Флоат-цінність — це націнка за чистоту ВСЕРЕДИНІ скіна: підлога = найдешевший запис скіна, і для запису чистішого підлоги націнка = (ціна − ціна підлоги)/(чистота − чистота підлоги) = $ за дод. одиницю чистоти (потрібно ≥2 флоата; нижче = дешевша чистота = менша переплата). Один запис → н/д. Флоат-бонус береться з ROI контракту в наступну рідкість (10→1), порахованого на РЕАЛЬНИХ записах за обраним режимом: «за найдешевшими» — найдешевший запис із його реальним флоатом, «за найкращим співвідношенням ціна/якість» — перебираються всі записи й береться філер із найкращим ROI; вихід усереднюється за ВСІМА скінами наступної рідкості на отриманому флоаті. Контрактна вага флоата w = (флоат − cap_min)/(cap_max − cap_min). У просунутому режимі галочки «красиве/ліквідне» немає — її роль виконує флоат-бонус із контрактного ROI (опис галочки вище стосується простого режиму).',
+            'Просунутий режим: ціна рідкості для рангу — її НАЙДЕШЕВШИЙ запис (ціна філерів). Флоат-цінність — це націнка за чистоту ВСЕРЕДИНІ скіна: підлога = найдешевший запис скіна, і для запису чистішого підлоги націнка = (ціна − ціна підлоги)/(чистота − чистота підлоги) = $ за дод. одиницю чистоти (потрібно ≥2 флоата; нижче = дешевша чистота = менша переплата). Один запис → н/д. Флоат-бонус береться з ROI контракту в наступну рідкість (10→1), порахованого на РЕАЛЬНИХ записах за обраним режимом: «за найдешевшими» — найдешевший запис із його реальним флоатом, «за найкращим співвідношенням ціна/якість» — перебираються всі записи й береться філер із найкращим поверненням; вихід усереднюється за ВСІМА скінами наступної рідкості на отриманому флоаті. Повернення показується як вихід ÷ вхід (100% = у нуль, 105% = +5% прибутку); ранговий бонус дається лише вище 100%. Контрактна вага флоата w = (флоат − cap_min)/(cap_max − cap_min). У просунутому режимі галочки «красиве/ліквідне» немає — її роль виконує флоат-бонус із контрактного ROI (опис галочки вище стосується простого режиму).',
         "Enter the price you consider fair for each rarity. Tick the box if you "
         "find that rarity's skins beautiful or especially liquid.":
             "Вкажи ціну, яку вважаєш справедливою для кожної якості. Постав галочку, "
@@ -2522,12 +2548,11 @@ def float_value_scores(records_metrics, alpha=0.5):
 
 
 # ===========================================================================
-# РЕЖИМ 5 — ДВИЖОК КОНТРАКТОВ И ДВУНАПРАВЛЕННЫЙ ROI (чистые функции)
+# РЕЖИМ 5 — ДВИЖОК КОНТРАКТОВ 10→1 (чистые функции)
 # ===========================================================================
 # Модель контракта обмена: 10 входов редкости R -> 1 выход редкости R+1.
-# Выходной флоат: f_out = a_out + W̄·(b_out − a_out), где W̄ — средняя нормализованная
-# чистота входов (w_i). База — равновероятный исход по всем выходным скинам коллекции;
-# точечный подбор под конкретный выходной скин — будущий режим (есть заготовка ниже).
+# Выходной флоат: f_out = a_out + W̄·(b_out − a_out), где W̄ — контрактный вес входов.
+# Исход — равновероятный по всем выходным скинам коллекции (1 скин = 1 исход).
 
 def contract_output_float(W_bar, out_cap_lo, out_cap_hi):
     """Выходной флоат контракта: f_out = a + W̄·(b − a). W̄ — средняя чистота входов."""
@@ -2605,11 +2630,19 @@ def tradeup_candidates(filler_skins, output_skins, midpoint=False, n=10):
 
     Для каждой валидной записи: контракт из n её копий (W̄ = её контрактный вес w),
     затраты = n × цена, ожидаемый выход = среднее по ВСЕМ скинам следующей редкости,
-    оценённым на флоате, который даст контракт (1 скин = 1 равновероятный исход), и ROI.
+    оценённым на флоате, который даст контракт (1 скин = 1 равновероятный исход).
+
+    ДВА показателя доходности (чтобы не путать их между собой):
+        net_roi  — чистая доходность = (выход − затраты)/затраты. 0 = в ноль,
+                   +0.05 = +5% прибыли, отрицательное = убыток. На ней построены
+                   пороги (флоат-бонус, вердикт «убыточен») — так удобнее считать.
+        roi_full — ПОЛНЫЙ возврат = выход/затраты = 1 + net_roi. 1.0 (100%) = вернул
+                   вложенное, 1.05 (105%) = +5% прибыли. Это то, что показывается
+                   в интерфейсе, чтобы «105%» нельзя было прочитать как «+105%».
 
     Единый источник математики: этим пользуются и выбор филлера (best_tradeup_roi),
     и таблица «что покупать» в интерфейсе — расчёты не могут разойтись.
-    Возвращает список {skin, wear, f, w, price, cost, E_out, roi} (несортированный).
+    Возвращает список {skin, wear, f, w, price, cost, E_out, net_roi, roi_full}.
     """
     if not output_skins:
         return []
@@ -2619,7 +2652,8 @@ def tradeup_candidates(filler_skins, output_skins, midpoint=False, n=10):
         cost = n * c["price"]
         if e is None or cost <= 0:
             continue
-        out.append({**c, "cost": cost, "E_out": e, "roi": (e - cost) / cost})
+        out.append({**c, "cost": cost, "E_out": e,
+                    "net_roi": (e - cost) / cost, "roi_full": e / cost})
     return out
 
 
@@ -2627,10 +2661,11 @@ def sort_tradeup_candidates(cands, contract_mode="cheapest"):
     """Порядок кандидатов под выбранный режим (первый = тот, который берёт контракт).
 
         'cheapest' — сначала самые дешёвые (при равной цене — более чистый);
-        'best'     — сначала лучший ROI (при равном ROI — дешевле, затем чище).
+        'best'     — сначала лучшая доходность (при равной — дешевле, затем чище).
+    Порядок по net_roi и по roi_full одинаков (roi_full = 1 + net_roi), сортируем по net_roi.
     """
     if contract_mode == "best":
-        return sorted(cands, key=lambda c: (-c["roi"], c["cost"], c["w"]))
+        return sorted(cands, key=lambda c: (-c["net_roi"], c["cost"], c["w"]))
     return sorted(cands, key=lambda c: (c["price"], c["w"]))
 
 
@@ -2642,17 +2677,19 @@ def best_tradeup_roi(filler_skins, output_skins, midpoint=False, n=10,
     tradeup_candidates). contract_mode:
         'cheapest' — филлер = САМАЯ ДЕШЁВАЯ запись (её реальный флоат; при равной
                      цене берётся более чистая);
-        'best'     — перебираются ВСЕ записи, берётся филлер с ЛУЧШИМ ROI
+        'best'     — перебираются ВСЕ записи, берётся филлер с ЛУЧШЕЙ доходностью
                      (лучшее соотношение цена/качество для крафта-закупки).
 
-    Возвращает {roi, W_star, E_out, cost, filler, n_candidates, overpay_clean}
-    или None (нет валидных данных). filler = {skin, wear, f, price}. overpay_clean:
+    Возвращает {net_roi, roi_full, W_star, E_out, cost, filler, n_candidates,
+    overpay_clean} или None (нет валидных данных). net_roi — чистая доходность
+    (0 = в ноль), roi_full — полный возврат (1.0 = 100% = в ноль); см. tradeup_candidates.
+    filler = {skin, wear, f, price}. overpay_clean:
         'worth'        — (только 'best') лучший филлер дороже самого дешёвого, но его
-                         ROI выше: доплата за чистоту окупается,
+                         доходность выше: доплата за чистоту окупается,
         'avoid'        — (только 'best') самый дешёвый филлер и есть лучший:
                          за чистоту не переплачивать,
-        'unprofitable' — ROI выбранного филлера ≤ 0 (крафт убыточен),
-        None           — режим 'cheapest' при ROI > 0 (чистоту не сравнивали).
+        'unprofitable' — net_roi ≤ 0, т.е. возврат ≤ 100% (крафт убыточен),
+        None           — режим 'cheapest' при net_roi > 0 (чистоту не сравнивали).
     """
     cands = tradeup_candidates(filler_skins, output_skins, midpoint, n)
     if not cands:
@@ -2660,38 +2697,33 @@ def best_tradeup_roi(filler_skins, output_skins, midpoint=False, n=10,
     cheapest = sort_tradeup_candidates(cands, "cheapest")[0]
     chosen = sort_tradeup_candidates(cands, contract_mode)[0]
     best = {
-        "roi": chosen["roi"], "W_star": chosen["w"], "E_out": chosen["E_out"],
+        "net_roi": chosen["net_roi"], "roi_full": chosen["roi_full"],
+        "W_star": chosen["w"], "E_out": chosen["E_out"],
         "cost": chosen["cost"], "n_candidates": len(cands),
         "filler": {"skin": chosen["skin"], "wear": chosen["wear"],
                    "f": chosen["f"], "price": chosen["price"]},
     }
-    if best["roi"] <= 0:
+    if best["net_roi"] <= 0:
         best["overpay_clean"] = "unprofitable"
     elif contract_mode != "best":
         best["overpay_clean"] = None  # в режиме «по самым дешёвым» чистоту не сравниваем
-    elif chosen["roi"] > cheapest["roi"] + 1e-12:
+    elif chosen["net_roi"] > cheapest["net_roi"] + 1e-12:
         best["overpay_clean"] = "worth"
     else:
         best["overpay_clean"] = "avoid"
     return best
 
 
-def tradeup_float_bonus(roi, cap=2.0, max_bonus=1.0):
-    """Флоат-бонус к ratio из ROI лучшего контракта (ограниченный, как бонус красоты).
-    ROI ≤ 0 → 0; ROI ≥ cap → max_bonus; линейно между (cap=2.0 ⇒ ROI 200% даёт полный бонус)."""
-    if roi is None or roi <= 0:
-        return 0.0
-    return min(max_bonus, (roi / cap) * max_bonus)
+def tradeup_float_bonus(net_roi, cap=2.0, max_bonus=1.0):
+    """Флоат-бонус к ratio из ЧИСТОЙ доходности контракта (ограниченный, как бонус красоты).
 
-
-def best_tradeup_for_target(filler_skins, target_skin, target_wear=None, midpoint=False, n=10):
-    """ЗАГОТОВКА под будущий режим «целимся в конкретный выходной скин».
-
-    Здесь будет точечный подбор входных скинов и оптимизация смеси флоатов под
-    заданный выход (target_skin / target_wear). Пока возвращает None — структура
-    данных это уже поддерживает, режим подключится позже без переделки.
+    Считается на net_roi (0 = в ноль), а не на полном возврате: net_roi ≤ 0 → бонуса нет
+    (убыточный контракт ранг не поднимает); net_roi ≥ cap → max_bonus; между — линейно.
+    cap = 2.0 ⇒ чистая доходность +200% (полный возврат 300%) даёт максимальный бонус.
     """
-    return None  # TODO (будущий режим): целевой подбор + оптимизация смеси входов
+    if net_roi is None or net_roi <= 0:
+        return 0.0
+    return min(max_bonus, (net_roi / cap) * max_bonus)
 
 
 def rarity_representative_price(skins, midpoint=False):
@@ -2716,14 +2748,15 @@ def analyze_collection_advanced(rarity_data, midpoint=False, contract_mode="chea
     rarity_data — список (key, skins) ПО ВОЗРАСТАНИЮ редкости. Учитываются редкости,
     у которых есть хотя бы один валидный скин с ценой. Логика ценового ранга та же,
     что в простом режиме (ratio соседних цен, реверс+штраф для высшего), НО к ratio
-    нижних редкостей добавляется флоат-бонус из ROI контракта R→R+1 на РЕАЛЬНЫХ
-    записях (best_tradeup_roi; contract_mode: 'cheapest' — самая дешёвая запись,
-    'best' — запись с лучшим ROI). Высшее качество флоат-бонус не получает
+    нижних редкостей добавляется флоат-бонус из чистой доходности контракта R→R+1 на
+    РЕАЛЬНЫХ записях (best_tradeup_roi; contract_mode: 'cheapest' — самая дешёвая запись,
+    'best' — запись с лучшей доходностью). Высшее качество флоат-бонус не получает
     (из него не крафтят).
 
     Возвращает список dict: key, price, ratio, rank, rank_index, role, float_bonus,
-    roi, W_star, E_out, cost, filler, n_candidates, candidates (все филлеры в порядке
-    выбранного режима: первый = взятый контрактом), verdict (overpay_clean),
+    net_roi (чистая доходность, 0 = в ноль), roi_full (полный возврат, 1.0 = 100% = в ноль),
+    W_star, E_out, cost, filler, n_candidates, candidates (все филлеры в порядке выбранного
+    режима: первый = взятый контрактом), verdict (overpay_clean),
     float_summary (наценка за чистоту по редкости).
     """
     active = []
@@ -2750,7 +2783,7 @@ def analyze_collection_advanced(rarity_data, midpoint=False, contract_mode="chea
                 tradeup_candidates(rar["skins"], active[i + 1]["skins"], midpoint),
                 contract_mode)
             if roi_info:
-                float_bonus = tradeup_float_bonus(roi_info["roi"])
+                float_bonus = tradeup_float_bonus(roi_info["net_roi"])
                 verdict = roi_info["overpay_clean"]
             base_ratio = active[i + 1]["price"] / price
             idx = _ratio_rank_index(base_ratio + float_bonus + pos[i])
@@ -2767,7 +2800,8 @@ def analyze_collection_advanced(rarity_data, midpoint=False, contract_mode="chea
             "key": rar["key"], "price": price, "ratio": base_ratio,
             "rank": _RARITY_RANKS[idx], "rank_index": idx, "role": role,
             "float_bonus": float_bonus,
-            "roi": (roi_info["roi"] if roi_info else None),
+            "net_roi": (roi_info["net_roi"] if roi_info else None),
+            "roi_full": (roi_info["roi_full"] if roi_info else None),
             "W_star": (roi_info["W_star"] if roi_info else None),
             "E_out": (roi_info["E_out"] if roi_info else None),
             "cost": (roi_info["cost"] if roi_info else None),
@@ -3262,7 +3296,7 @@ def _mode_5_advanced(currency, tp):
         nm = name_by_key.get(r["key"], r["key"])
         fs = r["float_summary"]
         parts = []
-        if r["roi"] is not None and r.get("filler") is not None:
+        if r["net_roi"] is not None and r.get("filler") is not None:
             fl = r["filler"]
             line = _("m5a_craft_line").format(
                 skin=_esc(fl["skin"]), wear=_esc(fl["wear"]), f=f"{fl['f']:.4f}",
@@ -3270,7 +3304,7 @@ def _mode_5_advanced(currency, tp):
                 price=format_currency(fl["price"], disp_ccy, price_decimals),
                 n=10, cost=format_currency(r["cost"], disp_ccy, price_decimals),
                 eout=format_currency(r["E_out"], disp_ccy, price_decimals),
-                roi=f"{r['roi']*100:.0f}")
+                roi=f"{r['roi_full']*100:.0f}", profit=f"{r['net_roi']*100:+.0f}")
             verdict_txt = verdict_label.get(r["verdict"])
             parts.append(f"**{_('craft up')}:** "
                          + (verdict_txt + " " + line if verdict_txt else line))
@@ -3300,12 +3334,12 @@ def _mode_5_advanced(currency, tp):
                     f"<th style='text-align:right;padding:6px 10px;'>{_('Price')}</th>"
                     f"<th style='text-align:right;padding:6px 10px;'>{_('m5a_col_cost')}</th>"
                     f"<th style='text-align:right;padding:6px 10px;'>{_('m5a_col_eout')}</th>"
-                    "<th style='text-align:center;padding:6px 10px;'>ROI</th>"
+                    f"<th style='text-align:center;padding:6px 10px;'>{_('m5a_col_roi')}</th>"
                     "</tr>")
                 crows = []
                 for ci, c in enumerate(cands):
                     top = (ci == 0)
-                    roi_color = "#4caf50" if c["roi"] > 0 else "#e05555"
+                    roi_color = "#4caf50" if c["net_roi"] > 0 else "#e05555"
                     style = "font-weight:600;background:rgba(76,175,80,0.08);" if top else ""
                     mark = "✅ " if top else ""
                     crows.append(
@@ -3317,7 +3351,7 @@ def _mode_5_advanced(currency, tp):
                         f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['price'], disp_ccy, price_decimals)}</td>"
                         f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['cost'], disp_ccy, price_decimals)}</td>"
                         f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['E_out'], disp_ccy, price_decimals)}</td>"
-                        f"<td style='text-align:center;padding:6px 10px;color:{roi_color};'>{c['roi'] * 100:+.0f}%</td>"
+                        f"<td style='text-align:center;padding:6px 10px;color:{roi_color};'>{c['roi_full'] * 100:.0f}%</td>"
                         "</tr>")
                 st.markdown("<table style='width:100%;border-collapse:collapse;'><thead>" + chead +
                             "</thead><tbody>" + "".join(crows) + "</tbody></table>",
@@ -3933,7 +3967,8 @@ def main():
 
     # --- Заголовок ---
     st.title("🎯 Yev Steam Deposit Calculator")
-    st.caption(_("Steam balance top-up profit calculator and skin purchase analyzer"))
+    st.caption(_("Steam top-up profit, skin purchase and CS2 collection analyzer")
+               + f" · v{APP_VERSION}")
 
     # --- Вкладки режимов ---
     tab_mode_1, tab_mode_2, tab_mode_3, tab_mode_4, tab_mode_5 = st.tabs([
