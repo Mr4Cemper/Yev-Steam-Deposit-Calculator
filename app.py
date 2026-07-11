@@ -51,6 +51,8 @@ Streamlit-приложение для оценки экономики торго
       именно 'ua' (а не ISO 'uk') — так его не путают с United Kingdom.
     * Функции calculate_mode_1..calculate_mode_5 строят интерфейс соответствующих
       режимов, main() настраивает страницу и является точкой входа.
+    * Новостная лента (NEWS + render_news) — статичные сообщения с датами прямо в
+      коде: их видит каждый, кто запустил эту версию. Запросов в сеть нет.
 
 Запуск:
     streamlit run app.py
@@ -60,11 +62,12 @@ SteamCalcu<версия>.py и переименовываются в app.py пр
 """
 
 import html
+from datetime import date
 
 import streamlit as st
 
 # Версия приложения — ЕДИНСТВЕННЫЙ источник истины (показывается в интерфейсе).
-APP_VERSION = "2.15"
+APP_VERSION = "2.16"
 
 # ===========================================================================
 # КОНФИГУРАЦИЯ И КОНСТАНТЫ
@@ -327,6 +330,10 @@ TRANSLATIONS = {
             'Trade-up & float details',
         'craft up':
             'craft up',
+        "News":
+            "News",
+        "Show all news":
+            "Show all news",
         "m5a_cands_title":
             "Filler candidates: what to buy ({n})",
         "m5a_cands_hint_cheapest":
@@ -740,6 +747,10 @@ TRANSLATIONS = {
             'Контракты и детали флоата',
         'craft up':
             'крафт вверх',
+        "News":
+            "Новости",
+        "Show all news":
+            "Показать все новости",
         "m5a_cands_title":
             "Кандидаты-филлеры: что покупать ({n})",
         "m5a_cands_hint_cheapest":
@@ -1145,6 +1156,10 @@ TRANSLATIONS = {
             'Контракти та деталі флоата',
         'craft up':
             'крафт вгору',
+        "News":
+            "Новини",
+        "Show all news":
+            "Показати всі новини",
         "m5a_cands_title":
             "Кандидати-філери: що купувати ({n})",
         "m5a_cands_hint_cheapest":
@@ -1783,6 +1798,119 @@ def render_m5_tp_block():
                                   step=1.0, key="m5_tp_topup")
     st.caption(_("Prices are converted to your real currency; for each item the CHEAPER of market vs Steam is used."))
     return tp
+
+
+
+# ===========================================================================
+# НОВОСТНАЯ ЛЕНТА (статичные сообщения — редактируются прямо здесь)
+# ===========================================================================
+# Сообщения едут вместе с кодом: их увидит каждый, кто запустил ЭТУ версию —
+# и на Streamlit Cloud, и локально. Никаких запросов в сеть: новости не могут
+# ничего сломать, подтянуть чужой текст или утечь наружу.
+#
+# Как добавить новость — допиши элемент в начало списка NEWS:
+#     {
+#         "date": "2026-07-15",          # дата (YYYY-MM-DD) — сохраняется здесь же
+#         "kind": "update",              # info | update | fix | warning (иконка)
+#         "text": "Короткий текст",      # одна строка на всех языках...
+#     },
+#     {
+#         "date": "2026-07-20",
+#         "kind": "info",
+#         "text": {                      # ...или отдельный текст на каждый язык
+#             "ru": "Текст по-русски",   # (можно заполнить не все — подставится
+#             "en": "Text in English",   #  любой доступный)
+#             "ua": "Текст українською",
+#         },
+#     },
+# Порядок в списке не важен: лента сама сортируется по дате (новые сверху).
+# В тексте работает markdown: **жирный**, *курсив*, [ссылка](https://...).
+# HTML намеренно НЕ выполняется (st.markdown без unsafe_allow_html) — безопасно.
+NEWS_KIND_ICONS = {"info": "📣", "update": "🆕", "fix": "🔧", "warning": "⚠️"}
+NEWS_FRESH_DAYS = 14   # сколько дней новость считается свежей (лента раскрыта сразу)
+NEWS_MAX_SHOWN = 5     # сколько последних новостей показывать без «показать все»
+
+NEWS = [
+    {
+        "date": "2026-07-11",
+        "kind": "update",
+        "text": {
+            "ru": "**Режим 5 (коллекции):** контракты 10→1 считаются на реальных записях — "
+                  "два режима подбора филлеров (по самым дешёвым / по лучшему соотношению "
+                  "цена-качество), таблица «что покупать» по каждой редкости, учёт цен Steam (ТП) "
+                  "и шаблоны коллекций (Cobblestone, Overpass 2024). Доходность теперь "
+                  "показывается как полный возврат: 100% = в ноль, 105% = +5% прибыли.",
+            "en": "**Mode 5 (collections):** 10→1 trade-ups are computed on your actual records — "
+                  "two filler strategies (cheapest / best price-quality), a \"what to buy\" table per "
+                  "rarity, optional Steam (TP) prices and ready-made collection templates "
+                  "(Cobblestone, Overpass 2024). Returns are now shown in full: 100% = break-even, "
+                  "105% = +5% profit.",
+            "ua": "**Режим 5 (колекції):** контракти 10→1 рахуються на реальних записах — "
+                  "два режими добору філерів (за найдешевшими / за найкращим співвідношенням "
+                  "ціна-якість), таблиця «що купувати» для кожної рідкості, облік цін Steam (ТП) "
+                  "і шаблони колекцій (Cobblestone, Overpass 2024). Дохідність тепер показується "
+                  "як повне повернення: 100% = у нуль, 105% = +5% прибутку.",
+        },
+    },
+]
+
+
+def _news_date(item):
+    """Дата новости как объект date (для сортировки).
+
+    Кривой/пустой формат не роняет приложение: такая новость просто уходит вниз
+    ленты (date.min). Новости не должны ломать калькулятор ни при каких данных.
+    """
+    try:
+        return date.fromisoformat(str(item.get("date", "")))
+    except (ValueError, TypeError, AttributeError):
+        return date.min
+
+
+def _news_text(item):
+    """Текст новости на активном языке.
+
+    text может быть строкой (одна на всех) или словарём {'ru': ..., 'en': ..., 'ua': ...}.
+    Если перевода на активный язык нет — подставляется любой доступный (en → ru → ua),
+    чтобы сообщение не пропало.
+    """
+    txt = item.get("text")
+    if isinstance(txt, dict):
+        for code in (_CURRENT_LANG, "en", "ru", "ua"):
+            val = txt.get(code)
+            if val:
+                return str(val)
+        return next((str(v) for v in txt.values() if v), "")
+    return str(txt or "")
+
+
+def news_sorted(items=None):
+    """Новости от свежих к старым (устойчиво к некорректным датам)."""
+    return sorted(items if items is not None else NEWS,
+                  key=_news_date, reverse=True)
+
+
+def render_news():
+    """Лента новостей под заголовком. Пустой список NEWS — блок не рисуется вовсе."""
+    items = [it for it in news_sorted() if _news_text(it)]
+    if not items:
+        return
+    newest = _news_date(items[0])
+    fresh = (newest != date.min
+             and 0 <= (date.today() - newest).days <= NEWS_FRESH_DAYS)
+    title = "📣 " + _("News")
+    if newest != date.min:
+        title += f" · {newest.isoformat()}"
+    with st.expander(title, expanded=fresh):
+        shown = items[:NEWS_MAX_SHOWN]
+        rest = items[NEWS_MAX_SHOWN:]
+        if rest and st.checkbox(_("Show all news"), value=False, key="news_show_all"):
+            shown = items
+        for it in shown:
+            icon = NEWS_KIND_ICONS.get(it.get("kind", "info"), "📣")
+            day = it.get("date", "")
+            # Без unsafe_allow_html: markdown работает, HTML не выполняется.
+            st.markdown(f"{icon} **{day}** — {_news_text(it)}")
 
 
 # ===========================================================================
@@ -3972,6 +4100,9 @@ def main():
     st.title("🎯 Yev Steam Deposit Calculator")
     st.caption(_("Steam top-up profit, skin purchase and CS2 collection analyzer")
                + f" · v{APP_VERSION}")
+
+    # --- Новости (статичные сообщения из кода) ---
+    render_news()
 
     # --- Вкладки режимов ---
     tab_mode_1, tab_mode_2, tab_mode_3, tab_mode_4, tab_mode_5 = st.tabs([
