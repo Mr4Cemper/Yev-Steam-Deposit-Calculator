@@ -2813,6 +2813,131 @@ COLLECTION_TEMPLATES = {
             ],
         },
     },
+    "overpass_2024": {
+        "name": "Overpass 2024",
+        "data": {
+            "rarity_covert": [
+                {"name": "AK-47 | B the Monster", "cap_lo": 0.00, "cap_hi": 0.80, "records": [
+                    {"wear": "FN", "exact_float": 0.0698, "price": 518.65},
+                    {"wear": "MW", "exact_float": 0.14533, "price": 210.36},
+                    {"wear": "FT", "exact_float": 0.3516491, "price": 120.80},
+                    {"wear": "WW", "exact_float": 0.44308909, "price": 104.72},
+                    {"wear": "BS", "exact_float": 0.65594, "price": 67.81},
+                ]},
+            ],
+            "rarity_classified": [
+                {"name": "AWP | Crakow!", "cap_lo": 0.00, "cap_hi": 1.00, "records": [
+                    {"wear": "FN", "exact_float": 0.069545, "price": 115.91},
+                    {"wear": "MW", "exact_float": 0.14996999, "price": 52.32},
+                    {"wear": "FT", "exact_float": 0.3508890, "price": 25.50},
+                    {"wear": "WW", "exact_float": 0.44785550, "price": 19.81},
+                    {"wear": "BS", "exact_float": 0.55, "price": 18.26},
+                ]},
+                {"name": "Zeus x27 | Dragon Snore", "cap_lo": 0.00, "cap_hi": 0.80, "records": [
+                    {"wear": "FN", "exact_float": 0.06850666, "price": 56.97},
+                    {"wear": "MW", "exact_float": 0.14625713, "price": 30.12},
+                    {"wear": "FT", "exact_float": 0.293806, "price": 14.60},
+                    {"wear": "WW", "exact_float": 0.441100, "price": 11.96},
+                    {"wear": "BS", "exact_float": 0.684881, "price": 11.06},
+                ]},
+            ],
+            "rarity_restricted": [
+                {"name": "AUG | Eye of Zapems", "cap_lo": 0.00, "cap_hi": 0.85, "records": [
+                    {"wear": "FN", "exact_float": 0.06980744, "price": 12.58},
+                    {"wear": "MW", "exact_float": 0.12237, "price": 4.69},
+                    {"wear": "FT", "exact_float": 0.366743, "price": 2.03},
+                    {"wear": "WW", "exact_float": 0.395760, "price": 2.10},
+                    {"wear": "BS", "exact_float": 0.542031, "price": 1.55},
+                ]},
+                {"name": "Dual Berettas | Sweet Little Angels", "cap_lo": 0.00, "cap_hi": 0.82, "records": [
+                    {"wear": "FN", "exact_float": 0.067218, "price": 11.44},
+                    {"wear": "MW", "exact_float": 0.118830, "price": 4.81},
+                    {"wear": "FT", "exact_float": 0.3241175, "price": 2.14},
+                    {"wear": "WW", "exact_float": 0.436387, "price": 1.92},
+                    {"wear": "BS", "exact_float": 0.757794797421, "price": 1.68},
+                ]},
+                {"name": "XM1014 | Monster Melt", "cap_lo": 0.00, "cap_hi": 0.75, "records": [
+                    {"wear": "FN", "exact_float": 0.065963, "price": 9.26},
+                    {"wear": "MW", "exact_float": 0.132945328, "price": 4.30},
+                    {"wear": "FT", "exact_float": 0.3212739, "price": 2.07},
+                    {"wear": "WW", "exact_float": 0.411673, "price": 2.03},
+                    {"wear": "BS", "exact_float": 0.57791, "price": 1.50},
+                ]},
+            ],
+            "rarity_milspec": [
+                {"name": "MAC-10 | Pipsqueak", "cap_lo": 0.00, "cap_hi": 0.90, "records": [
+                    {"wear": "FN", "exact_float": 0.058604, "price": 3.69},
+                    {"wear": "MW", "exact_float": 0.1132334, "price": 0.80},
+                    {"wear": "FT", "exact_float": 0.3575538, "price": 0.25},
+                    {"wear": "WW", "exact_float": 0.426355, "price": 0.23},
+                    {"wear": "BS", "exact_float": 0.840270638, "price": 0.18},
+                ]},
+                {"name": "Galil AR | Metallic Squeezer", "cap_lo": 0.00, "cap_hi": 0.60, "records": [
+                    {"wear": "FN", "exact_float": 0.05666, "price": 1.23},
+                    {"wear": "MW", "exact_float": 0.141441, "price": 0.37},
+                    {"wear": "FT", "exact_float": 0.23418, "price": 0.19},
+                    {"wear": "WW", "exact_float": 0.444086, "price": 0.17},
+                    {"wear": "BS", "exact_float": 0.557496, "price": 0.17},
+                ]},
+                {"name": "Nova | Wurst H\u00f6lle", "cap_lo": 0.00, "cap_hi": 1.00, "records": [
+                    {"wear": "FN", "exact_float": 0.0675576, "price": 2.36},
+                    {"wear": "MW", "exact_float": 0.13355, "price": 0.51},
+                    {"wear": "FT", "exact_float": 0.36028, "price": 0.24},
+                    {"wear": "WW", "exact_float": 0.386, "price": 0.21},
+                    {"wear": "BS", "exact_float": 0.8996814, "price": 0.18},
+                ]},
+                {"name": "Glock-18 | Teal Graf", "cap_lo": 0.00, "cap_hi": 0.50, "records": [
+                    {"wear": "FN", "exact_float": 0.06567, "price": 1.05},
+                    {"wear": "MW", "exact_float": 0.147716611, "price": 0.31},
+                    {"wear": "FT", "exact_float": 0.258276, "price": 0.20},
+                    {"wear": "WW", "exact_float": 0.3951617, "price": 0.18},
+                    {"wear": "BS", "exact_float": 0.450902223, "price": 0.17},
+                ]},
+            ],
+            "rarity_industrial": [
+                {"name": "Desert Eagle | Tilted", "cap_lo": 0.00, "cap_hi": 0.75, "records": [
+                    {"wear": "FN", "exact_float": None, "price": 1.63},
+                    {"wear": "MW", "exact_float": None, "price": 0.35},
+                    {"wear": "FT", "exact_float": None, "price": 0.09},
+                    {"wear": "WW", "exact_float": None, "price": 0.11},
+                    {"wear": "BS", "exact_float": None, "price": 0.07},
+                ]},
+                {"name": "M4A1-S | Wash me plz", "cap_lo": 0.00, "cap_hi": 0.58, "records": [
+                    {"wear": "FN", "exact_float": None, "price": 0.41},
+                    {"wear": "MW", "exact_float": None, "price": 0.08},
+                    {"wear": "FT", "exact_float": None, "price": 0.04},
+                    {"wear": "WW", "exact_float": None, "price": 0.06},
+                    {"wear": "BS", "exact_float": None, "price": 0.05},
+                ]},
+                {"name": "MP5-SD | Neon Squeezer", "cap_lo": 0.20, "cap_hi": 0.90, "records": [
+                    {"wear": "FT", "exact_float": None, "price": 0.08},
+                    {"wear": "WW", "exact_float": None, "price": 0.03},
+                    {"wear": "BS", "exact_float": None, "price": 0.02},
+                ]},
+                {"name": "Negev | Wall Bang", "cap_lo": 0.00, "cap_hi": 1.00, "records": [
+                    {"wear": "FN", "exact_float": None, "price": 1.12},
+                    {"wear": "MW", "exact_float": None, "price": 0.09},
+                    {"wear": "FT", "exact_float": None, "price": 0.02},
+                    {"wear": "WW", "exact_float": None, "price": 0.02},
+                    {"wear": "BS", "exact_float": None, "price": 0.01},
+                ]},
+                {"name": "Five-SeveN | Midnight Paintover", "cap_lo": 0.00, "cap_hi": 0.50, "records": [
+                    {"wear": "FN", "exact_float": None, "price": 0.17},
+                    {"wear": "MW", "exact_float": None, "price": 0.03},
+                    {"wear": "FT", "exact_float": None, "price": 0.02},
+                    {"wear": "WW", "exact_float": None, "price": 0.02},
+                    {"wear": "BS", "exact_float": None, "price": 0.03},
+                ]},
+                {"name": "P90 | Wash me", "cap_lo": 0.00, "cap_hi": 0.50, "records": [
+                    {"wear": "FN", "exact_float": None, "price": 0.17},
+                    {"wear": "MW", "exact_float": None, "price": 0.04},
+                    {"wear": "FT", "exact_float": None, "price": 0.02},
+                    {"wear": "WW", "exact_float": None, "price": 0.02},
+                    {"wear": "BS", "exact_float": None, "price": 0.01},
+                ]},
+            ],
+        },
+    },
 }
 
 
