@@ -50,6 +50,8 @@ Streamlit-приложение для оценки экономики торго
     streamlit run app.py
 """
 
+import html
+
 import streamlit as st
 
 # ===========================================================================
@@ -313,6 +315,24 @@ TRANSLATIONS = {
             'Trade-up & float details',
         'craft up':
             'craft up',
+        "m5a_cands_title":
+            "Filler candidates: what to buy ({n})",
+        "m5a_cands_hint_cheapest":
+            "Sorted by price — cheapest first. The contract uses the top row (✅). "
+            "ROI is what a contract of 10 copies of that exact record would return.",
+        "m5a_cands_hint_best":
+            "Sorted by contract ROI — best price/quality first. The contract uses the top "
+            "row (✅). Each row = a contract of 10 copies of that exact skin+quality.",
+        "m5a_col_skin":
+            "Skin",
+        "m5a_col_wear":
+            "Quality",
+        "m5a_col_float":
+            "Float",
+        "m5a_col_cost":
+            "Input ×10",
+        "m5a_col_eout":
+            "Avg output",
         "m5a_tpl_caption":
             "Loading fills every field for this collection (fully editable). It OVERWRITES "
             "the current advanced-mode input. Prices are approximate USD starting values — "
@@ -701,6 +721,24 @@ TRANSLATIONS = {
             'Контракты и детали флоата',
         'craft up':
             'крафт вверх',
+        "m5a_cands_title":
+            "Кандидаты-филлеры: что покупать ({n})",
+        "m5a_cands_hint_cheapest":
+            "Отсортировано по цене — сначала самые дешёвые. Контракт берёт верхнюю строку (✅). "
+            "ROI — что даст контракт из 10 копий именно этой записи.",
+        "m5a_cands_hint_best":
+            "Отсортировано по ROI контракта — сначала лучшее соотношение цена/качество. Контракт берёт "
+            "верхнюю строку (✅). Каждая строка = контракт из 10 копий этого скина в этом качестве.",
+        "m5a_col_skin":
+            "Скин",
+        "m5a_col_wear":
+            "Качество",
+        "m5a_col_float":
+            "Флоат",
+        "m5a_col_cost":
+            "Вход ×10",
+        "m5a_col_eout":
+            "Ср. выход",
         "Collection template":
             "Шаблон коллекции",
         "Load template":
@@ -1083,6 +1121,24 @@ TRANSLATIONS = {
             'Контракти та деталі флоата',
         'craft up':
             'крафт вгору',
+        "m5a_cands_title":
+            "Кандидати-філери: що купувати ({n})",
+        "m5a_cands_hint_cheapest":
+            "Відсортовано за ціною — спочатку найдешевші. Контракт бере верхній рядок (✅). "
+            "ROI — що дасть контракт із 10 копій саме цього запису.",
+        "m5a_cands_hint_best":
+            "Відсортовано за ROI контракту — спочатку найкраще співвідношення ціна/якість. Контракт бере "
+            "верхній рядок (✅). Кожен рядок = контракт із 10 копій цього скіна в цій якості.",
+        "m5a_col_skin":
+            "Скін",
+        "m5a_col_wear":
+            "Якість",
+        "m5a_col_float":
+            "Флоат",
+        "m5a_col_cost":
+            "Вхід ×10",
+        "m5a_col_eout":
+            "Сер. вихід",
         "Collection template":
             "Шаблон колекції",
         "Load template":
@@ -1488,6 +1544,16 @@ def get_valid_steam_price(desired_buyer_price,
         desired_buyer_price, is_integer_currency=True,
         cs2_fee_pct=cs2_fee_pct, steam_fee_pct=steam_fee_pct)
     return int(round(buyer)), int(round(seller))
+
+
+def _esc(text):
+    """Экранирование пользовательского текста перед вставкой в HTML.
+
+    Имена скинов вводит пользователь, а таблицы/детали рендерятся с
+    unsafe_allow_html=True — без экранирования имя вида '<img src=x onerror=...>'
+    исполнилось бы как разметка/скрипт. Здесь всё превращается в безопасный текст.
+    """
+    return html.escape(str(text), quote=True)
 
 
 def is_integer_currency(code):
@@ -2534,19 +2600,48 @@ def _filler_candidate_records(filler_skins, midpoint=False):
     return cands
 
 
+def tradeup_candidates(filler_skins, output_skins, midpoint=False, n=10):
+    """ВСЕ кандидаты-филлеры редкости с полной экономикой контракта R→R+1.
+
+    Для каждой валидной записи: контракт из n её копий (W̄ = её контрактный вес w),
+    затраты = n × цена, ожидаемый выход = среднее по ВСЕМ скинам следующей редкости,
+    оценённым на флоате, который даст контракт (1 скин = 1 равновероятный исход), и ROI.
+
+    Единый источник математики: этим пользуются и выбор филлера (best_tradeup_roi),
+    и таблица «что покупать» в интерфейсе — расчёты не могут разойтись.
+    Возвращает список {skin, wear, f, w, price, cost, E_out, roi} (несортированный).
+    """
+    if not output_skins:
+        return []
+    out = []
+    for c in _filler_candidate_records(filler_skins, midpoint):
+        e = expected_output_value(c["w"], output_skins, midpoint)
+        cost = n * c["price"]
+        if e is None or cost <= 0:
+            continue
+        out.append({**c, "cost": cost, "E_out": e, "roi": (e - cost) / cost})
+    return out
+
+
+def sort_tradeup_candidates(cands, contract_mode="cheapest"):
+    """Порядок кандидатов под выбранный режим (первый = тот, который берёт контракт).
+
+        'cheapest' — сначала самые дешёвые (при равной цене — более чистый);
+        'best'     — сначала лучший ROI (при равном ROI — дешевле, затем чище).
+    """
+    if contract_mode == "best":
+        return sorted(cands, key=lambda c: (-c["roi"], c["cost"], c["w"]))
+    return sorted(cands, key=lambda c: (c["price"], c["w"]))
+
+
 def best_tradeup_roi(filler_skins, output_skins, midpoint=False, n=10,
                      contract_mode="cheapest"):
     """Контракт R→R+1 на РЕАЛЬНЫХ записях (без интерполяции гипотетических филлеров).
 
-    Кандидат-филлер = валидная запись редкости; контракт = n её копий: W̄ = её
-    контрактный вес w, затраты = n × её цена. Ожидаемый выход = среднее по ВСЕМ
-    скинам следующей редкости, каждый оценён на флоате f_out = cap_lo + W̄·(cap_hi −
-    cap_lo) (1 скин = 1 равновероятный исход; цена берётся из введённых записей
-    этого скина в полученном качестве, при отсутствии записи — ближайшее качество).
-
-    contract_mode:
-        'cheapest' — филлер = САМАЯ ДЕШЁВАЯ запись (считаем её реальный флоат;
-                     при равной цене берётся более чистая);
+    Кандидат-филлер = валидная запись редкости; контракт = n её копий (см.
+    tradeup_candidates). contract_mode:
+        'cheapest' — филлер = САМАЯ ДЕШЁВАЯ запись (её реальный флоат; при равной
+                     цене берётся более чистая);
         'best'     — перебираются ВСЕ записи, берётся филлер с ЛУЧШИМ ROI
                      (лучшее соотношение цена/качество для крафта-закупки).
 
@@ -2559,43 +2654,22 @@ def best_tradeup_roi(filler_skins, output_skins, midpoint=False, n=10,
         'unprofitable' — ROI выбранного филлера ≤ 0 (крафт убыточен),
         None           — режим 'cheapest' при ROI > 0 (чистоту не сравнивали).
     """
-    if not output_skins:
-        return None
-    cands = _filler_candidate_records(filler_skins, midpoint)
+    cands = tradeup_candidates(filler_skins, output_skins, midpoint, n)
     if not cands:
         return None
-
-    def _stats(c):
-        e = expected_output_value(c["w"], output_skins, midpoint)
-        cost = n * c["price"]
-        if e is None or cost <= 0:
-            return None
-        return {"roi": (e - cost) / cost, "W_star": c["w"], "E_out": e, "cost": cost,
-                "filler": {"skin": c["skin"], "wear": c["wear"], "f": c["f"],
-                           "price": c["price"]}}
-
-    # Самая дешёвая запись; при равной цене — более чистая (строго не хуже).
-    cheapest_stats = _stats(min(cands, key=lambda c: (c["price"], c["w"])))
-    if contract_mode != "best":
-        best = cheapest_stats
-    else:
-        best = None
-        for c in cands:
-            st_c = _stats(c)
-            if st_c is None:
-                continue
-            if (best is None or st_c["roi"] > best["roi"]
-                    or (st_c["roi"] == best["roi"]
-                        and (st_c["cost"], st_c["W_star"]) < (best["cost"], best["W_star"]))):
-                best = st_c
-    if best is None:
-        return None
-    best["n_candidates"] = len(cands)
+    cheapest = sort_tradeup_candidates(cands, "cheapest")[0]
+    chosen = sort_tradeup_candidates(cands, contract_mode)[0]
+    best = {
+        "roi": chosen["roi"], "W_star": chosen["w"], "E_out": chosen["E_out"],
+        "cost": chosen["cost"], "n_candidates": len(cands),
+        "filler": {"skin": chosen["skin"], "wear": chosen["wear"],
+                   "f": chosen["f"], "price": chosen["price"]},
+    }
     if best["roi"] <= 0:
         best["overpay_clean"] = "unprofitable"
     elif contract_mode != "best":
         best["overpay_clean"] = None  # в режиме «по самым дешёвым» чистоту не сравниваем
-    elif cheapest_stats is None or best["roi"] > cheapest_stats["roi"] + 1e-12:
+    elif chosen["roi"] > cheapest["roi"] + 1e-12:
         best["overpay_clean"] = "worth"
     else:
         best["overpay_clean"] = "avoid"
@@ -2648,7 +2722,8 @@ def analyze_collection_advanced(rarity_data, midpoint=False, contract_mode="chea
     (из него не крафтят).
 
     Возвращает список dict: key, price, ratio, rank, rank_index, role, float_bonus,
-    roi, W_star, E_out, cost, filler, n_candidates, verdict (overpay_clean),
+    roi, W_star, E_out, cost, filler, n_candidates, candidates (все филлеры в порядке
+    выбранного режима: первый = взятый контрактом), verdict (overpay_clean),
     float_summary (наценка за чистоту по редкости).
     """
     active = []
@@ -2665,10 +2740,15 @@ def analyze_collection_advanced(rarity_data, midpoint=False, contract_mode="chea
     results = []
     for i, rar in enumerate(active):
         price = rar["price"]
-        float_bonus, verdict, roi_info = 0.0, None, None
+        float_bonus, verdict, roi_info, cands = 0.0, None, None, []
         if i < n - 1:  # не высшее: возможен контракт R -> R+1
             roi_info = best_tradeup_roi(rar["skins"], active[i + 1]["skins"], midpoint,
                                         contract_mode=contract_mode)
+            # Полный список кандидатов-филлеров в порядке выбранного режима:
+            # первый = тот, который берёт контракт (та же математика и те же тай-брейки).
+            cands = sort_tradeup_candidates(
+                tradeup_candidates(rar["skins"], active[i + 1]["skins"], midpoint),
+                contract_mode)
             if roi_info:
                 float_bonus = tradeup_float_bonus(roi_info["roi"])
                 verdict = roi_info["overpay_clean"]
@@ -2693,6 +2773,7 @@ def analyze_collection_advanced(rarity_data, midpoint=False, contract_mode="chea
             "cost": (roi_info["cost"] if roi_info else None),
             "filler": (roi_info["filler"] if roi_info else None),
             "n_candidates": (roi_info["n_candidates"] if roi_info else None),
+            "candidates": cands,
             "verdict": verdict,
             "float_summary": rarity_float_summary(rar["skins"], midpoint),
         })
@@ -3184,7 +3265,7 @@ def _mode_5_advanced(currency, tp):
         if r["roi"] is not None and r.get("filler") is not None:
             fl = r["filler"]
             line = _("m5a_craft_line").format(
-                skin=fl["skin"], wear=fl["wear"], f=f"{fl['f']:.4f}",
+                skin=_esc(fl["skin"]), wear=_esc(fl["wear"]), f=f"{fl['f']:.4f}",
                 w=f"{r['W_star']:.2f}",
                 price=format_currency(fl["price"], disp_ccy, price_decimals),
                 n=10, cost=format_currency(r["cost"], disp_ccy, price_decimals),
@@ -3197,11 +3278,50 @@ def _mode_5_advanced(currency, tp):
             best_p = format_currency(fs["best_premium"], disp_ccy, price_decimals)
             avg_p = format_currency(fs["avg_premium"], disp_ccy, price_decimals)
             parts.append(_("cheapest cleanliness {b}/{u} ({skin}) · avg {a}/{u}").format(
-                b=best_p, a=avg_p, u=_("unit"), skin=fs["best_skin"]))
+                b=best_p, a=avg_p, u=_("unit"), skin=_esc(fs["best_skin"])))
         else:
             parts.append(_("cleanliness premium: n/a (skins need ≥2 floats)"))
         st.markdown(f"<span style='color:{color_by_key.get(r['key'],'#888')};'>● </span>"
-                    f"**{nm}** — " + " · ".join(parts), unsafe_allow_html=True)
+                    f"**{_esc(nm)}** — " + " · ".join(parts), unsafe_allow_html=True)
+
+        # Что конкретно покупать: все кандидаты-филлеры этой редкости в порядке
+        # выбранного режима (первый ✅ — тот, который берёт контракт).
+        cands = r.get("candidates") or []
+        if cands:
+            with st.expander("🛒 " + _("m5a_cands_title").format(n=len(cands)), expanded=False):
+                st.caption(_("m5a_cands_hint_best") if contract_mode == "best"
+                           else _("m5a_cands_hint_cheapest"))
+                chead = (
+                    "<tr>"
+                    f"<th style='text-align:left;padding:6px 10px;'>{_('m5a_col_skin')}</th>"
+                    f"<th style='text-align:center;padding:6px 10px;'>{_('m5a_col_wear')}</th>"
+                    f"<th style='text-align:center;padding:6px 10px;'>{_('m5a_col_float')}</th>"
+                    "<th style='text-align:center;padding:6px 10px;'>w</th>"
+                    f"<th style='text-align:right;padding:6px 10px;'>{_('Price')}</th>"
+                    f"<th style='text-align:right;padding:6px 10px;'>{_('m5a_col_cost')}</th>"
+                    f"<th style='text-align:right;padding:6px 10px;'>{_('m5a_col_eout')}</th>"
+                    "<th style='text-align:center;padding:6px 10px;'>ROI</th>"
+                    "</tr>")
+                crows = []
+                for ci, c in enumerate(cands):
+                    top = (ci == 0)
+                    roi_color = "#4caf50" if c["roi"] > 0 else "#e05555"
+                    style = "font-weight:600;background:rgba(76,175,80,0.08);" if top else ""
+                    mark = "✅ " if top else ""
+                    crows.append(
+                        f"<tr style='border-top:1px solid #3a3a3a;{style}'>"
+                        f"<td style='text-align:left;padding:6px 10px;'>{mark}{_esc(c['skin'])}</td>"
+                        f"<td style='text-align:center;padding:6px 10px;'>{_esc(c['wear'])}</td>"
+                        f"<td style='text-align:center;padding:6px 10px;font-size:0.85em;'>{c['f']:.4f}</td>"
+                        f"<td style='text-align:center;padding:6px 10px;font-size:0.85em;'>{c['w']:.2f}</td>"
+                        f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['price'], disp_ccy, price_decimals)}</td>"
+                        f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['cost'], disp_ccy, price_decimals)}</td>"
+                        f"<td style='text-align:right;padding:6px 10px;'>{format_currency(c['E_out'], disp_ccy, price_decimals)}</td>"
+                        f"<td style='text-align:center;padding:6px 10px;color:{roi_color};'>{c['roi'] * 100:+.0f}%</td>"
+                        "</tr>")
+                st.markdown("<table style='width:100%;border-collapse:collapse;'><thead>" + chead +
+                            "</thead><tbody>" + "".join(crows) + "</tbody></table>",
+                            unsafe_allow_html=True)
     st.caption("ℹ️ " + _("Score 0–100 is experimental (relative within a skin, 50/50 clean/cheap)."))
 
     with st.expander("ℹ️ " + _("How the ranking works")):
